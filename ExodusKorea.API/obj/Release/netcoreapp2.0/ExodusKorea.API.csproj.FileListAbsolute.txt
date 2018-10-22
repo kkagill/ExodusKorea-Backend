@@ -1,0 +1,16 @@
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.API.deps.json
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.API.runtimeconfig.json
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.API.runtimeconfig.dev.json
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.API.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.API.pdb
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.Data.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.Model.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.Data.pdb
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\bin\Release\netcoreapp2.0\ExodusKorea.Model.pdb
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.csprojAssemblyReference.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.csproj.CoreCompileInputs.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.AssemblyInfoInputs.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.AssemblyInfo.cs
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.csproj.CopyComplete
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Release\netcoreapp2.0\ExodusKorea.API.pdb

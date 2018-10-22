@@ -1,0 +1,12 @@
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\bin\Debug\netcoreapp2.0\ExodusKorea.Data.deps.json
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\bin\Debug\netcoreapp2.0\ExodusKorea.Data.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\bin\Debug\netcoreapp2.0\ExodusKorea.Data.pdb
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\bin\Debug\netcoreapp2.0\ExodusKorea.Model.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\bin\Debug\netcoreapp2.0\ExodusKorea.Model.pdb
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.csprojAssemblyReference.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.csproj.CoreCompileInputs.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.AssemblyInfoInputs.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.AssemblyInfo.cs
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.csproj.CopyComplete
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Data\obj\Debug\netcoreapp2.0\ExodusKorea.Data.pdb

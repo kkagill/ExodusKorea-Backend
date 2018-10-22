@@ -1,0 +1,4 @@
+﻿dotnet ef migrations add Initial -c ExodusKoreaContext
+dotnet ef database update -c ExodusKoreaContext
+//removing previous migration one by one
+dotnet ef migrations remove -c ExodusKoreaContext

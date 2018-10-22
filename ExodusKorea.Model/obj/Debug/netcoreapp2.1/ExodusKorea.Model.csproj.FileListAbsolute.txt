@@ -1,0 +1,5 @@
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\bin\Debug\netcoreapp2.1\ExodusKorea.Model.deps.json
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\bin\Debug\netcoreapp2.1\ExodusKorea.Model.dll
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.1\ExodusKorea.Model.csproj.CoreCompileInputs.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.1\ExodusKorea.Model.AssemblyInfoInputs.cache
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.1\ExodusKorea.Model.AssemblyInfo.cs
