@@ -1,17 +1,8 @@
-﻿using ExodusKorea.API.Exceptions;
-using ExodusKorea.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using MailKit.Net.Smtp;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using ExodusKorea.API.Services.Interfaces;
 
 namespace ExodusKorea.API.Services
 {

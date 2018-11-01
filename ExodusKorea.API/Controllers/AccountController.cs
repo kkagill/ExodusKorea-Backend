@@ -11,6 +11,7 @@ using AutoMapper.Configuration;
 using Microsoft.Extensions.Options;
 using ExodusKorea.Model;
 using AutoMapper;
+using ExodusKorea.API.Services.Interfaces;
 
 namespace ExodusKorea.API.Controllers
 {
@@ -124,8 +125,8 @@ namespace ExodusKorea.API.Controllers
                 var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var callbackUrl = new Uri(Url.Link("ConfirmEmail", new { id = _protector.Protect(user.Id), token = emailConfirmationToken }));
 
-                //await _messageService.SendEmailAsync(user.Email,
-                //    "엑소더스 코리아 회원가입 인증", "회원가입을 완료하시려면 아래의 인증링크를 클릭하세요." + callbackUrl, null);
+                await _messageService.SendEmailAsync(user.Email,
+                    "엑소더스 코리아 회원가입 인증", "회원가입을 완료하시려면 아래의 인증링크를 클릭하세요." + callbackUrl, null);
 
                 return CreatedAtRoute("GetUser", new { controller = "Account", id = user.Id }, user);
             }            

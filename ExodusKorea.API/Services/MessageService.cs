@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MailKit.Net.Smtp;
 using System.Threading.Tasks;
+using ExodusKorea.API.Services.Interfaces;
 
 namespace ExodusKorea.API.Services
 {

@@ -9,7 +9,10 @@ using AutoMapper;
 using ExodusKorea.API.Exceptions;
 using ExodusKorea.API.Provider;
 using ExodusKorea.API.Services;
+using ExodusKorea.API.Services.Interfaces;
 using ExodusKorea.Data;
+using ExodusKorea.Data.Interfaces;
+using ExodusKorea.Data.Repositories;
 using ExodusKorea.Model;
 using ExodusKorea.Model.Entities;
 using ExodusKorea.Model.ViewModels.Mapping;
@@ -55,10 +58,10 @@ namespace ExodusKorea.API
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 // Password settings
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;      
                 options.Password.RequiredLength = 8;
                 options.User.AllowedUserNameCharacters = null;
 
@@ -66,8 +69,9 @@ namespace ExodusKorea.API
                 options.SignIn.RequireConfirmedEmail = true;
 
                 // Lockout settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 5;
+                //options.Lockout.AllowedForNewUsers = true;
+                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                //options.Lockout.MaxFailedAccessAttempts = 5;
             })
                 .AddEntityFrameworkStores<ExodusKoreaContext>()
                 .AddDefaultTokenProviders();
@@ -150,14 +154,18 @@ namespace ExodusKorea.API
                 });
 
             services.Configure<GoogleReCaptcha>(Configuration.GetSection("GoogleReCaptcha"));
+            services.Configure<YoutubeData>(Configuration.GetSection("YoutubeData"));
 
             // Repositories
-            //services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IHomeRepository, HomeRepository>();
+            services.AddScoped<ICardDetailRepository, CardDetailRepository>();
 
             // Services            
             services.AddTransient<DbInitializer>();
             services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<ICurrencyRatesService, CurrencyRatesService>();
             services.AddTransient<IGoogleRecaptchaService, GoogleRecaptchaService>();
+            services.AddTransient<IYouTubeCommentService, YouTubeCommentService>();
 
             // Without this controller actions are not forbidden if other roles are trying to access
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();

@@ -73,6 +73,76 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfo", b =>
+                {
+                    b.Property<int>("CountryInfoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CapitalCity");
+
+                    b.Property<string>("CountryInEnglish");
+
+                    b.Property<string>("CountryName");
+
+                    b.Property<string>("Currency");
+
+                    b.Property<string>("Languages");
+
+                    b.Property<string>("MajorCities");
+
+                    b.Property<string>("PerCapitaGDP");
+
+                    b.Property<string>("Population");
+
+                    b.HasKey("CountryInfoId");
+
+                    b.ToTable("CountryInfo");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.NewVideo", b =>
+                {
+                    b.Property<int>("NewVideoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("CountryInEnglish");
+
+                    b.Property<int>("Likes");
+
+                    b.Property<string>("Title");
+
+                    b.Property<DateTime>("UploadedDate");
+
+                    b.Property<string>("UploaderName");
+
+                    b.Property<string>("YouTubeVideoId");
+
+                    b.HasKey("NewVideoId");
+
+                    b.ToTable("NewVideo");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.PriceInfo", b =>
+                {
+                    b.Property<int>("PriceInfoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("CostOfLivingIndex");
+
+                    b.Property<string>("Country");
+
+                    b.Property<decimal>("GroceriesIndex");
+
+                    b.Property<decimal>("RentIndex");
+
+                    b.Property<decimal>("RestaurantPriceIndex");
+
+                    b.HasKey("PriceInfoId");
+
+                    b.ToTable("PriceInfo");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")

@@ -8,13 +8,17 @@ namespace ExodusKorea.Data
     {
         public ExodusKoreaContext(DbContextOptions options) : base(options) { }
 
-        //public DbSet<Course> Courses { get; set; }       
+        public DbSet<NewVideo> NewVideos { get; set; }
+        public DbSet<CountryInfo> CountryInfo { get; set; }
+        public DbSet<PriceInfo> PriceInfo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Course>().ToTable("Course");           
+            modelBuilder.Entity<NewVideo>().ToTable("NewVideo");
+            modelBuilder.Entity<CountryInfo>().ToTable("CountryInfo");
+            modelBuilder.Entity<PriceInfo>().ToTable("PriceInfo");
         }
     }
 }

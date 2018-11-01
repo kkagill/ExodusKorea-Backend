@@ -1,8 +1,10 @@
 ﻿using ExodusKorea.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -12,12 +14,15 @@ namespace ExodusKorea.Data.Repositories
     public class EntityBaseRepository<T> : IEntityBaseRepository<T>
             where T : class, new()
     {
+        private readonly ExodusKoreaContext _context;
+        private readonly IConfiguration _config;
+        public static SqlConnection conn;
 
-        private ExodusKoreaContext _context;
-
-        public EntityBaseRepository(ExodusKoreaContext context)
+        public EntityBaseRepository(ExodusKoreaContext context,
+                                    IConfiguration config)
         {
             _context = context;
+            _config = config;
         }       
 
         public virtual IEnumerable<T> GetAll()
@@ -91,6 +96,13 @@ namespace ExodusKorea.Data.Repositories
         public virtual async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public virtual SqlConnection Connection()
+        {
+            string _connectionString = _config.GetConnectionString("ExodusKorea");
+            //string _connectionString = _config.GetConnectionString("ExodusKoreaAzure");
+            return new SqlConnection(_connectionString);
         }
     }
 }
