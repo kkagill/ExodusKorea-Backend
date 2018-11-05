@@ -14,6 +14,7 @@ namespace ExodusKorea.Model.ViewModels
             Comments = new List<Comment>();
         }
 
+        public string Likes { get; set; }
         public List<Comment> Comments { get; set; }
     }
 

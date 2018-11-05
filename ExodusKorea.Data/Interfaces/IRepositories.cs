@@ -11,8 +11,12 @@ namespace ExodusKorea.Data.Interfaces
 
     public interface ICardDetailRepository : IEntityBaseRepository<object>
     {
-        Task<string> GetCountryByVideoId(string videoId);
+        Task<string> GetCountryById(int newVideoId);
         Task<CountryInfo> GetCountryInfoByCountry(string country);
         Task<PriceInfo> GetPriceInfoByCountry(string country);
     }
+
+    public interface INewVideoRepository : IEntityBaseRepository<NewVideo> { }
+    public interface IVideoCommentRepository : IEntityBaseRepository<VideoComment> {}
+    public interface IVideoCommentReplyRepository : IEntityBaseRepository<VideoCommentReply> { }
 }

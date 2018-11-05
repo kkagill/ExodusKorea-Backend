@@ -97,15 +97,13 @@ namespace ExodusKorea.API.Controllers
             if (!ModelState.IsValid)
             {
                 string errorMsg = null;
-
                 foreach (var m in ModelState.Values)
                     foreach (var msg in m.Errors)
                         errorMsg = msg.ErrorMessage;
-
                 return BadRequest(errorMsg);
             }
 
-            var newUser = new ApplicationUser
+            ApplicationUser newUser = new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,

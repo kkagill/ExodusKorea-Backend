@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181102211627_AddedVideoComment")]
+    partial class AddedVideoComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,8 +149,6 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoCommentId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorDisplayName");
-
                     b.Property<string>("Comment");
 
                     b.Property<DateTime>("DateCreated");
@@ -158,11 +157,9 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<int>("Likes");
 
-                    b.Property<int>("NewVideoId");
+                    b.Property<string>("VideoId");
 
                     b.HasKey("VideoCommentId");
-
-                    b.HasIndex("NewVideoId");
 
                     b.ToTable("VideoComment");
                 });
@@ -171,8 +168,6 @@ namespace ExodusKorea.API.Migrations
                 {
                     b.Property<int>("VideoCommentReplyId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AuthorDisplayName");
 
                     b.Property<string>("Comment");
 
@@ -183,6 +178,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("Likes");
 
                     b.Property<int>("VideoCommentId");
+
+                    b.Property<string>("VideoId");
 
                     b.HasKey("VideoCommentReplyId");
 
@@ -418,14 +415,6 @@ namespace ExodusKorea.API.Migrations
                         .HasFilter("[Hash] IS NOT NULL");
 
                     b.ToTable("OpenIddictTokens");
-                });
-
-            modelBuilder.Entity("ExodusKorea.Model.Entities.VideoComment", b =>
-                {
-                    b.HasOne("ExodusKorea.Model.Entities.NewVideo", "NewVideo")
-                        .WithMany()
-                        .HasForeignKey("NewVideoId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoCommentReply", b =>

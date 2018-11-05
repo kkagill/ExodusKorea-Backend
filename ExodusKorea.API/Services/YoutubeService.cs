@@ -11,13 +11,33 @@ using ExodusKorea.Model.ViewModels;
 
 namespace ExodusKorea.API.Services
 {
-    public class YouTubeCommentService : IYouTubeCommentService
+    public class YoutubeService : IYouTubeService
     {
         private readonly YoutubeData _apiKey;
 
-        public YouTubeCommentService(IOptionsSnapshot<YoutubeData> youtubeDataAccessor)
+        public YoutubeService(IOptionsSnapshot<YoutubeData> youtubeDataAccessor)
         {
             _apiKey = youtubeDataAccessor.Value;
+        }
+
+        public async Task<string> GetYouTubeLikesByVideoId(string videoId)
+        {
+            var httpClient = new HttpClient();
+            var res = await httpClient
+                .GetAsync($"https://www.googleapis.com/youtube/v3/videos?id={videoId}&key={_apiKey.Key}&part=statistics");
+            
+            if (res.StatusCode != HttpStatusCode.OK)
+                return null;
+
+            var jsonRes = await res.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<YouTubeLikesJM>(jsonRes);
+            string likes = null;
+
+            if (result != null)
+                foreach (var c in result.Items)
+                    likes = c.Statistics.LikeCount.ToString();
+
+            return likes;
         }
 
         public async Task<YouTubeCommentVM> GetYouTubeCommentsByVideoId(string videoId)
@@ -43,7 +63,8 @@ namespace ExodusKorea.API.Services
                         Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString()
                     });
 
-            while (result.NextPageToken != null)
+            int count = 2;
+            while (result.NextPageToken != null && count > 0)
             {
                 var resNext = await httpClient
                     .GetAsync($"https://www.googleapis.com/youtube/v3/commentThreads?pageToken={result.NextPageToken}&part=snippet&videoId={videoId}&maxResults=100&key={_apiKey.Key}");
@@ -65,6 +86,7 @@ namespace ExodusKorea.API.Services
                         });
 
                 result.NextPageToken = nextResult.NextPageToken;
+                count--;             
             }
 
             return youTubeCommentVM;

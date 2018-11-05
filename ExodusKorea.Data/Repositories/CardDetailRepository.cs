@@ -18,17 +18,17 @@ namespace ExodusKorea.Data.Repositories
         private readonly IConfiguration _config;
 
         public CardDetailRepository(ExodusKoreaContext context,
-                              IConfiguration config)
+                                    IConfiguration config)
             : base(context, config)
         {
             _context = context;
             _config = config;
         }
 
-        public async Task<string> GetCountryByVideoId(string videoId)
+        public async Task<string> GetCountryById(int newVideoId)
         {
             var result = await _context.NewVideos
-                .SingleOrDefaultAsync(x => x.YouTubeVideoId == videoId);
+                .SingleOrDefaultAsync(x => x.NewVideoId == newVideoId);
 
             return result.Country;
         }
@@ -47,8 +47,7 @@ namespace ExodusKorea.Data.Repositories
                 .SingleOrDefaultAsync(x => x.CountryName == country);
 
             return result;
-        }      
-
+        }
 
         // This is used when we know Hospital/Clinic doesn't send multiple ExamTypes per HL7 Message
         //public stp_GetWaitTimeAndCount GetWaitTimeAndCount(string code, string offset)

@@ -13,6 +13,7 @@ namespace ExodusKorea.Data.Interfaces
         T GetSingle(Expression<Func<T, bool>> predicate);
         T GetSingle(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);    
         IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);

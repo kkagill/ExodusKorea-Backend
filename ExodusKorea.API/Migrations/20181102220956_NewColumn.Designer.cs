@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181102220956_NewColumn")]
+    partial class NewColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,8 +149,6 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoCommentId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorDisplayName");
-
                     b.Property<string>("Comment");
 
                     b.Property<DateTime>("DateCreated");
@@ -159,6 +158,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("Likes");
 
                     b.Property<int>("NewVideoId");
+
+                    b.Property<string>("VideoId");
 
                     b.HasKey("VideoCommentId");
 
@@ -172,8 +173,6 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoCommentReplyId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorDisplayName");
-
                     b.Property<string>("Comment");
 
                     b.Property<DateTime>("DateCreated");
@@ -183,6 +182,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("Likes");
 
                     b.Property<int>("VideoCommentId");
+
+                    b.Property<string>("VideoId");
 
                     b.HasKey("VideoCommentReplyId");
 

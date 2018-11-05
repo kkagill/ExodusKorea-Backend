@@ -66,6 +66,18 @@ namespace ExodusKorea.Data.Repositories
             return _context.Set<T>().Where(predicate);
         }
 
+        public virtual IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate,
+                                             params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return query.Where(predicate).AsEnumerable();
+        }
+
         public virtual async Task AddAsync(T entity)
         {
             EntityEntry dbEntityEntry = _context.Entry<T>(entity);

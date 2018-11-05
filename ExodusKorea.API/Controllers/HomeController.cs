@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using ExodusKorea.API.Services.Interfaces;
 using ExodusKorea.Data.Interfaces;
 using ExodusKorea.Model.Entities;
 using ExodusKorea.Model.ViewModels;
@@ -17,10 +18,13 @@ namespace ExodusKorea.API.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeRepository _repository;
+        private readonly IYouTubeService _youTube;
 
-        public HomeController(IHomeRepository repository)
+        public HomeController(IHomeRepository repository,
+                              IYouTubeService youTube)
         {
             _repository = repository;
+            _youTube = youTube;
         }
 
         [HttpGet]
@@ -33,13 +37,11 @@ namespace ExodusKorea.API.Controllers
                 return BadRequest();
 
             var newVideosVM = Mapper.Map<IEnumerable<NewVideo>, IEnumerable<NewVideosVM>>(allNewVideos);
-
+            
             foreach (var nv in newVideosVM)
             {
-                // Todo: add comment to NewVideosVM 
-                // 1. Get comments from youtube api 
-                // 2. Get comments from VideoComment table
-                // 3. Add those two
+                var likes = await _youTube.GetYouTubeLikesByVideoId(nv.YouTubeVideoId);
+                nv.Likes = Convert.ToInt32(likes);
             }
 
             return new OkObjectResult(newVideosVM);

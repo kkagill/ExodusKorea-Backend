@@ -20,26 +20,29 @@ namespace ExodusKorea.API.Controllers
     public class CardDetailController : Controller
     {
         private readonly ICardDetailRepository _repository;
+        private readonly IVideoCommentRepository _vcRepository;
         private readonly ICurrencyRatesService _currencyRate;
-        private readonly IYouTubeCommentService _youTubeComment;
+        private readonly IYouTubeService _youTube;
 
         public CardDetailController(ICardDetailRepository repository,
+                                    IVideoCommentRepository vcRepository,
                                     ICurrencyRatesService currencyRate,
-                                    IYouTubeCommentService youTubeComment)
+                                    IYouTubeService youTube)
         {
             _repository = repository;
+            _vcRepository = vcRepository;
             _currencyRate = currencyRate;
-            _youTubeComment = youTubeComment;
+            _youTube = youTube;
         }
 
         [HttpGet]
-        [Route("{videoId}/country-info", Name = "CountryInfo")]
-        public async Task<IActionResult> GetCountryInfo(string videoId)
+        [Route("{newVideoId}/country-info", Name = "CountryInfo")]
+        public async Task<IActionResult> GetCountryInfo(int newVideoId)
         {
-            if (string.IsNullOrEmpty(videoId))
+            if (newVideoId <= 0)
                 return BadRequest();
 
-            var country = await _repository.GetCountryByVideoId(videoId);
+            var country = await _repository.GetCountryById(newVideoId);
             var countryInfo = await _repository.GetCountryInfoByCountry(country);
 
             if (countryInfo == null)
@@ -51,13 +54,13 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("{videoId}/price-info", Name = "PriceInfo")]
-        public async Task<IActionResult> GetPriceInfo(string videoId)
+        [Route("{newVideoId}/price-info", Name = "PriceInfo")]
+        public async Task<IActionResult> GetPriceInfo(int newVideoId)
         {
-            if (string.IsNullOrEmpty(videoId))
+            if (newVideoId <= 0)
                 return BadRequest();
 
-            var country = await _repository.GetCountryByVideoId(videoId);
+            var country = await _repository.GetCountryById(newVideoId);
             var kPriceInfo = await _repository.GetPriceInfoByCountry("대한민국");            
             var priceInfo = await _repository.GetPriceInfoByCountry(country);
 
@@ -81,13 +84,13 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("{videoId}/currency-info", Name = "CurrencyInfo")]
-        public async Task<IActionResult> GetCurrencyInfo(string videoId)
+        [Route("{newVideoId}/currency-info", Name = "CurrencyInfo")]
+        public async Task<IActionResult> GetCurrencyInfo(int newVideoId)
         {
-            if (string.IsNullOrEmpty(videoId))
+            if (newVideoId <= 0)
                 return BadRequest();
 
-            var country = await _repository.GetCountryByVideoId(videoId);
+            var country = await _repository.GetCountryById(newVideoId);
             var baseCurrency = GetBaseCurrency(country);
             var krwRate = await _currencyRate.GetKRWRateByCountry(baseCurrency);
           
@@ -101,22 +104,84 @@ namespace ExodusKorea.API.Controllers
                 KrwRate = krwRate,
                 Now = DateTime.Now
             });
-        }
+        }       
 
         [HttpGet]
-        [Route("{videoId}/youtube-comments", Name = "YouTubeComments")]
-        public async Task<IActionResult> GetYouTubeComments(string videoId)
+        [Route("{videoId}/youtube-likes", Name = "YouTubeLikes")]
+        public async Task<IActionResult> GetYouTubeLikes(string videoId)
         {
-            if (string.IsNullOrEmpty(videoId))
+            if (string.IsNullOrWhiteSpace(videoId))
                 return BadRequest();
-            
-            var comments = await _youTubeComment.GetYouTubeCommentsByVideoId(videoId);
 
-            if (comments == null)
-                return BadRequest();          
+            var likes = await _youTube.GetYouTubeLikesByVideoId(videoId);
 
-            return new OkObjectResult(comments);
+            if (likes == null)
+                return BadRequest();
+
+            return new OkObjectResult(likes);
+        }  
+
+        [HttpGet]
+        [Route("{newVideoId}/{videoId}/video-comments-combined", Name = "GetVideoCommentsCombined")]
+        public async Task<IActionResult> GetVideoCommentsCombined(int newVideoId, string videoId)
+        {
+            if (newVideoId <= 0 || string.IsNullOrWhiteSpace(videoId))
+                return BadRequest();
+
+            var videoComments = _vcRepository
+                .FindBy(nv => nv.NewVideoId == newVideoId, vcr => vcr.VideoCommentReplies);           
+            var youTubeComments = await _youTube.GetYouTubeCommentsByVideoId(videoId);
+
+            if (videoComments == null)
+                return NotFound();
+
+            IEnumerable<VideoCommentVM> videoCommentVM =
+                    Mapper.Map<IEnumerable<VideoComment>, IEnumerable<VideoCommentVM>>(videoComments);
+            // Add youtube comments on top of comments from database
+            if (videoComments != null)
+            {
+                foreach (var yc in youTubeComments.Comments)
+                    videoCommentVM = videoCommentVM.Append(new VideoCommentVM
+                    {
+                        AuthorDisplayName = yc.AuthorDisplayName,
+                        Comment = yc.TextDisplay,
+                        DateCreated = yc.UpdatedAt.DateTime,
+                        Likes = Convert.ToInt32(yc.Likes),
+                        IsYouTubeComment = true
+                    });
+            }
+
+            videoCommentVM = videoCommentVM.OrderByDescending(x => x.DateCreated);
+            return new OkObjectResult(videoCommentVM);
         }
+
+        [HttpPost]
+        [Route("video-comment")]
+        public async Task<IActionResult> AddVideoComment([FromBody] VideoCommentVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                string errorMsg = null;
+                foreach (var m in ModelState.Values)
+                    foreach (var msg in m.Errors)
+                        errorMsg = msg.ErrorMessage;
+                return BadRequest(errorMsg);
+            }
+
+            VideoComment newVideoComment = new VideoComment
+            {
+                Comment = model.Comment,
+                DateCreated = DateTime.Now,
+                NewVideoId = model.NewVideoId                
+            };
+
+            await _vcRepository.AddAsync(newVideoComment);
+            await _vcRepository.CommitAsync();
+
+            var videoComment = Mapper.Map<VideoComment, VideoCommentVM>(newVideoComment);
+
+            return CreatedAtRoute("GetVideoComments", new { controller = "CardDetail", id = videoComment.VideoCommentId }, videoComment);
+        }      
 
         #region Private Functions
         private string ComparePrices(decimal korea, decimal country)

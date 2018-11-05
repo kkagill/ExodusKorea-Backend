@@ -8,7 +8,8 @@ using System.Linq;
 namespace ExodusKorea.Model.ViewModels
 {    
     public class NewVideosVM
-    {  
+    {
+        public int NewVideoId { get; set; }
         public string UploaderName { get; set; }
         public DateTime UploadedDate { get; set; }
         public string YouTubeVideoId { get; set; }

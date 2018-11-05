@@ -159,13 +159,15 @@ namespace ExodusKorea.API
             // Repositories
             services.AddScoped<IHomeRepository, HomeRepository>();
             services.AddScoped<ICardDetailRepository, CardDetailRepository>();
-
+            services.AddScoped<INewVideoRepository, NewVideoRepository>();
+            services.AddScoped<IVideoCommentRepository, VideoCommentRepository>();
+            services.AddScoped<IVideoCommentReplyRepository, VideoCommentReplyRepository>();
             // Services            
             services.AddTransient<DbInitializer>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<ICurrencyRatesService, CurrencyRatesService>();
             services.AddTransient<IGoogleRecaptchaService, GoogleRecaptchaService>();
-            services.AddTransient<IYouTubeCommentService, YouTubeCommentService>();
+            services.AddTransient<IYouTubeService, YoutubeService>();
 
             // Without this controller actions are not forbidden if other roles are trying to access
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();

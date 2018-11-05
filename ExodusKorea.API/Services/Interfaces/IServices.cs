@@ -21,8 +21,9 @@ namespace ExodusKorea.API.Services.Interfaces
         Task SendEmailAsync(string email, string subject, string message, string htmlBody);
     }
 
-    public interface IYouTubeCommentService
+    public interface IYouTubeService
     {
+        Task<string> GetYouTubeLikesByVideoId(string videoId);
         Task<YouTubeCommentVM> GetYouTubeCommentsByVideoId(string videoId);
     }
 }
