@@ -15,7 +15,8 @@ namespace ExodusKorea.Model.ViewModels.Mapping
             CreateMap<CountryInfo, CountryInfoVM>();
             CreateMap<VideoComment, VideoCommentVM>()             
                .ForMember(vm => vm.VideoCommentReplies, 
-               opt => opt.MapFrom(i => i.VideoCommentReplies.Select(vcr => new VideoCommentReplyVM
+               opt => opt.MapFrom(i => i.VideoCommentReplies.OrderByDescending(x => x.DateCreated)
+               .Select(vcr => new VideoCommentReplyVM
                {
                    VideoCommentReplyId = vcr.VideoCommentReplyId,
                    VideoCommentId = vcr.VideoCommentId,

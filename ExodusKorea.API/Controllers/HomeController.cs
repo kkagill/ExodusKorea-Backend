@@ -34,7 +34,7 @@ namespace ExodusKorea.API.Controllers
             var allNewVideos = await _repository.GetAllNewVideos();
 
             if (allNewVideos == null)
-                return BadRequest();
+                return NotFound();
 
             var newVideosVM = Mapper.Map<IEnumerable<NewVideo>, IEnumerable<NewVideosVM>>(allNewVideos);
             
