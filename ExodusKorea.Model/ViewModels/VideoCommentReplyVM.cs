@@ -8,13 +8,15 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class VideoCommentReplyVM : IValidatableObject
     {
-        public int VideoCommentReplyId { get; set; }
-        public int VideoCommentId { get; set; }
+        public long VideoCommentReplyId { get; set; }
+        public long VideoCommentId { get; set; }
         public string AuthorDisplayName { get; set; }
         public string Comment { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
         public int Likes { get; set; }
+        public string UserId { get; set; }
+        public string RepliedTo { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

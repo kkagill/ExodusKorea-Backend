@@ -25,18 +25,68 @@ namespace ExodusKorea.Data.Repositories
             _config = config;
         }
 
-        public async Task<string> GetCountryById(int newVideoId)
+        public async Task<string> GetCountryById(int videoPostId)
         {
-            var result = await _context.NewVideos
-                .SingleOrDefaultAsync(x => x.NewVideoId == newVideoId);
+            var result = await _context.VideoPosts
+                .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
 
-            return result.Country;
+            return result.CountryInEng;
+        }
+
+        public async Task<SalaryInfo> GetSalaryInfoById(int videoPostId)
+        {
+            var result = await _context.SalaryInfo
+                     .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
+
+            return result;
         }
 
         public async Task<PriceInfo> GetPriceInfoByCountry(string country)
-        {
+        {    
             var result = await _context.PriceInfo
-                .SingleOrDefaultAsync(x => x.Country == country);
+                     .SingleOrDefaultAsync(x => x.Country.Equals(country));          
+
+            return result;
+        }
+
+        public async Task<IEnumerable<string>> GetMajorCitiesByCountry(string country)
+        {
+            var result = await _context.PI_Rent
+                   .Where(x => x.Country.Equals(country))
+                   .Select(x => x.City)
+                   .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<PI_Rent> GetPI_RentByCity(string city)
+        {
+             var result = await _context.PI_Rent
+                     .SingleOrDefaultAsync(x => x.City.Equals(city));
+
+            return result;
+        }
+
+        public async Task<PI_Restaurant> GetPI_RestaurantByCity(string city)
+        {
+            var result = await _context.PI_Restaurant
+                    .SingleOrDefaultAsync(x => x.City.Equals(city));
+
+            return result;
+        }
+
+        public async Task<PI_Groceries> GetPI_GroceriesByCity(string city)
+        {
+            var result = await _context.PI_Groceries
+                        .SingleOrDefaultAsync(x => x.City.Equals(city));
+
+            return result;
+        }
+
+        public async Task<PI_Etc> GetPI_EtcByCity(string city)
+        {
+            var result = await _context.PI_Etc
+                     .SingleOrDefaultAsync(x => x.City.Equals(city));
 
             return result;
         }
@@ -44,10 +94,10 @@ namespace ExodusKorea.Data.Repositories
         public async Task<CountryInfo> GetCountryInfoByCountry(string country)
         {
             var result = await _context.CountryInfo
-                .SingleOrDefaultAsync(x => x.CountryName == country);
+                .SingleOrDefaultAsync(x => x.CountryInEng.Equals(country));
 
             return result;
-        }
+        }      
 
         // This is used when we know Hospital/Clinic doesn't send multiple ExamTypes per HL7 Message
         //public stp_GetWaitTimeAndCount GetWaitTimeAndCount(string code, string offset)

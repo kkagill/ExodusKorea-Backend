@@ -159,9 +159,13 @@ namespace ExodusKorea.API
             // Repositories
             services.AddScoped<IHomeRepository, HomeRepository>();
             services.AddScoped<ICardDetailRepository, CardDetailRepository>();
-            services.AddScoped<INewVideoRepository, NewVideoRepository>();
+            services.AddScoped<IVideoPostRepository, VideoPostRepository>();
             services.AddScoped<IVideoCommentRepository, VideoCommentRepository>();
             services.AddScoped<IVideoCommentReplyRepository, VideoCommentReplyRepository>();
+            services.AddScoped<IVideoPostLikeRepository, VideoPostLikeRepository>();
+            services.AddScoped<IVideoCommentLikeRepository, VideoCommentLikeRepository>();
+            services.AddScoped<IVideoCommentReplyLikeRepository, VideoCommentReplyLikeRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
             // Services            
             services.AddTransient<DbInitializer>();
             services.AddTransient<IMessageService, MessageService>();

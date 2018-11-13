@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ExodusKorea.Model.Entities
 {
@@ -9,6 +10,6 @@ namespace ExodusKorea.Model.Entities
         public decimal CostOfLivingIndex { get; set; }
         public decimal RentIndex { get; set; }
         public decimal GroceriesIndex { get; set; }
-        public decimal RestaurantPriceIndex { get; set; }   
+        public decimal RestaurantPriceIndex { get; set; }
     }
 }

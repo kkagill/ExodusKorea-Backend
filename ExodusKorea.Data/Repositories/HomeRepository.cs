@@ -25,11 +25,11 @@ namespace ExodusKorea.Data.Repositories
             _config = config;
         }  
 
-        public async Task<IEnumerable<NewVideo>> GetAllNewVideos()
+        public async Task<IEnumerable<VideoPost>> GetAllNewVideos()
         {
-            var twoWeeks = DateTime.Now.Date.AddDays(-14);
-            var result = await _context.NewVideos
-                .Where(x => x.UploadedDate >= twoWeeks)
+            //var twoWeeks = DateTime.Now.Date.AddDays(-14);
+            var result = await _context.VideoPosts
+                //.Where(x => x.UploadedDate >= twoWeeks)
                 .OrderByDescending(x => x.UploadedDate)
                 .ToListAsync();
 

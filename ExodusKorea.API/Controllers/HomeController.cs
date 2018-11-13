@@ -31,20 +31,20 @@ namespace ExodusKorea.API.Controllers
         [Route("new-videos")]
         public async Task<IActionResult> GetNewVideos()
         {
-            var allNewVideos = await _repository.GetAllNewVideos();
+            var allVideoPosts = await _repository.GetAllNewVideos();
 
-            if (allNewVideos == null)
+            if (allVideoPosts == null)
                 return NotFound();
 
-            var newVideosVM = Mapper.Map<IEnumerable<NewVideo>, IEnumerable<NewVideosVM>>(allNewVideos);
+            var allVideoVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);
             
-            foreach (var nv in newVideosVM)
-            {
-                var likes = await _youTube.GetYouTubeLikesByVideoId(nv.YouTubeVideoId);
-                nv.Likes = Convert.ToInt32(likes);
-            }
+            //foreach (var av in allVideoVM)
+            //{
+            //    var likes = await _youTube.GetYouTubeLikesByVideoId(av.YouTubeVideoId);
+            //    av.Likes = av.Likes + Convert.ToInt32(likes);
+            //}
 
-            return new OkObjectResult(newVideosVM);
+            return new OkObjectResult(allVideoVM);
         }
     }
 }

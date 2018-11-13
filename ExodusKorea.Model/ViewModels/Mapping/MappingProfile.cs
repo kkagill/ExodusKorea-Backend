@@ -11,11 +11,17 @@ namespace ExodusKorea.Model.ViewModels.Mapping
         {
             // Domain to ViewModel
             CreateMap<ApplicationUser, ApplicationUserVM>();
-            CreateMap<NewVideo, NewVideosVM>();
+            CreateMap<VideoPost, VideoPostVM>();
             CreateMap<CountryInfo, CountryInfoVM>();
+            CreateMap<SalaryInfo, SalaryInfoVM>();
+            CreateMap<PI_Etc, PI_EtcVM>();
+            CreateMap<PI_Restaurant, PI_RestaurantVM>();
+            CreateMap<PI_Rent, PI_RentVM>();
+            CreateMap<PI_Groceries, PI_GroceriesVM>();
+            CreateMap<Notification, NotificationVM>();
             CreateMap<VideoComment, VideoCommentVM>()             
                .ForMember(vm => vm.VideoCommentReplies, 
-               opt => opt.MapFrom(i => i.VideoCommentReplies.OrderByDescending(x => x.DateCreated)
+               opt => opt.MapFrom(vc => vc.VideoCommentReplies.OrderBy(vcr => vcr.DateCreated)
                .Select(vcr => new VideoCommentReplyVM
                {
                    VideoCommentReplyId = vcr.VideoCommentReplyId,
@@ -24,11 +30,13 @@ namespace ExodusKorea.Model.ViewModels.Mapping
                    Comment = vcr.Comment,
                    DateCreated = vcr.DateCreated,
                    DateUpdated = vcr.DateUpdated,
-                   Likes = vcr.Likes                   
+                   Likes = vcr.Likes,
+                   UserId = vcr.UserId,
+                   RepliedTo = vcr.RepliedTo
                })));
             // ViewModel to Domain
             CreateMap<ApplicationUserVM, ApplicationUser>();
-            CreateMap<NewVideosVM, NewVideo>();
+            CreateMap<VideoPostVM, VideoPost>();
             CreateMap<CountryInfoVM, CountryInfo>();
             CreateMap<VideoCommentVM, VideoComment>();
         }
