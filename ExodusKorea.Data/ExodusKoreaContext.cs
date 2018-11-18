@@ -22,6 +22,8 @@ namespace ExodusKorea.Data
         public DbSet<PI_Etc> PI_Etc { get; set; }
         public DbSet<SalaryInfo> SalaryInfo { get; set; }
         public DbSet<Notification> Notification { get; set; }
+        public DbSet<City> City { get; set; }
+        public DbSet<MinimumCostOfLiving> MinimumCostOfLiving { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +47,8 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<PI_Etc>().ToTable("PI_Etc");
             modelBuilder.Entity<SalaryInfo>().ToTable("SalaryInfo");
             modelBuilder.Entity<Notification>().ToTable("Notification");
+            modelBuilder.Entity<City>().ToTable("City");
+            modelBuilder.Entity<MinimumCostOfLiving>().ToTable("MinimumCostOfLiving");
         }
     }
 }

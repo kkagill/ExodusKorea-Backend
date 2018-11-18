@@ -9,6 +9,7 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class NotificationVM
     {
+        public long NotificationId { get; set; }
         public long VideoCommentId { get; set; }
         public long VideoCommentReplyId { get; set; }
         public int VideoPostId { get; set; }
@@ -17,5 +18,6 @@ namespace ExodusKorea.Model.ViewModels
         public string NickName { get; set; }
         public string Comment { get; set; }
         public DateTime DateCreated { get; set; }
+        public bool HasRead { get; set; }
     }
 }

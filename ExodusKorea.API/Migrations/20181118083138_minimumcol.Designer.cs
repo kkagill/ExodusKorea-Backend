@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181118083138_minimumcol")]
+    partial class minimumcol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,10 +160,6 @@ namespace ExodusKorea.API.Migrations
                     b.Property<decimal>("Food");
 
                     b.Property<decimal>("Internet");
-
-                    b.Property<string>("IpAddress");
-
-                    b.Property<string>("NickName");
 
                     b.Property<decimal>("Rent");
 

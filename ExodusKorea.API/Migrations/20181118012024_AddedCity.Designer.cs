@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181118012024_AddedCity")]
+    partial class AddedCity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,20 +74,6 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("ExodusKorea.Model.Entities.City", b =>
-                {
-                    b.Property<int>("CityId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Country");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("CityId");
-
-                    b.ToTable("City");
-                });
-
             modelBuilder.Entity("ExodusKorea.Model.Entities.CommentLike", b =>
                 {
                     b.Property<long>("VideoCommentId");
@@ -139,38 +126,6 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("CountryInfoId");
 
                     b.ToTable("CountryInfo");
-                });
-
-            modelBuilder.Entity("ExodusKorea.Model.Entities.MinimumCostOfLiving", b =>
-                {
-                    b.Property<int>("MinimumCostOfLivingId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Cell");
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("Country");
-
-                    b.Property<int>("CountryInfoId");
-
-                    b.Property<string>("Etc");
-
-                    b.Property<decimal>("Food");
-
-                    b.Property<decimal>("Internet");
-
-                    b.Property<string>("IpAddress");
-
-                    b.Property<string>("NickName");
-
-                    b.Property<decimal>("Rent");
-
-                    b.Property<decimal>("Transportation");
-
-                    b.HasKey("MinimumCostOfLivingId");
-
-                    b.ToTable("MinimumCostOfLiving");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.Notification", b =>

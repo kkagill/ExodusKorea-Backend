@@ -46,5 +46,27 @@ namespace ExodusKorea.API.Controllers
 
             return new OkObjectResult(allVideoVM);
         }
+
+        [HttpGet("{country}/videos-by-country", Name = "GetVideosByCountry")]
+        public async Task<IActionResult> GetVideosByCountry(string country)
+        {
+            var videos = await _repository.GetVideosByCountry(country);
+
+            if (videos == null)
+                return NotFound();
+
+            var random = new Random();
+            videos = videos.OrderBy(x => random.Next()).Take(4);
+
+            var randomVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(videos);
+
+            //foreach (var av in allVideoVM)
+            //{
+            //    var likes = await _youTube.GetYouTubeLikesByVideoId(av.YouTubeVideoId);
+            //    av.Likes = av.Likes + Convert.ToInt32(likes);
+            //}
+
+            return new OkObjectResult(randomVideosVM);
+        }
     }
 }

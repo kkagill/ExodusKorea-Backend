@@ -97,8 +97,32 @@ namespace ExodusKorea.Data.Repositories
                 .SingleOrDefaultAsync(x => x.CountryInEng.Equals(country));
 
             return result;
-        }      
+        }
 
+        public async Task<IEnumerable<City>> GetAllCitiesByCountry(string country)
+        {
+            var result = await _context.City
+                .Where(x => x.Country.Equals(country))
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<int> GetCountryIdByCountry(string country)
+        {
+            var result = await _context.CountryInfo
+                .SingleOrDefaultAsync(x => x.CountryInEng.Equals(country));
+                
+            return result.CountryInfoId;
+        }
+
+        public async Task<string> GetCityById(int city)
+        {
+            var result = await _context.City
+                .SingleOrDefaultAsync(x => x.CityId == city);
+
+            return result.Name;
+        }
         // This is used when we know Hospital/Clinic doesn't send multiple ExamTypes per HL7 Message
         //public stp_GetWaitTimeAndCount GetWaitTimeAndCount(string code, string offset)
         //{

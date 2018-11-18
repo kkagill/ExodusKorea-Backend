@@ -18,6 +18,7 @@ namespace ExodusKorea.Model.ViewModels
         public bool IsYouTubeComment { get; set; }
         public int VideoPostId { get; set; }
         public string UserId { get; set; }
+        public string Country { get; set; }
 
         public IEnumerable<VideoCommentReplyVM> VideoCommentReplies { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

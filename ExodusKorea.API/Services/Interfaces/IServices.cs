@@ -26,4 +26,10 @@ namespace ExodusKorea.API.Services.Interfaces
         Task<string> GetYouTubeLikesByVideoId(string videoId);
         Task<YouTubeCommentVM> GetYouTubeCommentsByVideoId(string videoId);
     }
+
+    public interface IClientIPService
+    {
+        string GetClientIP(bool tryUseXForwardHeader = true);
+        Task<string> GetCountryByIP(string ipAddress);
+    }
 }

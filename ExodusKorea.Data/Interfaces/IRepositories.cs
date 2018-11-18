@@ -7,6 +7,7 @@ namespace ExodusKorea.Data.Interfaces
     public interface IHomeRepository : IEntityBaseRepository<object>
     {
         Task<IEnumerable<VideoPost>> GetAllNewVideos();
+        Task<IEnumerable<VideoPost>> GetVideosByCountry(string country);
     }
 
     public interface ICardDetailRepository : IEntityBaseRepository<object>
@@ -20,6 +21,9 @@ namespace ExodusKorea.Data.Interfaces
         Task<PI_Restaurant> GetPI_RestaurantByCity(string city);
         Task<PI_Groceries> GetPI_GroceriesByCity(string city);
         Task<PI_Etc> GetPI_EtcByCity(string city);
+        Task<IEnumerable<City>> GetAllCitiesByCountry(string country);
+        Task<int> GetCountryIdByCountry(string country);
+        Task<string> GetCityById(int city);
     }
 
     public interface IVideoPostRepository : IEntityBaseRepository<VideoPost> { }
@@ -29,4 +33,5 @@ namespace ExodusKorea.Data.Interfaces
     public interface IVideoCommentLikeRepository : IEntityBaseRepository<CommentLike> { }
     public interface IVideoCommentReplyLikeRepository : IEntityBaseRepository<CommentReplyLike> { }
     public interface INotificationRepository : IEntityBaseRepository<Notification> { }
+    public interface IMinimumCostOfLivingRepository : IEntityBaseRepository<MinimumCostOfLiving> { }
 }

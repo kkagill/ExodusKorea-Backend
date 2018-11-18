@@ -19,6 +19,7 @@ namespace ExodusKorea.Model.ViewModels.Mapping
             CreateMap<PI_Rent, PI_RentVM>();
             CreateMap<PI_Groceries, PI_GroceriesVM>();
             CreateMap<Notification, NotificationVM>();
+            CreateMap<MinimumCostOfLiving, MinimumCostOfLivingVM>();
             CreateMap<VideoComment, VideoCommentVM>()             
                .ForMember(vm => vm.VideoCommentReplies, 
                opt => opt.MapFrom(vc => vc.VideoCommentReplies.OrderBy(vcr => vcr.DateCreated)
@@ -32,7 +33,8 @@ namespace ExodusKorea.Model.ViewModels.Mapping
                    DateUpdated = vcr.DateUpdated,
                    Likes = vcr.Likes,
                    UserId = vcr.UserId,
-                   RepliedTo = vcr.RepliedTo
+                   RepliedTo = vcr.RepliedTo,
+                   Country = vcr.Country
                })));
             // ViewModel to Domain
             CreateMap<ApplicationUserVM, ApplicationUser>();

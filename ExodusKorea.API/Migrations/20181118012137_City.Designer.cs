@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181118012137_City")]
+    partial class City
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,38 +140,6 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("CountryInfoId");
 
                     b.ToTable("CountryInfo");
-                });
-
-            modelBuilder.Entity("ExodusKorea.Model.Entities.MinimumCostOfLiving", b =>
-                {
-                    b.Property<int>("MinimumCostOfLivingId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Cell");
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("Country");
-
-                    b.Property<int>("CountryInfoId");
-
-                    b.Property<string>("Etc");
-
-                    b.Property<decimal>("Food");
-
-                    b.Property<decimal>("Internet");
-
-                    b.Property<string>("IpAddress");
-
-                    b.Property<string>("NickName");
-
-                    b.Property<decimal>("Rent");
-
-                    b.Property<decimal>("Transportation");
-
-                    b.HasKey("MinimumCostOfLivingId");
-
-                    b.ToTable("MinimumCostOfLiving");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.Notification", b =>

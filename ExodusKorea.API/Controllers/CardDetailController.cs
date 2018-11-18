@@ -29,8 +29,10 @@ namespace ExodusKorea.API.Controllers
         private readonly IVideoCommentReplyLikeRepository _vcrlRepository;
         private readonly IVideoPostRepository _vpRepository;
         private readonly INotificationRepository _nRepository;
+        private readonly IMinimumCostOfLivingRepository _mcolRepository;
         private readonly ICurrencyRatesService _currencyRate;
         private readonly IYouTubeService _youTube;
+        private readonly IClientIPService _clientIP;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public CardDetailController(ICardDetailRepository repository,
@@ -41,8 +43,10 @@ namespace ExodusKorea.API.Controllers
                                     IVideoCommentReplyLikeRepository vcrlRepository,                                 
                                     IVideoPostRepository vpRepository,
                                     INotificationRepository nRepository,
+                                    IMinimumCostOfLivingRepository mcolRepository,
                                     ICurrencyRatesService currencyRate,
                                     IYouTubeService youTube,
+                                    IClientIPService clientIP,
                                     UserManager<ApplicationUser> userManager)
         {
             _repository = repository;
@@ -53,8 +57,10 @@ namespace ExodusKorea.API.Controllers
             _vcrlRepository = vcrlRepository;
             _vpRepository = vpRepository;
             _nRepository = nRepository;
+            _mcolRepository = mcolRepository;
             _currencyRate = currencyRate;
             _youTube = youTube;
+            _clientIP = clientIP;
             _userManager = userManager;
         }
 
@@ -162,6 +168,90 @@ namespace ExodusKorea.API.Controllers
             }      
 
             return new OkObjectResult(priceInfoDetailVM);
+        }
+        #endregion
+
+        #region Minimum Cost of Living
+        [HttpGet]
+        [Route("{country}/cities-by-country", Name = "GetAllCitiesByCountry")]
+        public async Task<IActionResult> GetAllCitiesByCountry(string country)
+        {
+            if (string.IsNullOrWhiteSpace(country))
+                return NotFound();
+           
+            var cities = await _repository.GetAllCitiesByCountry(country);
+
+            if (cities == null)
+                return NotFound();
+
+            return new OkObjectResult(cities);
+        }
+
+        [HttpGet("{id}/minimum-col", Name = "GetMinimumCostOfLiving")]
+        public IActionResult GetMinimumCostOfLiving(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var minimumCoL = _mcolRepository.GetSingle(c => c.MinimumCostOfLivingId == id);
+
+            if (minimumCoL != null)
+            {
+                var minimumCoLVM = Mapper.Map<MinimumCostOfLiving, MinimumCostOfLivingVM>(minimumCoL);
+
+                return new OkObjectResult(minimumCoL);
+            }
+            else
+                return NotFound();
+        }
+
+        [HttpPost]
+        [Route("add-minimum-col")]
+        [Authorize]
+        public async Task<IActionResult> AddMinimumCoL([FromBody] MinimumCostOfLivingVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                string errorMsg = null;
+                foreach (var m in ModelState.Values)
+                    foreach (var msg in m.Errors)
+                        errorMsg = msg.ErrorMessage;
+                return BadRequest(errorMsg);
+            }
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var ipAddress = _clientIP.GetClientIP();
+            var country = await _clientIP.GetCountryByIP(ipAddress);
+
+            MinimumCostOfLiving newMinimumCostOfLiving = new MinimumCostOfLiving
+            {
+                CountryInfoId = await _repository.GetCountryIdByCountry(vm.Country),
+                Country = country == null ? null : SetCountryName(country.ToLower().Trim()),
+                City = vm.CityId == 0 ? vm.City : await _repository.GetCityById(vm.CityId),
+                Rent = vm.Rent,
+                Transportation = vm.Transportation,
+                Food = vm.Food,
+                Cell = vm.Cell,
+                Internet = vm.Internet,
+                Etc = vm.Etc,
+                IpAddress = ipAddress,
+                NickName = user.NickName
+            };
+
+            await _mcolRepository.AddAsync(newMinimumCostOfLiving);
+            await _mcolRepository.CommitAsync();
+
+            var minimumCostOfLivingVM = Mapper.Map<MinimumCostOfLiving, MinimumCostOfLivingVM>(newMinimumCostOfLiving);
+
+            return CreatedAtRoute("GetMinimumCostOfLiving", new
+            {
+                controller = "CardDetail",
+                id = newMinimumCostOfLiving.MinimumCostOfLivingId
+            }, null);
         }
         #endregion
 
@@ -274,13 +364,17 @@ namespace ExodusKorea.API.Controllers
             if (user == null)
                 return NotFound();
 
+            var ipAddress = _clientIP.GetClientIP();          
+            var country = await _clientIP.GetCountryByIP(ipAddress);
+
             VideoComment newVideoComment = new VideoComment
             {
                 Comment = vm.Comment,
                 DateCreated = DateTime.Now,
                 VideoPostId = vm.VideoPostId,
                 AuthorDisplayName = user.NickName.Trim(),
-                UserId = user.Id
+                UserId = user.Id,
+                Country = country == null ? null : SetCountryName(country.ToLower().Trim())
             };
 
             await _vcRepository.AddAsync(newVideoComment);
@@ -314,13 +408,17 @@ namespace ExodusKorea.API.Controllers
             if (user == null)
                 return NotFound();
 
+            var ipAddress = _clientIP.GetClientIP();
+            var country = await _clientIP.GetCountryByIP(ipAddress);
+
             VideoCommentReply newVideoCommentReply = new VideoCommentReply
             {
                 Comment = vm.Comment,
                 DateCreated = DateTime.Now,
                 VideoCommentId = vm.VideoCommentId,
                 AuthorDisplayName = user.NickName.Trim(),
-                UserId = user.Id
+                UserId = user.Id,
+                Country = country == null ? null : SetCountryName(country.ToLower().Trim())
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -354,6 +452,9 @@ namespace ExodusKorea.API.Controllers
             if (user == null)
                 return NotFound();
 
+            var ipAddress = _clientIP.GetClientIP();
+            var country = await _clientIP.GetCountryByIP(ipAddress);
+
             VideoCommentReply newVideoCommentReply = new VideoCommentReply
             {
                 Comment = vm.Comment,
@@ -361,7 +462,8 @@ namespace ExodusKorea.API.Controllers
                 VideoCommentId = vm.VideoCommentId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                RepliedTo = vm.AuthorDisplayName
+                RepliedTo = vm.AuthorDisplayName,
+                Country = country == null ? null : SetCountryName(country.ToLower().Trim())
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -724,6 +826,25 @@ namespace ExodusKorea.API.Controllers
         #endregion
 
         #region Notification
+        [HttpGet]
+        [Route("notifications-for-user", Name = "GetNotificationsForUser")]
+        [Authorize]
+        public async Task<IActionResult> GetNotificationsForUser()
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var notifications = _nRepository
+                .FindBy(nv => nv.UserId.Equals(user.Id) && nv.DateCreated >= DateTime.Now.Date.AddDays(-7));
+            var notificationsVM = Mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationVM>>(notifications);
+
+            notificationsVM = notificationsVM.OrderByDescending(x => x.DateCreated);
+
+            return new OkObjectResult(notificationsVM);
+        }
+
         [HttpGet("{id}/notification", Name = "GetNotification")]
         public IActionResult GetNotification(long? id)
         {
@@ -784,6 +905,27 @@ namespace ExodusKorea.API.Controllers
                 id = newNotification.NotificationId
             }, null);
         }
+
+        [HttpPut]
+        [Route("{id}/update-has-read")]
+        [Authorize]
+        public async Task<IActionResult> UpdateHasRead(long id)
+        {
+            if (id <= 0)
+                return NotFound();
+
+            var notification = _nRepository.GetSingle(n => n.NotificationId == id);
+
+            if (notification == null)
+                return NotFound();
+            else
+                notification.HasRead = true;
+
+            _nRepository.Update(notification);
+            await _nRepository.CommitAsync();
+
+            return new NoContentResult();
+        }
         #endregion
 
         #region Private Functions
@@ -815,7 +957,7 @@ namespace ExodusKorea.API.Controllers
                 result = "chevron-down";
 
             return result;
-        }
+        }      
 
         private string GetCountryInKorean(string country)
         {
@@ -828,6 +970,12 @@ namespace ExodusKorea.API.Controllers
                     break;
                 case "unitedstates":
                     countryKor = "미국";
+                    break;
+                case "australia":
+                    countryKor = "호주";
+                    break;
+                case "newzealand":
+                    countryKor = "뉴질랜드";
                     break;
             }
 
@@ -846,9 +994,41 @@ namespace ExodusKorea.API.Controllers
                 case "unitedstates":
                     baseCurrency = "USD";
                     break;
+                case "australia":
+                    baseCurrency = "AUD";
+                    break;
+                case "newzealand":
+                    baseCurrency = "NZD";
+                    break;
             }
 
             return baseCurrency;
+        }
+
+        private string SetCountryName(string country)
+        {
+            var countryFinal = "";
+
+            switch (country)
+            {
+                case "south korea":
+                    countryFinal = "southkorea";
+                    break;
+                case "canada":
+                    countryFinal = "canada";
+                    break;
+                case "united states":
+                    countryFinal = "unitedstates";
+                    break;
+                case "australia":
+                    countryFinal = "australia";
+                    break;
+                case "new zealand":
+                    countryFinal = "newzealand";
+                    break;
+            }
+
+            return countryFinal;
         }
         #endregion
     }

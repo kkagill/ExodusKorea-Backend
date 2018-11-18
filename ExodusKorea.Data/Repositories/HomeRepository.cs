@@ -34,8 +34,16 @@ namespace ExodusKorea.Data.Repositories
                 .ToListAsync();
 
             return result;
-        }      
+        }
 
+        public async Task<IEnumerable<VideoPost>> GetVideosByCountry(string country)
+        {
+            var result = await _context.VideoPosts
+                .Where(x => x.CountryInEng.Equals(country))
+                .ToListAsync();
+
+            return result;
+        }
 
         // This is used when we know Hospital/Clinic doesn't send multiple ExamTypes per HL7 Message
         //public stp_GetWaitTimeAndCount GetWaitTimeAndCount(string code, string offset)

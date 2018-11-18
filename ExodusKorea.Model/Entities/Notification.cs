@@ -14,5 +14,6 @@ namespace ExodusKorea.Model.Entities
         public string NickName { get; set; }
         public string Comment { get; set; }
         public DateTime DateCreated { get; set; }
+        public bool HasRead { get; set; }
     }
 }

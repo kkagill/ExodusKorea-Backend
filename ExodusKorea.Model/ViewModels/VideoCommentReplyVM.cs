@@ -17,6 +17,7 @@ namespace ExodusKorea.Model.ViewModels
         public int Likes { get; set; }
         public string UserId { get; set; }
         public string RepliedTo { get; set; }
+        public string Country { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

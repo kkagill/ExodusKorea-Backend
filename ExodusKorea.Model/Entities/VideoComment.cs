@@ -12,6 +12,7 @@ namespace ExodusKorea.Model.Entities
         public DateTime? DateUpdated { get; set; }
         public int Likes { get; set; }
         public string UserId { get; set; }
+        public string Country { get; set; }
 
         public int VideoPostId { get; set; }
         public VideoPost VideoPost { get; set; }
