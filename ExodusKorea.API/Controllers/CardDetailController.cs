@@ -171,7 +171,49 @@ namespace ExodusKorea.API.Controllers
         }
         #endregion
 
-        #region Minimum Cost of Living
+        #region Minimum Cost of Living Info
+        [HttpGet]
+        [Route("{videoPostId}/minimum-col-info", Name = "MinimumCoLInfo")]
+        public async Task<IActionResult> MinimumCoLInfo(int videoPostId)
+        {
+            if (videoPostId <= 0)
+                return NotFound();
+
+            var video = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId);
+
+            if (video == null)
+                return NotFound();
+
+            var countryInfoId = await _repository.GetCountryIdByCountry(video.CountryInEng);
+            var minimumCoLs = _mcolRepository.FindBy(mcol => mcol.CountryInfoId == countryInfoId);
+            var cities = await _repository.GetAllCitiesByCountry(video.Country);
+            var minimumCostOfLivingInfoVM = new MinimumCostOfLivingInfoVM
+            {
+                Country = video.Country,
+                CountryInEng = video.CountryInEng,
+                BaseCurrency = GetBaseCurrency(video.CountryInEng),
+                CityMinimums = CalculateCityMinimums(cities.ToList(), minimumCoLs.ToList())
+            };
+
+            return new OkObjectResult(minimumCostOfLivingInfoVM);
+        }
+
+        [HttpGet]
+        [Route("{country}/minimum-col-detail", Name = "GetMinimumCostOfLivingDetail")]
+        public async Task<IActionResult> GetMinimumCostOfLivingDetail(string country)
+        {
+            if (string.IsNullOrWhiteSpace(country))
+                return NotFound();
+
+            var countryInfoId = await _repository.GetCountryIdByCountry(country);
+            var minimumCols = _mcolRepository.FindBy(mcol => mcol.CountryInfoId == countryInfoId);          
+            var minimumColsVM = Mapper.Map<IEnumerable<MinimumCostOfLiving>, IEnumerable<MinimumCostOfLivingVM>>(minimumCols);
+
+            minimumColsVM = minimumColsVM.OrderByDescending(x => x.DateCreated);
+
+            return new OkObjectResult(minimumColsVM);
+        }
+
         [HttpGet]
         [Route("{country}/cities-by-country", Name = "GetAllCitiesByCountry")]
         public async Task<IActionResult> GetAllCitiesByCountry(string country)
@@ -193,7 +235,7 @@ namespace ExodusKorea.API.Controllers
             if (id == null)
                 return NotFound();
 
-            var minimumCoL = _mcolRepository.GetSingle(c => c.MinimumCostOfLivingId == id);
+            var minimumCoL = _mcolRepository.GetSingle(mcol => mcol.MinimumCostOfLivingId == id);
 
             if (minimumCoL != null)
             {
@@ -230,6 +272,7 @@ namespace ExodusKorea.API.Controllers
             MinimumCostOfLiving newMinimumCostOfLiving = new MinimumCostOfLiving
             {
                 CountryInfoId = await _repository.GetCountryIdByCountry(vm.Country),
+                CityId = vm.CityId > 0 ? vm.CityId : 0,
                 Country = country == null ? null : SetCountryName(country.ToLower().Trim()),
                 City = vm.CityId == 0 ? vm.City : await _repository.GetCityById(vm.CityId),
                 Rent = vm.Rent,
@@ -239,7 +282,9 @@ namespace ExodusKorea.API.Controllers
                 Internet = vm.Internet,
                 Etc = vm.Etc,
                 IpAddress = ipAddress,
-                NickName = user.NickName
+                NickName = user.NickName,
+                Total = vm.Rent + vm.Transportation + vm.Food + vm.Cell + vm.Internet,
+                DateCreated = DateTime.Now
             };
 
             await _mcolRepository.AddAsync(newMinimumCostOfLiving);
@@ -1003,7 +1048,7 @@ namespace ExodusKorea.API.Controllers
             }
 
             return baseCurrency;
-        }
+        }      
 
         private string SetCountryName(string country)
         {
@@ -1029,6 +1074,27 @@ namespace ExodusKorea.API.Controllers
             }
 
             return countryFinal;
+        }
+
+        private List<CityMinimumVM> CalculateCityMinimums(List<City> cities, List<MinimumCostOfLiving> mcol)
+        {
+            var random = new Random();
+            var randomCities = cities.OrderBy(x => random.Next()).Take(2).ToList();
+            var cityMinimumVM = new List<CityMinimumVM>();
+
+            foreach (var c in randomCities)
+            {
+                var col = mcol.Where(x => x.CityId == c.CityId).ToList();
+                var count = col.Count;
+
+                cityMinimumVM.Add(new CityMinimumVM
+                {
+                    City = c.Name,
+                    AvgCostOfLiving = count == 0 ? 0 : col.Sum(x => x.Total) / count
+                });
+            }
+
+            return cityMinimumVM;
         }
         #endregion
     }

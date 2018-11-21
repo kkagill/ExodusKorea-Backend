@@ -19,5 +19,7 @@ namespace ExodusKorea.Model.ViewModels
         public decimal Internet { get; set; }
         public string Etc { get; set; }
         public string NickName { get; set; }
+        public decimal Total { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }

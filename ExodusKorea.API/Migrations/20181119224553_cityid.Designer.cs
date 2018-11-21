@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181119224553_cityid")]
+    partial class cityid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,8 +170,6 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("NickName");
 
                     b.Property<decimal>("Rent");
-
-                    b.Property<decimal>("Total");
 
                     b.Property<decimal>("Transportation");
 
