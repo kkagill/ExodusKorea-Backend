@@ -24,6 +24,8 @@ namespace ExodusKorea.Data
         public DbSet<Notification> Notification { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<MinimumCostOfLiving> MinimumCostOfLiving { get; set; }
+        public DbSet<NewsDetail> NewsDetail { get; set; }
+        public DbSet<News> News { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +51,8 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<Notification>().ToTable("Notification");
             modelBuilder.Entity<City>().ToTable("City");
             modelBuilder.Entity<MinimumCostOfLiving>().ToTable("MinimumCostOfLiving");
+            modelBuilder.Entity<NewsDetail>().ToTable("NewsDetail");
+            modelBuilder.Entity<News>().ToTable("News");
         }
     }
 }

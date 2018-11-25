@@ -18,13 +18,46 @@ namespace ExodusKorea.API.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeRepository _repository;
+        private readonly ICurrencyRatesService _currencyRate;
         private readonly IYouTubeService _youTube;
 
         public HomeController(IHomeRepository repository,
+                              ICurrencyRatesService currencyRate,
                               IYouTubeService youTube)
         {
             _repository = repository;
+            _currencyRate = currencyRate;
             _youTube = youTube;
+        }
+
+        [HttpGet]
+        [Route("recommended-video")]
+        public async Task<IActionResult> GetRecommendedVideo()
+        {
+            var allVideoPosts = await _repository.GetAllNewVideos();
+
+            if (allVideoPosts == null)
+                return NotFound();
+
+            var random = new Random();
+            var convertedToList = allVideoPosts.OrderBy(x => random.Next()).Take(1).ToList();
+            var recommendedVideoVM = Mapper.Map<VideoPost, VideoPostVM>(convertedToList[0]);         
+
+            return new OkObjectResult(recommendedVideoVM);
+        }
+
+        [HttpGet]
+        [Route("main-currencies")]
+        public async Task<IActionResult> GetMainCurrencies()
+        {
+            var mainCurrencies = await _currencyRate.GetMainCurrencies();
+
+            if (mainCurrencies == null)
+                return NotFound();
+
+            mainCurrencies.Today = DateTime.Now;
+
+            return new OkObjectResult(mainCurrencies);
         }
 
         [HttpGet]
@@ -36,13 +69,7 @@ namespace ExodusKorea.API.Controllers
             if (allVideoPosts == null)
                 return NotFound();
 
-            var allVideoVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);
-            
-            //foreach (var av in allVideoVM)
-            //{
-            //    var likes = await _youTube.GetYouTubeLikesByVideoId(av.YouTubeVideoId);
-            //    av.Likes = av.Likes + Convert.ToInt32(likes);
-            //}
+            var allVideoVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts); 
 
             return new OkObjectResult(allVideoVM);
         }
@@ -59,12 +86,6 @@ namespace ExodusKorea.API.Controllers
             videos = videos.OrderBy(x => random.Next()).Take(4);
 
             var randomVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(videos);
-
-            //foreach (var av in allVideoVM)
-            //{
-            //    var likes = await _youTube.GetYouTubeLikesByVideoId(av.YouTubeVideoId);
-            //    av.Likes = av.Likes + Convert.ToInt32(likes);
-            //}
 
             return new OkObjectResult(randomVideosVM);
         }

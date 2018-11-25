@@ -34,4 +34,6 @@ namespace ExodusKorea.Data.Interfaces
     public interface IVideoCommentReplyLikeRepository : IEntityBaseRepository<CommentReplyLike> { }
     public interface INotificationRepository : IEntityBaseRepository<Notification> { }
     public interface IMinimumCostOfLivingRepository : IEntityBaseRepository<MinimumCostOfLiving> { }
+    public interface INewsRepository : IEntityBaseRepository<News> { }
+    public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }
 }

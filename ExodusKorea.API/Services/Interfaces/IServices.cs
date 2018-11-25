@@ -8,6 +8,7 @@ namespace ExodusKorea.API.Services.Interfaces
 {
     public interface ICurrencyRatesService
     {
+        Task<MainCurrenciesVM> GetMainCurrencies();
         Task<string> GetKRWRateByCountry(string baseCurrency);
     }
 
@@ -30,6 +31,6 @@ namespace ExodusKorea.API.Services.Interfaces
     public interface IClientIPService
     {
         string GetClientIP(bool tryUseXForwardHeader = true);
-        Task<string> GetCountryByIP(string ipAddress);
+        Task<string> GetCountryCodeByIP(string ipAddress);
     }
 }

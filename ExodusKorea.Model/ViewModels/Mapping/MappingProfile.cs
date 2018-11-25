@@ -20,6 +20,8 @@ namespace ExodusKorea.Model.ViewModels.Mapping
             CreateMap<PI_Groceries, PI_GroceriesVM>();
             CreateMap<Notification, NotificationVM>();
             CreateMap<MinimumCostOfLiving, MinimumCostOfLivingVM>();
+            CreateMap<News, NewsVM>();
+            CreateMap<NewsDetail, NewsDetailVM>();
             CreateMap<VideoComment, VideoCommentVM>()             
                .ForMember(vm => vm.VideoCommentReplies, 
                opt => opt.MapFrom(vc => vc.VideoCommentReplies.OrderBy(vcr => vcr.DateCreated)

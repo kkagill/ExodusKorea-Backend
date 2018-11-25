@@ -64,7 +64,7 @@ namespace ExodusKorea.API.Services
             return default(T);
         }
 
-        public async Task<string> GetCountryByIP(string ipAddress)
+        public async Task<string> GetCountryCodeByIP(string ipAddress)
         {
             var country = "";
             var url = "http://api.ipstack.com/" + ipAddress + "?access_key=afba48e8935e8f0d723c349c8b09884c";
@@ -78,7 +78,7 @@ namespace ExodusKorea.API.Services
                     {
                         string json = reader.ReadToEnd();
                         var obj = JObject.Parse(json);
-                        country = (string)obj["country_name"];                    
+                        country = (string)obj["country_code"];                    
                     }
                 }
             }

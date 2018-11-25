@@ -267,13 +267,13 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();
-            var country = await _clientIP.GetCountryByIP(ipAddress);
+            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             MinimumCostOfLiving newMinimumCostOfLiving = new MinimumCostOfLiving
             {
                 CountryInfoId = await _repository.GetCountryIdByCountry(vm.Country),
                 CityId = vm.CityId > 0 ? vm.CityId : 0,
-                Country = country == null ? null : SetCountryName(country.ToLower().Trim()),
+                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim()),
                 City = vm.CityId == 0 ? vm.City : await _repository.GetCityById(vm.CityId),
                 Rent = vm.Rent,
                 Transportation = vm.Transportation,
@@ -410,7 +410,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();          
-            var country = await _clientIP.GetCountryByIP(ipAddress);
+            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             VideoComment newVideoComment = new VideoComment
             {
@@ -419,7 +419,7 @@ namespace ExodusKorea.API.Controllers
                 VideoPostId = vm.VideoPostId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                Country = country == null ? null : SetCountryName(country.ToLower().Trim())
+                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim())
             };
 
             await _vcRepository.AddAsync(newVideoComment);
@@ -454,7 +454,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();
-            var country = await _clientIP.GetCountryByIP(ipAddress);
+            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             VideoCommentReply newVideoCommentReply = new VideoCommentReply
             {
@@ -463,7 +463,7 @@ namespace ExodusKorea.API.Controllers
                 VideoCommentId = vm.VideoCommentId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                Country = country == null ? null : SetCountryName(country.ToLower().Trim())
+                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim())
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -498,7 +498,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();
-            var country = await _clientIP.GetCountryByIP(ipAddress);
+            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             VideoCommentReply newVideoCommentReply = new VideoCommentReply
             {
@@ -508,7 +508,7 @@ namespace ExodusKorea.API.Controllers
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
                 RepliedTo = vm.AuthorDisplayName,
-                Country = country == null ? null : SetCountryName(country.ToLower().Trim())
+                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim())
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -1050,25 +1050,25 @@ namespace ExodusKorea.API.Controllers
             return baseCurrency;
         }      
 
-        private string SetCountryName(string country)
+        private string SetCountryName(string countryCode)
         {
             var countryFinal = "";
 
-            switch (country)
+            switch (countryCode)
             {
-                case "south korea":
+                case "kr":
                     countryFinal = "southkorea";
                     break;
-                case "canada":
+                case "ca":
                     countryFinal = "canada";
                     break;
-                case "united states":
+                case "us":
                     countryFinal = "unitedstates";
                     break;
-                case "australia":
+                case "au":
                     countryFinal = "australia";
                     break;
-                case "new zealand":
+                case "nz":
                     countryFinal = "newzealand";
                     break;
             }

@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181122225300_newsdetail")]
+    partial class newsdetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,46 +178,6 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("MinimumCostOfLivingId");
 
                     b.ToTable("MinimumCostOfLiving");
-                });
-
-            modelBuilder.Entity("ExodusKorea.Model.Entities.News", b =>
-                {
-                    b.Property<int>("NewsId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Topic");
-
-                    b.HasKey("NewsId");
-
-                    b.ToTable("News");
-                });
-
-            modelBuilder.Entity("ExodusKorea.Model.Entities.NewsDetail", b =>
-                {
-                    b.Property<int>("NewsDetailId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Body");
-
-                    b.Property<string>("Country");
-
-                    b.Property<string>("Creator");
-
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<string>("Department");
-
-                    b.Property<int>("NewsId");
-
-                    b.Property<string>("Subject");
-
-                    b.Property<string>("Thumbnail");
-
-                    b.Property<int>("Views");
-
-                    b.HasKey("NewsDetailId");
-
-                    b.ToTable("NewsDetail");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.Notification", b =>
