@@ -26,6 +26,15 @@ namespace ExodusKorea.Data.Interfaces
         Task<string> GetCityById(int city);
     }
 
+    public interface ICountryInfoRepository : IEntityBaseRepository<object>
+    {
+        //Task<PromisingField> GetPromisingFieldByCountry(string country);
+        IEnumerable<PromisingField> GetAllPromisingFields();
+        IEnumerable<SettlementGuide> GetAllSettlementGuides();
+        IEnumerable<LivingCondition> GetAllLivingConditions();
+        IEnumerable<ImmigrationVisa> GetAllImmigrationVisas();
+    }
+
     public interface IVideoPostRepository : IEntityBaseRepository<VideoPost> { }
     public interface IVideoCommentRepository : IEntityBaseRepository<VideoComment> {}
     public interface IVideoCommentReplyRepository : IEntityBaseRepository<VideoCommentReply> { }
@@ -35,5 +44,5 @@ namespace ExodusKorea.Data.Interfaces
     public interface INotificationRepository : IEntityBaseRepository<Notification> { }
     public interface IMinimumCostOfLivingRepository : IEntityBaseRepository<MinimumCostOfLiving> { }
     public interface INewsRepository : IEntityBaseRepository<News> { }
-    public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }
+    public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }   
 }

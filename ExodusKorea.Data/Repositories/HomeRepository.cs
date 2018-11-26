@@ -27,10 +27,11 @@ namespace ExodusKorea.Data.Repositories
 
         public async Task<IEnumerable<VideoPost>> GetAllNewVideos()
         {
-            //var twoWeeks = DateTime.Now.Date.AddDays(-14);
+            var twoWeeks = DateTime.Now.Date.AddDays(-14);
             var result = await _context.VideoPosts
-                //.Where(x => x.UploadedDate >= twoWeeks)
+                .Where(x => x.UploadedDate >= twoWeeks)
                 .OrderByDescending(x => x.UploadedDate)
+                .Take(8)
                 .ToListAsync();
 
             return result;

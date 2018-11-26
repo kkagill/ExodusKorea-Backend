@@ -100,5 +100,41 @@ namespace ExodusKorea.API.Controllers
 
             return new OkObjectResult(newsDetailsVM);
         }
+
+        [HttpPut]
+        [Route("{newsDetailId}/update-views-count")]
+        public async Task<IActionResult> UpdateViewsCount(int newsDetailId)
+        {
+            if (newsDetailId <= 0)
+                return NotFound();
+
+            var newsDetail = _ndRepository.GetSingle(vc => vc.NewsDetailId == newsDetailId);
+
+            if (newsDetail == null)
+                return NotFound();
+            else
+                newsDetail.Views += 1;
+
+            _ndRepository.Update(newsDetail);
+            await _ndRepository.CommitAsync();
+
+            return new NoContentResult();
+        }
+
+        [HttpGet]
+        [Route("popular-news")]
+        public IActionResult GetPopularNews()
+        {
+            var allNewsDetails = _ndRepository.GetAll();
+            
+            if (allNewsDetails == null)
+                return NotFound();
+
+            var allNewsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(allNewsDetails);
+            allNewsDetailsVM = allNewsDetailsVM.OrderByDescending(x => x.Views);
+            allNewsDetailsVM = allNewsDetailsVM.Take(5);
+
+            return new OkObjectResult(allNewsDetailsVM);
+        }
     }
 }
