@@ -25,15 +25,34 @@ namespace ExodusKorea.Data.Repositories
             _config = config;
         }
 
-        public async Task<string> GetCountryById(int videoPostId)
+        public async Task<int> GetCountryIdByVideoPostId(int videoPostId)
         {
             var result = await _context.VideoPosts
+                .Include(x => x.Country)
                 .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
 
-            return result.CountryInEng;
+            return result.CountryId;
         }
 
-        public async Task<SalaryInfo> GetSalaryInfoById(int videoPostId)
+        public async Task<Country> GetCountryByVideoPostId(int videoPostId)
+        {
+            var result = await _context.VideoPosts
+                .Include(x => x.Country)
+                .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
+
+            return result.Country;
+        }
+
+        public async Task<VideoPost> GetVideoPostByVideoPostId(int videoPostId)
+        {
+            var result = await _context.VideoPosts
+                .Include(x => x.Country)
+                .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
+
+            return result;
+        }
+
+        public async Task<SalaryInfo> GetSalaryInfoByVideoPostId(int videoPostId)
         {
             var result = await _context.SalaryInfo
                      .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
@@ -47,6 +66,14 @@ namespace ExodusKorea.Data.Repositories
                      .SingleOrDefaultAsync(x => x.Country.Equals(country));          
 
             return result;
+        }
+
+        public async Task<string> GetBaseCurrencyByCountry(string country)
+        {
+            var result = await _context.Country
+                .SingleOrDefaultAsync(x => x.NameEN.Equals(country));
+
+            return result.BaseCurrency;
         }
 
         public async Task<IEnumerable<string>> GetMajorCitiesByCountry(string country)
@@ -78,7 +105,7 @@ namespace ExodusKorea.Data.Repositories
         public async Task<PI_Groceries> GetPI_GroceriesByCity(string city)
         {
             var result = await _context.PI_Groceries
-                        .SingleOrDefaultAsync(x => x.City.Equals(city));
+                .SingleOrDefaultAsync(x => x.City.Equals(city));
 
             return result;
         }
@@ -86,7 +113,24 @@ namespace ExodusKorea.Data.Repositories
         public async Task<PI_Etc> GetPI_EtcByCity(string city)
         {
             var result = await _context.PI_Etc
-                     .SingleOrDefaultAsync(x => x.City.Equals(city));
+                .SingleOrDefaultAsync(x => x.City.Equals(city));
+
+            return result;
+        }
+
+        public async Task<CountryInfo> GetCountryInfoByCountryId(int countryId)
+        {
+            var result = await _context.CountryInfo
+                .SingleOrDefaultAsync(x => x.CountryId == countryId);
+
+            return result;
+        }     
+
+        public async Task<IEnumerable<City>> GetAllCitiesByCountryId(int countryId)
+        {
+            var result = await _context.City
+                .Where(x => x.CountryId == countryId)
+                .ToListAsync();
 
             return result;
         }
@@ -94,25 +138,16 @@ namespace ExodusKorea.Data.Repositories
         public async Task<CountryInfo> GetCountryInfoByCountry(string country)
         {
             var result = await _context.CountryInfo
-                .SingleOrDefaultAsync(x => x.CountryInEng.Equals(country));
-
-            return result;
-        }     
-
-        public async Task<IEnumerable<City>> GetAllCitiesByCountry(string country)
-        {
-            var result = await _context.City
-                .Where(x => x.Country.Equals(country))
-                .ToListAsync();
-
+                .SingleOrDefaultAsync(x => x.Country.NameEN.Equals(country));
+                
             return result;
         }
 
-        public async Task<int> GetCountryIdByCountry(string country)
+        public async Task<int> GetCountryInfoIdByCountry(string country)
         {
             var result = await _context.CountryInfo
-                .SingleOrDefaultAsync(x => x.CountryInEng.Equals(country));
-                
+                .SingleOrDefaultAsync(x => x.Country.NameEN.Equals(country));
+
             return result.CountryInfoId;
         }
 

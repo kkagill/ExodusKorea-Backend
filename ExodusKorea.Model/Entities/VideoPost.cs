@@ -11,9 +11,9 @@ namespace ExodusKorea.Model.Entities
         public string Title { get; set; }
         public int Likes { get; set; }
         public string YouTubeVideoId { get; set; }
-        public string Country { get; set; }
-        public string CountryInEng { get; set; }
 
+        public int CountryId { get; set; }
+        public Country Country { get; set; }
         public ICollection<VideoPostLike> VideoPostLikes { get; set; }
     }
 }

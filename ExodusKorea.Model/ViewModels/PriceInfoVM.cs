@@ -9,8 +9,8 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class PriceInfoVM
     {
-        public string Country { get; set; }
-        public string CountryInEng { get; set; }
+        public string CountryKR { get; set; }
+        public string CountryEN { get; set; }
         public string CostOfLiving { get; set; }
         public string CostOfLivingIcon { get; set; }
         public string Rent { get; set; }

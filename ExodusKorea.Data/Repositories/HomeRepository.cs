@@ -29,6 +29,7 @@ namespace ExodusKorea.Data.Repositories
         {
             var twoWeeks = DateTime.Now.Date.AddDays(-14);
             var result = await _context.VideoPosts
+                .Include(x => x.Country)
                 .Where(x => x.UploadedDate >= twoWeeks)
                 .OrderByDescending(x => x.UploadedDate)
                 .Take(8)
@@ -37,10 +38,18 @@ namespace ExodusKorea.Data.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<VideoPost>> GetVideosByCountry(string country)
+        public async Task<IEnumerable<VideoPost>> GetAllVideos()
         {
             var result = await _context.VideoPosts
-                .Where(x => x.CountryInEng.Equals(country))
+                .Include(x => x.Country)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Country>> GetAllCountries()
+        {
+            var result = await _context.Country               
                 .ToListAsync();
 
             return result;

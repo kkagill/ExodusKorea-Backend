@@ -50,23 +50,126 @@ namespace ExodusKorea.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CountryInfo",
+                name: "Country",
                 columns: table => new
                 {
-                    CountryInfoId = table.Column<int>(nullable: false)
+                    CountryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CapitalCity = table.Column<string>(nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    CountryInEng = table.Column<string>(nullable: true),
-                    Currency = table.Column<string>(nullable: true),
-                    Languages = table.Column<string>(nullable: true),
-                    MajorCities = table.Column<string>(nullable: true),
-                    PerCapitaGDP = table.Column<string>(nullable: true),
-                    Population = table.Column<string>(nullable: true)
+                    NameEN = table.Column<string>(nullable: true),
+                    NameKR = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CountryInfo", x => x.CountryInfoId);
+                    table.PrimaryKey("PK_Country", x => x.CountryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ImmigrationVisa",
+                columns: table => new
+                {
+                    ImmigrationVisaId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Content = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImmigrationVisa", x => x.ImmigrationVisaId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LivingCondition",
+                columns: table => new
+                {
+                    LivingConditionId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Content = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LivingCondition", x => x.LivingConditionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MinimumCostOfLiving",
+                columns: table => new
+                {
+                    MinimumCostOfLivingId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Cell = table.Column<decimal>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    CityId = table.Column<int>(nullable: false),
+                    Country = table.Column<string>(nullable: true),
+                    CountryInfoId = table.Column<int>(nullable: false),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    Etc = table.Column<string>(nullable: true),
+                    Food = table.Column<decimal>(nullable: false),
+                    Internet = table.Column<decimal>(nullable: false),
+                    IpAddress = table.Column<string>(nullable: true),
+                    NickName = table.Column<string>(nullable: true),
+                    Rent = table.Column<decimal>(nullable: false),
+                    Total = table.Column<decimal>(nullable: false),
+                    Transportation = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MinimumCostOfLiving", x => x.MinimumCostOfLivingId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "News",
+                columns: table => new
+                {
+                    NewsId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Topic = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_News", x => x.NewsId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NewsDetail",
+                columns: table => new
+                {
+                    NewsDetailId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Body = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    Creator = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    Department = table.Column<string>(nullable: true),
+                    NewsId = table.Column<int>(nullable: false),
+                    Subject = table.Column<string>(nullable: true),
+                    Thumbnail = table.Column<string>(nullable: true),
+                    Views = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsDetail", x => x.NewsDetailId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    NotificationId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Comment = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    HasRead = table.Column<bool>(nullable: false),
+                    NickName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    VideoCommentId = table.Column<long>(nullable: false),
+                    VideoCommentReplyId = table.Column<long>(nullable: false),
+                    VideoPostId = table.Column<int>(nullable: false),
+                    YouTubeVideoId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.NotificationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,22 +222,51 @@ namespace ExodusKorea.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoPost",
+                name: "PromisingField",
                 columns: table => new
                 {
-                    VideoPostId = table.Column<int>(nullable: false)
+                    PromisingFieldId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Country = table.Column<string>(nullable: true),
-                    CountryInEng = table.Column<string>(nullable: true),
-                    Likes = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    UploadedDate = table.Column<DateTime>(nullable: false),
-                    Uploader = table.Column<string>(nullable: true),
-                    YouTubeVideoId = table.Column<string>(nullable: true)
+                    Content = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideoPost", x => x.VideoPostId);
+                    table.PrimaryKey("PK_PromisingField", x => x.PromisingFieldId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SalaryInfo",
+                columns: table => new
+                {
+                    SalaryInfoId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Country = table.Column<string>(nullable: true),
+                    Currency = table.Column<string>(nullable: true),
+                    High = table.Column<decimal>(nullable: false),
+                    IsDisplayable = table.Column<bool>(nullable: false),
+                    Low = table.Column<decimal>(nullable: false),
+                    Median = table.Column<decimal>(nullable: false),
+                    Occupation = table.Column<string>(nullable: true),
+                    VideoPostId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalaryInfo", x => x.SalaryInfoId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SettlementGuide",
+                columns: table => new
+                {
+                    SettlementGuideId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Content = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SettlementGuide", x => x.SettlementGuideId);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,6 +376,76 @@ namespace ExodusKorea.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "City",
+                columns: table => new
+                {
+                    CityId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CountryId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_City", x => x.CityId);
+                    table.ForeignKey(
+                        name: "FK_City_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CountryInfo",
+                columns: table => new
+                {
+                    CountryInfoId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CapitalCity = table.Column<string>(nullable: true),
+                    CountryId = table.Column<int>(nullable: false),
+                    CountryLink = table.Column<string>(nullable: true),
+                    Currency = table.Column<string>(nullable: true),
+                    Languages = table.Column<string>(nullable: true),
+                    MajorCities = table.Column<string>(nullable: true),
+                    PerCapitaGDP = table.Column<string>(nullable: true),
+                    Population = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CountryInfo", x => x.CountryInfoId);
+                    table.ForeignKey(
+                        name: "FK_CountryInfo_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoPost",
+                columns: table => new
+                {
+                    VideoPostId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CountryId = table.Column<int>(nullable: false),
+                    Likes = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    UploadedDate = table.Column<DateTime>(nullable: false),
+                    Uploader = table.Column<string>(nullable: true),
+                    YouTubeVideoId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoPost", x => x.VideoPostId);
+                    table.ForeignKey(
+                        name: "FK_VideoPost_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
@@ -267,6 +469,108 @@ namespace ExodusKorea.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PI_Etc",
+                columns: table => new
+                {
+                    PI_EtcId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Bus = table.Column<decimal>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    Gas = table.Column<decimal>(nullable: false),
+                    Internet = table.Column<decimal>(nullable: false),
+                    PriceInfoId = table.Column<int>(nullable: false),
+                    Subway = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PI_Etc", x => x.PI_EtcId);
+                    table.ForeignKey(
+                        name: "FK_PI_Etc_PriceInfo_PriceInfoId",
+                        column: x => x.PriceInfoId,
+                        principalTable: "PriceInfo",
+                        principalColumn: "PriceInfoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PI_Groceries",
+                columns: table => new
+                {
+                    PI_GroceriesId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Apple = table.Column<decimal>(nullable: false),
+                    ChickenBreasts = table.Column<decimal>(nullable: false),
+                    Cigarettes = table.Column<decimal>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    Eggs = table.Column<decimal>(nullable: false),
+                    Milk = table.Column<decimal>(nullable: false),
+                    Potatoes = table.Column<decimal>(nullable: false),
+                    PriceInfoId = table.Column<int>(nullable: false),
+                    Water = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PI_Groceries", x => x.PI_GroceriesId);
+                    table.ForeignKey(
+                        name: "FK_PI_Groceries_PriceInfo_PriceInfoId",
+                        column: x => x.PriceInfoId,
+                        principalTable: "PriceInfo",
+                        principalColumn: "PriceInfoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PI_Rent",
+                columns: table => new
+                {
+                    PI_RentId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    OneBedRoomCenter = table.Column<decimal>(nullable: false),
+                    OneBedRoomOutside = table.Column<decimal>(nullable: false),
+                    PriceInfoId = table.Column<int>(nullable: false),
+                    TwoBedRoomCenter = table.Column<decimal>(nullable: false),
+                    TwoBedRoomOutside = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PI_Rent", x => x.PI_RentId);
+                    table.ForeignKey(
+                        name: "FK_PI_Rent_PriceInfo_PriceInfoId",
+                        column: x => x.PriceInfoId,
+                        principalTable: "PriceInfo",
+                        principalColumn: "PriceInfoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PI_Restaurant",
+                columns: table => new
+                {
+                    PI_RestaurantId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BigMacMeal = table.Column<decimal>(nullable: false),
+                    Cappuccino = table.Column<decimal>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    MealPerOne = table.Column<decimal>(nullable: false),
+                    PriceInfoId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PI_Restaurant", x => x.PI_RestaurantId);
+                    table.ForeignKey(
+                        name: "FK_PI_Restaurant_PriceInfo_PriceInfoId",
+                        column: x => x.PriceInfoId,
+                        principalTable: "PriceInfo",
+                        principalColumn: "PriceInfoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VideoComment",
                 columns: table => new
                 {
@@ -274,9 +578,11 @@ namespace ExodusKorea.API.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuthorDisplayName = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateUpdated = table.Column<DateTime>(nullable: true),
                     Likes = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
                     VideoPostId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -379,9 +685,12 @@ namespace ExodusKorea.API.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuthorDisplayName = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateUpdated = table.Column<DateTime>(nullable: true),
                     Likes = table.Column<int>(nullable: false),
+                    RepliedTo = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     VideoCommentId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -459,6 +768,11 @@ namespace ExodusKorea.API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_City_CountryId",
+                table: "City",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CommentLikes_UserId",
                 table: "CommentLikes",
                 column: "UserId");
@@ -467,6 +781,11 @@ namespace ExodusKorea.API.Migrations
                 name: "IX_CommentReplyLikes_UserId",
                 table: "CommentReplyLikes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CountryInfo_CountryId",
+                table: "CountryInfo",
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
@@ -497,6 +816,26 @@ namespace ExodusKorea.API.Migrations
                 filter: "[Hash] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PI_Etc_PriceInfoId",
+                table: "PI_Etc",
+                column: "PriceInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PI_Groceries_PriceInfoId",
+                table: "PI_Groceries",
+                column: "PriceInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PI_Rent_PriceInfoId",
+                table: "PI_Rent",
+                column: "PriceInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PI_Restaurant_PriceInfoId",
+                table: "PI_Restaurant",
+                column: "PriceInfoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VideoComment_VideoPostId",
                 table: "VideoComment",
                 column: "VideoPostId");
@@ -505,6 +844,11 @@ namespace ExodusKorea.API.Migrations
                 name: "IX_VideoCommentReply_VideoCommentId",
                 table: "VideoCommentReply",
                 column: "VideoCommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoPost_CountryId",
+                table: "VideoPost",
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VideoPostLikes_UserId",
@@ -530,6 +874,9 @@ namespace ExodusKorea.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "City");
+
+            migrationBuilder.DropTable(
                 name: "CommentLikes");
 
             migrationBuilder.DropTable(
@@ -539,13 +886,49 @@ namespace ExodusKorea.API.Migrations
                 name: "CountryInfo");
 
             migrationBuilder.DropTable(
+                name: "ImmigrationVisa");
+
+            migrationBuilder.DropTable(
+                name: "LivingCondition");
+
+            migrationBuilder.DropTable(
+                name: "MinimumCostOfLiving");
+
+            migrationBuilder.DropTable(
+                name: "News");
+
+            migrationBuilder.DropTable(
+                name: "NewsDetail");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictTokens");
 
             migrationBuilder.DropTable(
-                name: "PriceInfo");
+                name: "PI_Etc");
+
+            migrationBuilder.DropTable(
+                name: "PI_Groceries");
+
+            migrationBuilder.DropTable(
+                name: "PI_Rent");
+
+            migrationBuilder.DropTable(
+                name: "PI_Restaurant");
+
+            migrationBuilder.DropTable(
+                name: "PromisingField");
+
+            migrationBuilder.DropTable(
+                name: "SalaryInfo");
+
+            migrationBuilder.DropTable(
+                name: "SettlementGuide");
 
             migrationBuilder.DropTable(
                 name: "VideoPostLikes");
@@ -560,6 +943,9 @@ namespace ExodusKorea.API.Migrations
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
+                name: "PriceInfo");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
@@ -570,6 +956,9 @@ namespace ExodusKorea.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "VideoPost");
+
+            migrationBuilder.DropTable(
+                name: "Country");
         }
     }
 }

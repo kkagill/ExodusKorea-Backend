@@ -7,22 +7,27 @@ namespace ExodusKorea.Data.Interfaces
     public interface IHomeRepository : IEntityBaseRepository<object>
     {
         Task<IEnumerable<VideoPost>> GetAllNewVideos();
-        Task<IEnumerable<VideoPost>> GetVideosByCountry(string country);
+        Task<IEnumerable<VideoPost>> GetAllVideos();
+        Task<IEnumerable<Country>> GetAllCountries();
     }
 
     public interface ICardDetailRepository : IEntityBaseRepository<object>
     {
-        Task<string> GetCountryById(int videoPostId);
-        Task<SalaryInfo> GetSalaryInfoById(int videoPostId);
-        Task<CountryInfo> GetCountryInfoByCountry(string country);
+        Task<int> GetCountryIdByVideoPostId(int videoPostId);
+        Task<Country> GetCountryByVideoPostId(int videoPostId);
+        Task<VideoPost> GetVideoPostByVideoPostId(int videoPostId);
+        Task<SalaryInfo> GetSalaryInfoByVideoPostId(int videoPostId);
+        Task<CountryInfo> GetCountryInfoByCountryId(int countryId);
         Task<PriceInfo> GetPriceInfoByCountry(string country);
+        Task<string> GetBaseCurrencyByCountry(string country);
         Task<IEnumerable<string>> GetMajorCitiesByCountry(string country);
         Task<PI_Rent> GetPI_RentByCity(string city);
         Task<PI_Restaurant> GetPI_RestaurantByCity(string city);
         Task<PI_Groceries> GetPI_GroceriesByCity(string city);
         Task<PI_Etc> GetPI_EtcByCity(string city);
-        Task<IEnumerable<City>> GetAllCitiesByCountry(string country);
-        Task<int> GetCountryIdByCountry(string country);
+        Task<IEnumerable<City>> GetAllCitiesByCountryId(int countryId);
+        Task<CountryInfo> GetCountryInfoByCountry(string country);
+        Task<int> GetCountryInfoIdByCountry(string country);
         Task<string> GetCityById(int city);
     }
 

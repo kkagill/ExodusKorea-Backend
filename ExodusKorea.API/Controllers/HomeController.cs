@@ -74,20 +74,35 @@ namespace ExodusKorea.API.Controllers
             return new OkObjectResult(allVideoVM);
         }
 
-        [HttpGet("{country}/videos-by-country", Name = "GetVideosByCountry")]
-        public async Task<IActionResult> GetVideosByCountry(string country)
+        [HttpGet]
+        [Route("all-videos")]
+        public async Task<IActionResult> GetAllVideos()
         {
-            var videos = await _repository.GetVideosByCountry(country);
+            var allVideoPosts = await _repository.GetAllVideos();
 
-            if (videos == null)
+            if (allVideoPosts == null)
                 return NotFound();
 
             var random = new Random();
-            videos = videos.OrderBy(x => random.Next()).Take(4);
+            var allVideosVM = new List<AllVideosVM>();
+            var allCountries = await _repository.GetAllCountries();
 
-            var randomVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(videos);
+            if (allCountries == null)
+                return NotFound();
 
-            return new OkObjectResult(randomVideosVM);
+            var allVideoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);                  
+
+            foreach (var c in allCountries.Take(3))
+                allVideosVM.Add(new AllVideosVM
+                {
+                    CountryKR = c.NameKR,
+                    VideoPosts = allVideoPostsVM
+                        .Where(x => x.CountryId == c.CountryId)
+                        .OrderBy(x => random.Next())
+                        .Take(4)
+                });
+
+            return new OkObjectResult(allVideosVM);
         }
     }
 }

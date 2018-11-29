@@ -11,8 +11,13 @@ namespace ExodusKorea.Model.ViewModels.Mapping
         {
             // Domain to ViewModel
             CreateMap<ApplicationUser, ApplicationUserVM>();
-            CreateMap<VideoPost, VideoPostVM>();
-            CreateMap<CountryInfo, CountryInfoVM>();
+            CreateMap<VideoPost, VideoPostVM>()
+                .ForMember(vm => vm.CountryId, opt => opt.MapFrom(vp => vp.CountryId))
+                .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vp => vp.Country.NameEN))
+                .ForMember(vm => vm.CountryKR, opt => opt.MapFrom(vp => vp.Country.NameKR));
+            CreateMap<CountryInfo, CountryInfoVM>()
+                .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vp => vp.Country.NameEN))
+                .ForMember(vm => vm.CountryKR, opt => opt.MapFrom(vp => vp.Country.NameKR));
             CreateMap<SalaryInfo, SalaryInfoVM>();
             CreateMap<PI_Etc, PI_EtcVM>();
             CreateMap<PI_Restaurant, PI_RestaurantVM>();
@@ -22,22 +27,25 @@ namespace ExodusKorea.Model.ViewModels.Mapping
             CreateMap<MinimumCostOfLiving, MinimumCostOfLivingVM>();
             CreateMap<News, NewsVM>();
             CreateMap<NewsDetail, NewsDetailVM>();
-            CreateMap<VideoComment, VideoCommentVM>()             
-               .ForMember(vm => vm.VideoCommentReplies, 
-               opt => opt.MapFrom(vc => vc.VideoCommentReplies.OrderBy(vcr => vcr.DateCreated)
-               .Select(vcr => new VideoCommentReplyVM
-               {
-                   VideoCommentReplyId = vcr.VideoCommentReplyId,
-                   VideoCommentId = vcr.VideoCommentId,
-                   AuthorDisplayName = vcr.AuthorDisplayName,
-                   Comment = vcr.Comment,
-                   DateCreated = vcr.DateCreated,
-                   DateUpdated = vcr.DateUpdated,
-                   Likes = vcr.Likes,
-                   UserId = vcr.UserId,
-                   RepliedTo = vcr.RepliedTo,
-                   Country = vcr.Country
-               })));
+            CreateMap<VideoComment, VideoCommentVM>()
+               .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vc => vc.Country))
+               .ForMember(vm => vm.VideoCommentReplies,
+                    opt => opt.MapFrom(vc => vc.VideoCommentReplies.OrderBy(vcr => vcr.DateCreated)
+                       .Select(vcr => new VideoCommentReplyVM
+                       {
+                           VideoCommentReplyId = vcr.VideoCommentReplyId,
+                           VideoCommentId = vcr.VideoCommentId,
+                           AuthorDisplayName = vcr.AuthorDisplayName,
+                           Comment = vcr.Comment,
+                           DateCreated = vcr.DateCreated,
+                           DateUpdated = vcr.DateUpdated,
+                           Likes = vcr.Likes,
+                           UserId = vcr.UserId,
+                           RepliedTo = vcr.RepliedTo,
+                           CountryEN = vcr.Country
+                       })));
+            CreateMap<VideoCommentReply, VideoCommentReplyVM>()
+                .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vc => vc.Country));
             // ViewModel to Domain
             CreateMap<ApplicationUserVM, ApplicationUser>();
             CreateMap<VideoPostVM, VideoPost>();

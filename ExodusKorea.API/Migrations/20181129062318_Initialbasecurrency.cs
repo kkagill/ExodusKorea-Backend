@@ -4,22 +4,21 @@ using System.Collections.Generic;
 
 namespace ExodusKorea.API.Migrations
 {
-    public partial class AddedHasRead : Migration
+    public partial class Initialbasecurrency : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "HasRead",
-                table: "Notification",
-                nullable: false,
-                defaultValue: false);
+            migrationBuilder.AddColumn<string>(
+                name: "BaseCurrency",
+                table: "Country",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "HasRead",
-                table: "Notification");
+                name: "BaseCurrency",
+                table: "Country");
         }
     }
 }

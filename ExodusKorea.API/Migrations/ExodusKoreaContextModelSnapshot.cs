@@ -78,11 +78,13 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("CityId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Country");
+                    b.Property<int>("CountryId");
 
                     b.Property<string>("Name");
 
                     b.HasKey("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("City");
                 });
@@ -113,6 +115,22 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("CommentReplyLikes");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BaseCurrency");
+
+                    b.Property<string>("NameEN");
+
+                    b.Property<string>("NameKR");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Country");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfo", b =>
                 {
                     b.Property<int>("CountryInfoId")
@@ -120,9 +138,7 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<string>("CapitalCity");
 
-                    b.Property<string>("Country");
-
-                    b.Property<string>("CountryInEng");
+                    b.Property<int>("CountryId");
 
                     b.Property<string>("CountryLink");
 
@@ -137,6 +153,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("Population");
 
                     b.HasKey("CountryInfoId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("CountryInfo");
                 });
@@ -173,6 +191,8 @@ namespace ExodusKorea.API.Migrations
                 {
                     b.Property<int>("MinimumCostOfLivingId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorCountryEN");
 
                     b.Property<decimal>("Cell");
 
@@ -520,9 +540,7 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoPostId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Country");
-
-                    b.Property<string>("CountryInEng");
+                    b.Property<int>("CountryId");
 
                     b.Property<int>("Likes");
 
@@ -535,6 +553,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("YouTubeVideoId");
 
                     b.HasKey("VideoPostId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("VideoPost");
                 });
@@ -781,6 +801,14 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.City", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.CommentLike", b =>
                 {
                     b.HasOne("ExodusKorea.Model.Entities.ApplicationUser", "User")
@@ -804,6 +832,14 @@ namespace ExodusKorea.API.Migrations
                     b.HasOne("ExodusKorea.Model.Entities.VideoCommentReply", "VideoCommentReply")
                         .WithMany("CommentReplyLikes")
                         .HasForeignKey("VideoCommentReplyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfo", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -852,6 +888,14 @@ namespace ExodusKorea.API.Migrations
                     b.HasOne("ExodusKorea.Model.Entities.VideoComment", "VideoComment")
                         .WithMany("VideoCommentReplies")
                         .HasForeignKey("VideoCommentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.VideoPost", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

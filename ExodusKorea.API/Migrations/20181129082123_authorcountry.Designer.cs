@@ -11,8 +11,8 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    [Migration("20181122225628_Initialthumbnail")]
-    partial class Initialthumbnail
+    [Migration("20181129082123_authorcountry")]
+    partial class authorcountry
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -79,11 +79,13 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("CityId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Country");
+                    b.Property<int>("CountryId");
 
                     b.Property<string>("Name");
 
                     b.HasKey("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("City");
                 });
@@ -114,6 +116,22 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("CommentReplyLikes");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BaseCurrency");
+
+                    b.Property<string>("NameEN");
+
+                    b.Property<string>("NameKR");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Country");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfo", b =>
                 {
                     b.Property<int>("CountryInfoId")
@@ -121,9 +139,7 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<string>("CapitalCity");
 
-                    b.Property<string>("Country");
-
-                    b.Property<string>("CountryInEng");
+                    b.Property<int>("CountryId");
 
                     b.Property<string>("CountryLink");
 
@@ -139,13 +155,45 @@ namespace ExodusKorea.API.Migrations
 
                     b.HasKey("CountryInfoId");
 
+                    b.HasIndex("CountryId");
+
                     b.ToTable("CountryInfo");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.ImmigrationVisa", b =>
+                {
+                    b.Property<int>("ImmigrationVisaId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("ImmigrationVisaId");
+
+                    b.ToTable("ImmigrationVisa");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.LivingCondition", b =>
+                {
+                    b.Property<int>("LivingConditionId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("LivingConditionId");
+
+                    b.ToTable("LivingCondition");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.MinimumCostOfLiving", b =>
                 {
                     b.Property<int>("MinimumCostOfLivingId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorCountryEN");
 
                     b.Property<decimal>("Cell");
 
@@ -180,6 +228,18 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("MinimumCostOfLiving");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.News", b =>
+                {
+                    b.Property<int>("NewsId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Topic");
+
+                    b.HasKey("NewsId");
+
+                    b.ToTable("News");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.NewsDetail", b =>
                 {
                     b.Property<int>("NewsDetailId")
@@ -194,6 +254,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<string>("Department");
+
+                    b.Property<int>("NewsId");
 
                     b.Property<string>("Subject");
 
@@ -362,6 +424,20 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("PriceInfo");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.PromisingField", b =>
+                {
+                    b.Property<int>("PromisingFieldId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("PromisingFieldId");
+
+                    b.ToTable("PromisingField");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.SalaryInfo", b =>
                 {
                     b.Property<int>("SalaryInfoId")
@@ -386,6 +462,20 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("SalaryInfoId");
 
                     b.ToTable("SalaryInfo");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.SettlementGuide", b =>
+                {
+                    b.Property<int>("SettlementGuideId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("SettlementGuideId");
+
+                    b.ToTable("SettlementGuide");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoComment", b =>
@@ -451,9 +541,7 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoPostId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Country");
-
-                    b.Property<string>("CountryInEng");
+                    b.Property<int>("CountryId");
 
                     b.Property<int>("Likes");
 
@@ -466,6 +554,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("YouTubeVideoId");
 
                     b.HasKey("VideoPostId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("VideoPost");
                 });
@@ -712,6 +802,14 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.City", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.CommentLike", b =>
                 {
                     b.HasOne("ExodusKorea.Model.Entities.ApplicationUser", "User")
@@ -735,6 +833,14 @@ namespace ExodusKorea.API.Migrations
                     b.HasOne("ExodusKorea.Model.Entities.VideoCommentReply", "VideoCommentReply")
                         .WithMany("CommentReplyLikes")
                         .HasForeignKey("VideoCommentReplyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfo", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -783,6 +889,14 @@ namespace ExodusKorea.API.Migrations
                     b.HasOne("ExodusKorea.Model.Entities.VideoComment", "VideoComment")
                         .WithMany("VideoCommentReplies")
                         .HasForeignKey("VideoCommentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.VideoPost", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

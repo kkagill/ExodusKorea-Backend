@@ -22,6 +22,7 @@ namespace ExodusKorea.Data
         public DbSet<PI_Etc> PI_Etc { get; set; }
         public DbSet<SalaryInfo> SalaryInfo { get; set; }
         public DbSet<Notification> Notification { get; set; }
+        public DbSet<Country> Country { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<MinimumCostOfLiving> MinimumCostOfLiving { get; set; }
         public DbSet<NewsDetail> NewsDetail { get; set; }
@@ -29,7 +30,7 @@ namespace ExodusKorea.Data
         public DbSet<PromisingField> PromisingField { get; set; }
         public DbSet<SettlementGuide> SettlementGuide { get; set; }
         public DbSet<LivingCondition> LivingCondition { get; set; }
-        public DbSet<ImmigrationVisa> ImmigrationVisa { get; set; }
+        public DbSet<ImmigrationVisa> ImmigrationVisa { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,6 +54,7 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<PI_Etc>().ToTable("PI_Etc");
             modelBuilder.Entity<SalaryInfo>().ToTable("SalaryInfo");
             modelBuilder.Entity<Notification>().ToTable("Notification");
+            modelBuilder.Entity<Country>().ToTable("Country");
             modelBuilder.Entity<City>().ToTable("City");
             modelBuilder.Entity<MinimumCostOfLiving>().ToTable("MinimumCostOfLiving");
             modelBuilder.Entity<NewsDetail>().ToTable("NewsDetail");
@@ -60,7 +62,7 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<PromisingField>().ToTable("PromisingField");
             modelBuilder.Entity<SettlementGuide>().ToTable("SettlementGuide");
             modelBuilder.Entity<LivingCondition>().ToTable("LivingCondition");
-            modelBuilder.Entity<ImmigrationVisa>().ToTable("ImmigrationVisa");
+            modelBuilder.Entity<ImmigrationVisa>().ToTable("ImmigrationVisa");        
         }
     }
 }

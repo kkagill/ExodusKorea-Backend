@@ -4,8 +4,9 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class MinimumCostOfLivingInfoVM
     {
-        public string Country { get; set; }
-        public string CountryInEng { get; set; }
+        public int CountryId { get; set; }
+        public string CountryKR { get; set; }
+        public string CountryEN { get; set; }
         public string BaseCurrency { get; set; }
         public List<CityMinimumVM> CityMinimums { get; set; }
     }

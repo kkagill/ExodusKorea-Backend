@@ -16,6 +16,7 @@ namespace ExodusKorea.Model.Entities
         public decimal Internet { get; set; }
         public string Etc { get; set; }
         public string IpAddress { get; set; }
+        public string AuthorCountryEN { get; set; }
         public string NickName { get; set; }
         public decimal Total { get; set; }
         public DateTime DateCreated { get; set; }

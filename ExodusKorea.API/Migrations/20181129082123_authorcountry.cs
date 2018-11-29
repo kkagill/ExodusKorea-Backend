@@ -4,21 +4,20 @@ using System.Collections.Generic;
 
 namespace ExodusKorea.API.Migrations
 {
-    public partial class datecreated : Migration
+    public partial class authorcountry : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "DateCreated",
+            migrationBuilder.AddColumn<string>(
+                name: "AuthorCountryEN",
                 table: "MinimumCostOfLiving",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DateCreated",
+                name: "AuthorCountryEN",
                 table: "MinimumCostOfLiving");
         }
     }

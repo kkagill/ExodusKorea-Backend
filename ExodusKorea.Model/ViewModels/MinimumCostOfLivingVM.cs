@@ -21,5 +21,6 @@ namespace ExodusKorea.Model.ViewModels
         public string NickName { get; set; }
         public decimal Total { get; set; }
         public DateTime DateCreated { get; set; }
+        public string AuthorCountryEN { get; set; }
     }
 }

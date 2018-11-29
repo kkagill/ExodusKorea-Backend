@@ -72,8 +72,8 @@ namespace ExodusKorea.API.Controllers
             if (videoPostId <= 0)
                 return NotFound();
 
-            var country = await _repository.GetCountryById(videoPostId);
-            var countryInfo = await _repository.GetCountryInfoByCountry(country);
+            var countryId = await _repository.GetCountryIdByVideoPostId(videoPostId);
+            var countryInfo = await _repository.GetCountryInfoByCountryId(countryId);
 
             if (countryInfo == null)
                 return NotFound();
@@ -92,7 +92,7 @@ namespace ExodusKorea.API.Controllers
             if (videoPostId <= 0)
                 return NotFound();
          
-            var salaryInfo = await _repository.GetSalaryInfoById(videoPostId);
+            var salaryInfo = await _repository.GetSalaryInfoByVideoPostId(videoPostId);
 
             if (salaryInfo == null)
                 return NotFound();
@@ -111,17 +111,17 @@ namespace ExodusKorea.API.Controllers
             if (videoPostId <= 0)
                 return NotFound();
 
-            var country = await _repository.GetCountryById(videoPostId);
-            var kPriceInfo = await _repository.GetPriceInfoByCountry("southkorea");
-            var priceInfo = await _repository.GetPriceInfoByCountry(country);
+            var videoPost = await _repository.GetVideoPostByVideoPostId(videoPostId);
+            var kPriceInfo = await _repository.GetPriceInfoByCountry("kr");
+            var priceInfo = await _repository.GetPriceInfoByCountry(videoPost.Country.NameEN);
 
             if (kPriceInfo == null || priceInfo == null)
                 return NotFound();
 
             var priceInfoVM = new PriceInfoVM
             {
-                Country = GetCountryInKorean(country),
-                CountryInEng = country,
+                CountryKR = videoPost.Country.NameKR,
+                CountryEN = videoPost.Country.NameEN,
                 CostOfLiving = ComparePrices(kPriceInfo.CostOfLivingIndex, priceInfo.CostOfLivingIndex),
                 CostOfLivingIcon = ComparePricesIcon(kPriceInfo.CostOfLivingIndex, priceInfo.CostOfLivingIndex),
                 Rent = ComparePrices(kPriceInfo.RentIndex, priceInfo.RentIndex),
@@ -159,7 +159,7 @@ namespace ExodusKorea.API.Controllers
                 priceInfoDetailVM.Add(new PriceInfoDetailVM
                 {
                     City = c,
-                    Currency = GetBaseCurrency(country),
+                    Currency = await _repository.GetBaseCurrencyByCountry(country),
                     Rent = Mapper.Map<PI_Rent, PI_RentVM>(rent),
                     Restaurant = Mapper.Map<PI_Restaurant, PI_RestaurantVM>(restaurant),
                     Groceries = Mapper.Map<PI_Groceries, PI_GroceriesVM>(groceries),
@@ -179,19 +179,20 @@ namespace ExodusKorea.API.Controllers
             if (videoPostId <= 0)
                 return NotFound();
 
-            var video = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId);
+            var video = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId, vp => vp.Country);
 
             if (video == null)
                 return NotFound();
 
-            var countryInfoId = await _repository.GetCountryIdByCountry(video.CountryInEng);
-            var minimumCoLs = _mcolRepository.FindBy(mcol => mcol.CountryInfoId == countryInfoId);
-            var cities = await _repository.GetAllCitiesByCountry(video.Country);
+            var countryInfo = await _repository.GetCountryInfoByCountry(video.Country.NameEN);
+            var minimumCoLs = _mcolRepository.FindBy(mcol => mcol.CountryInfoId == countryInfo.CountryInfoId);
+            var cities = await _repository.GetAllCitiesByCountryId(countryInfo.CountryId);
             var minimumCostOfLivingInfoVM = new MinimumCostOfLivingInfoVM
             {
-                Country = video.Country,
-                CountryInEng = video.CountryInEng,
-                BaseCurrency = GetBaseCurrency(video.CountryInEng),
+                CountryId = video.CountryId,
+                CountryKR = video.Country.NameKR,
+                CountryEN = video.Country.NameEN,
+                BaseCurrency = await _repository.GetBaseCurrencyByCountry(video.Country.NameEN),
                 CityMinimums = CalculateCityMinimums(cities.ToList(), minimumCoLs.ToList())
             };
 
@@ -200,13 +201,12 @@ namespace ExodusKorea.API.Controllers
 
         [HttpGet]
         [Route("{country}/minimum-col-detail", Name = "GetMinimumCostOfLivingDetail")]
-        public async Task<IActionResult> GetMinimumCostOfLivingDetail(string country)
+        public IActionResult GetMinimumCostOfLivingDetail(string country)
         {
             if (string.IsNullOrWhiteSpace(country))
                 return NotFound();
 
-            var countryInfoId = await _repository.GetCountryIdByCountry(country);
-            var minimumCols = _mcolRepository.FindBy(mcol => mcol.CountryInfoId == countryInfoId);          
+            var minimumCols = _mcolRepository.FindBy(mcol => mcol.Country.Equals(country));          
             var minimumColsVM = Mapper.Map<IEnumerable<MinimumCostOfLiving>, IEnumerable<MinimumCostOfLivingVM>>(minimumCols);
 
             minimumColsVM = minimumColsVM.OrderByDescending(x => x.DateCreated);
@@ -215,13 +215,13 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("{country}/cities-by-country", Name = "GetAllCitiesByCountry")]
-        public async Task<IActionResult> GetAllCitiesByCountry(string country)
+        [Route("{countryId}/cities-by-country", Name = "GetAllCitiesByCountryId")]
+        public async Task<IActionResult> GetAllCitiesByCountryId(int countryId)
         {
-            if (string.IsNullOrWhiteSpace(country))
+            if (countryId <= 0)
                 return NotFound();
-           
-            var cities = await _repository.GetAllCitiesByCountry(country);
+
+            var cities = await _repository.GetAllCitiesByCountryId(countryId);
 
             if (cities == null)
                 return NotFound();
@@ -271,9 +271,9 @@ namespace ExodusKorea.API.Controllers
 
             MinimumCostOfLiving newMinimumCostOfLiving = new MinimumCostOfLiving
             {
-                CountryInfoId = await _repository.GetCountryIdByCountry(vm.Country),
+                CountryInfoId = await _repository.GetCountryInfoIdByCountry(vm.Country),
                 CityId = vm.CityId > 0 ? vm.CityId : 0,
-                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim()),
+                Country = vm.Country,
                 City = vm.CityId == 0 ? vm.City : await _repository.GetCityById(vm.CityId),
                 Rent = vm.Rent,
                 Transportation = vm.Transportation,
@@ -284,7 +284,8 @@ namespace ExodusKorea.API.Controllers
                 IpAddress = ipAddress,
                 NickName = user.NickName,
                 Total = vm.Rent + vm.Transportation + vm.Food + vm.Cell + vm.Internet,
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                AuthorCountryEN = countryCode
             };
 
             await _mcolRepository.AddAsync(newMinimumCostOfLiving);
@@ -308,17 +309,16 @@ namespace ExodusKorea.API.Controllers
             if (videoPostId <= 0)
                 return NotFound();
 
-            var country = await _repository.GetCountryById(videoPostId);
-            var baseCurrency = GetBaseCurrency(country);
-            var krwRate = await _currencyRate.GetKRWRateByCountry(baseCurrency);
+            var country = await _repository.GetCountryByVideoPostId(videoPostId);
+            var krwRate = await _currencyRate.GetKRWRateByCountry(country.BaseCurrency);
 
             if (string.IsNullOrEmpty(krwRate))
                 return NotFound();
 
             return new OkObjectResult(new CurrencyInfoVM
             {
-                Country = GetCountryInKorean(country),
-                BaseCurrency = baseCurrency,
+                Country = country.NameKR,
+                BaseCurrency = country.BaseCurrency,
                 KrwRate = krwRate,
                 Now = DateTime.Now
             });
@@ -419,7 +419,7 @@ namespace ExodusKorea.API.Controllers
                 VideoPostId = vm.VideoPostId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim())
+                Country = countryCode
             };
 
             await _vcRepository.AddAsync(newVideoComment);
@@ -463,7 +463,7 @@ namespace ExodusKorea.API.Controllers
                 VideoCommentId = vm.VideoCommentId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim())
+                Country = countryCode
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -508,7 +508,7 @@ namespace ExodusKorea.API.Controllers
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
                 RepliedTo = vm.AuthorDisplayName,
-                Country = countryCode == null ? null : SetCountryName(countryCode.ToLower().Trim())
+                Country = countryCode
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -1002,79 +1002,7 @@ namespace ExodusKorea.API.Controllers
                 result = "chevron-down";
 
             return result;
-        }      
-
-        private string GetCountryInKorean(string country)
-        {
-            var countryKor = "";
-
-            switch (country)
-            {
-                case "canada":
-                    countryKor = "캐나다";
-                    break;
-                case "unitedstates":
-                    countryKor = "미국";
-                    break;
-                case "australia":
-                    countryKor = "호주";
-                    break;
-                case "newzealand":
-                    countryKor = "뉴질랜드";
-                    break;
-            }
-
-            return countryKor;
-        }
-
-        private string GetBaseCurrency(string country)
-        {
-            var baseCurrency = "";
-
-            switch (country)
-            {
-                case "canada":
-                    baseCurrency = "CAD";
-                    break;
-                case "unitedstates":
-                    baseCurrency = "USD";
-                    break;
-                case "australia":
-                    baseCurrency = "AUD";
-                    break;
-                case "newzealand":
-                    baseCurrency = "NZD";
-                    break;
-            }
-
-            return baseCurrency;
-        }      
-
-        private string SetCountryName(string countryCode)
-        {
-            var countryFinal = "";
-
-            switch (countryCode)
-            {
-                case "kr":
-                    countryFinal = "southkorea";
-                    break;
-                case "ca":
-                    countryFinal = "canada";
-                    break;
-                case "us":
-                    countryFinal = "unitedstates";
-                    break;
-                case "au":
-                    countryFinal = "australia";
-                    break;
-                case "nz":
-                    countryFinal = "newzealand";
-                    break;
-            }
-
-            return countryFinal;
-        }
+        }   
 
         private List<CityMinimumVM> CalculateCityMinimums(List<City> cities, List<MinimumCostOfLiving> mcol)
         {
