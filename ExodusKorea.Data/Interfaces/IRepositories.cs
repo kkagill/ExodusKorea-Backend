@@ -8,7 +8,8 @@ namespace ExodusKorea.Data.Interfaces
     {
         Task<IEnumerable<VideoPost>> GetAllNewVideos();
         Task<IEnumerable<VideoPost>> GetAllVideos();
-        Task<IEnumerable<Country>> GetAllCountries();
+        Task<IEnumerable<Category>> GetAllCategories();
+        Task<IEnumerable<Career>> GetAllCareers();
     }
 
     public interface ICardDetailRepository : IEntityBaseRepository<object>
@@ -33,11 +34,7 @@ namespace ExodusKorea.Data.Interfaces
 
     public interface ICountryInfoRepository : IEntityBaseRepository<object>
     {
-        //Task<PromisingField> GetPromisingFieldByCountry(string country);
-        IEnumerable<PromisingField> GetAllPromisingFields();
-        IEnumerable<SettlementGuide> GetAllSettlementGuides();
-        IEnumerable<LivingCondition> GetAllLivingConditions();
-        IEnumerable<ImmigrationVisa> GetAllImmigrationVisas();
+        Task<CountryInfoKOTRA> GetCountryInfoCanada();    
     }
 
     public interface IVideoPostRepository : IEntityBaseRepository<VideoPost> { }

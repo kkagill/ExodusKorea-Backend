@@ -12,9 +12,10 @@ namespace ExodusKorea.Model.ViewModels.Mapping
             // Domain to ViewModel
             CreateMap<ApplicationUser, ApplicationUserVM>();
             CreateMap<VideoPost, VideoPostVM>()
-                .ForMember(vm => vm.CountryId, opt => opt.MapFrom(vp => vp.CountryId))
+                .ForMember(vm => vm.CategoryId, opt => opt.MapFrom(vp => vp.CategoryId))
                 .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vp => vp.Country.NameEN))
-                .ForMember(vm => vm.CountryKR, opt => opt.MapFrom(vp => vp.Country.NameKR));
+                .ForMember(vm => vm.CountryKR, opt => opt.MapFrom(vp => vp.Country.NameKR))
+                .ForMember(vm => vm.Category, opt => opt.MapFrom(vp => vp.Category.Name));
             CreateMap<CountryInfo, CountryInfoVM>()
                 .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vp => vp.Country.NameEN))
                 .ForMember(vm => vm.CountryKR, opt => opt.MapFrom(vp => vp.Country.NameKR));

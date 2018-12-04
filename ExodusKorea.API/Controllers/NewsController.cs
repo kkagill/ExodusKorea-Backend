@@ -68,6 +68,21 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
+        [Route("all-categories")]
+        public IActionResult GetAllCategories()
+        {
+            var categories = new List<CategoryVM>
+            {
+                new CategoryVM { CategoryId = 0, Name = "전체" },
+                new CategoryVM { CategoryId = 1, Name = "경제/무역" },
+                new CategoryVM { CategoryId = 2, Name = "통상/규제" },
+                new CategoryVM { CategoryId = 3, Name = "일자리 동향" }
+            };
+
+            return new OkObjectResult(categories);
+        }
+
+        [HttpGet]
         [Route("{newsDetailId}/news-detail", Name = "GetNewsDetail")]
         public IActionResult GetNewsDetail(int newsDetailId)
         {
@@ -88,8 +103,23 @@ namespace ExodusKorea.API.Controllers
         [Route("{newsId}/news-list", Name = "GetNewsList")]
         public IActionResult GetNewsList(int newsId)
         {
-            if (newsId <= 0)
+            if (newsId < 0)
                 return NotFound();
+
+            if (newsId == 0)
+            {
+                var allNewsDetails = _ndRepository.GetAll();
+
+                if (allNewsDetails == null)
+                    return NotFound();
+
+                var allNewsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(allNewsDetails);
+
+                foreach (var and in allNewsDetailsVM)
+                    and.NewsId = 0;
+
+                return new OkObjectResult(allNewsDetailsVM);
+            }
 
             var newsDetails = _ndRepository.FindBy(nd => nd.NewsId == newsId);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExodusKorea.Model.Entities
 {
@@ -12,8 +13,12 @@ namespace ExodusKorea.Model.Entities
         public int Likes { get; set; }
         public string YouTubeVideoId { get; set; }
 
-        public int CountryId { get; set; }
+        public int CountryId { get; set; }     
+        public int CareerId { get; set; }      
+        public int CategoryId { get; set; }
         public Country Country { get; set; }
+        public Career Career { get; set; }
+        public Category Category { get; set; }
         public ICollection<VideoPostLike> VideoPostLikes { get; set; }
     }
 }

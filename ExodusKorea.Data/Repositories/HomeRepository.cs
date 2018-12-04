@@ -27,10 +27,11 @@ namespace ExodusKorea.Data.Repositories
 
         public async Task<IEnumerable<VideoPost>> GetAllNewVideos()
         {
-            var twoWeeks = DateTime.Now.Date.AddDays(-14);
+            //var twoWeeks = DateTime.Now.Date.AddDays(-21);
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
-                .Where(x => x.UploadedDate >= twoWeeks)
+                //.Where(x => x.UploadedDate >= twoWeeks)
+                .Where(x => x.CountryId == 2)
                 .OrderByDescending(x => x.UploadedDate)
                 .Take(8)
                 .ToListAsync();
@@ -42,14 +43,24 @@ namespace ExodusKorea.Data.Repositories
         {
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
+                .Where(x => x.CountryId == 2)
+                .Take(12)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Country>> GetAllCountries()
+        public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            var result = await _context.Country               
+            var result = await _context.Category               
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Career>> GetAllCareers()
+        {
+            var result = await _context.Career
                 .ToListAsync();
 
             return result;

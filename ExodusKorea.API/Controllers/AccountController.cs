@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using ExodusKorea.Model.Entities;
 using ExodusKorea.Model.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using ExodusKorea.API.Services;
 using System;
 using Microsoft.AspNetCore.DataProtection;
-using AutoMapper.Configuration;
 using Microsoft.Extensions.Options;
 using ExodusKorea.Model;
 using AutoMapper;
@@ -61,15 +59,14 @@ namespace ExodusKorea.API.Controllers
         
             await _userManager.UpdateSecurityStampAsync(user); // Generate new security stamp       
 
-            var temporaryPwd = Guid.NewGuid().ToString("n").Substring(0, 8); // Generate a temporary password
+            var temporaryPwd = Guid.NewGuid().ToString("n").Substring(0, 6); // Generate a temporary password
+            var passwordRequirement = "P" + temporaryPwd + "n1"; // 숫자, 대소문자 requirement
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);           
-            var result = await _userManager.ResetPasswordAsync(user, token, temporaryPwd); // Temporary password is now the user's current password            
-            var message = string.Format(@"<p>안녕하세요 엑소더스 코리아 회원님! <br><br>
-                                        <p><strong>이메일: </strong>{0}<br>
-                                        <p><strong>비밀번호: </strong>{1}<br><br><br>
-                                        <p>임시 비밀번호를 통해 로그인하시고 곧바로 비밀번호를 재변경하시기 바랍니다. <br><br><br>", model.Email, temporaryPwd);
+            var result = await _userManager.ResetPasswordAsync(user, token, passwordRequirement); // Temporary password is now the user's current password            
+            var emailTemplateVM = new EmailTemplateVM(user.Email, "http://localhost:4200/", passwordRequirement);
+            var emailFormat = emailTemplateVM.GetForgotPasswordEmailFormat();
 
-            await _messageService.SendEmailAsync(user.Email, "엑소더스 코리아 비밀번호 찾기", null, message);
+            await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);         
 
             return new OkResult();
         }
@@ -116,15 +113,16 @@ namespace ExodusKorea.API.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);  
                 var userRole = new IdentityRole("User");
-                // Add userAccount to a user role
+
                 if (!await _userManager.IsInRoleAsync(user, userRole.Name))
                     await _userManager.AddToRoleAsync(user, userRole.Name);
 
                 var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var callbackUrl = new Uri(Url.Link("ConfirmEmail", new { id = _protector.Protect(user.Id), token = emailConfirmationToken }));
+                var emailTemplateVM = new EmailTemplateVM(user.Email, callbackUrl.AbsoluteUri);
+                var emailFormat = emailTemplateVM.GetConfirmEmailFormat();
 
-                await _messageService.SendEmailAsync(user.Email,
-                    "엑소더스 코리아 회원가입 인증", "회원가입을 완료하시려면 아래의 인증링크를 클릭하세요." + callbackUrl, null);
+                await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);
 
                 return CreatedAtRoute("GetUser", new { controller = "Account", id = user.Id }, user);
             }            
@@ -164,9 +162,10 @@ namespace ExodusKorea.API.Controllers
 
             var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = new Uri(Url.Link("ConfirmEmail", new { id = _protector.Protect(user.Id), token = emailConfirmationToken }));
+            var emailTemplateVM = new EmailTemplateVM(user.Email, callbackUrl.AbsoluteUri);
+            var emailFormat = emailTemplateVM.GetConfirmEmailFormat();
 
-            //await _messageService.SendEmailAsync(user.Email,
-            //    "엑소더스 코리아 회원가입 재인증", "회원가입을 완료하시려면 아래의 인증링크를 클릭하세요." + callbackUrl, null);
+            await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);         
 
             return new OkResult();
         }

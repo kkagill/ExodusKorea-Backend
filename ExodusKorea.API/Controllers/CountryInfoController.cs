@@ -24,67 +24,16 @@ namespace ExodusKorea.API.Controllers
             _repository = repository;
         }
 
-        //[HttpGet]
-        //[Route("{country}/promising-field", Name = "GetPromisingFieldByCountry")]
-        //public async Task<IActionResult> GetPromisingFieldByCountry(string country)
-        //{
-        //    if (string.IsNullOrWhiteSpace(country))
-        //        return NotFound();
-
-        //    var content = await _repository.GetPromisingFieldByCountry(country);
-
-        //    if (content == null)
-        //        return NotFound();
-
-        //    return new OkObjectResult(content);
-        //}
-
         [HttpGet]
-        [Route("promising-fields")]
-        public IActionResult GetAllPromisingField()
-        {         
-            var allPromisingFields = _repository.GetAllPromisingFields();
-
-            if (allPromisingFields == null)
-                return NotFound();
-
-            return new OkObjectResult(allPromisingFields);
-        }
-
-        [HttpGet]
-        [Route("settlement-guides")]
-        public IActionResult GetAllSettlementGuide()
+        [Route("country-info-canada")]
+        public async Task<IActionResult> GetCountryInfoCanadaAsync()
         {
-            var allSettlementGuides = _repository.GetAllSettlementGuides();
+            var countryInfo = await _repository.GetCountryInfoCanada();
 
-            if (allSettlementGuides == null)
+            if (countryInfo == null)
                 return NotFound();
 
-            return new OkObjectResult(allSettlementGuides);
-        }
-
-        [HttpGet]
-        [Route("living-conditions")]
-        public IActionResult GetAllLivingConditions()
-        {
-            var allLivingConditions = _repository.GetAllLivingConditions();
-
-            if (allLivingConditions == null)
-                return NotFound();
-
-            return new OkObjectResult(allLivingConditions);
-        }
-
-        [HttpGet]
-        [Route("immigration-visas")]
-        public IActionResult GetAllImmigrationVisas()
-        {
-            var allImmigrationVisas = _repository.GetAllImmigrationVisas();
-
-            if (allImmigrationVisas == null)
-                return NotFound();
-
-            return new OkObjectResult(allImmigrationVisas);
+            return new OkObjectResult(countryInfo);
         }
     }
 }

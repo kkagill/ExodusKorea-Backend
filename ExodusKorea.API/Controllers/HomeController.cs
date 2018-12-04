@@ -47,18 +47,22 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("main-currencies")]
-        public async Task<IActionResult> GetMainCurrencies()
+        [Route("currency")]
+        public async Task<IActionResult> GetCurrency()
         {
-            var mainCurrencies = await _currencyRate.GetMainCurrencies();
+            var krwRate = await _currencyRate.GetKRWRateByCountry("CAD");
 
-            if (mainCurrencies == null)
+            if (string.IsNullOrEmpty(krwRate))
                 return NotFound();
 
-            mainCurrencies.Today = DateTime.Now;
-
-            return new OkObjectResult(mainCurrencies);
-        }
+            return new OkObjectResult(new CurrencyInfoVM
+            {
+                Country = "캐나다",
+                BaseCurrency = "CAD",
+                KrwRate = krwRate,
+                Now = DateTime.Now
+            });
+        }     
 
         [HttpGet]
         [Route("new-videos")]
@@ -83,26 +87,40 @@ namespace ExodusKorea.API.Controllers
             if (allVideoPosts == null)
                 return NotFound();
 
-            var random = new Random();
-            var allVideosVM = new List<AllVideosVM>();
-            var allCountries = await _repository.GetAllCountries();
+            var allVideoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);           
 
-            if (allCountries == null)
-                return NotFound();
-
-            var allVideoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);                  
-
-            foreach (var c in allCountries.Take(3))
-                allVideosVM.Add(new AllVideosVM
-                {
-                    CountryKR = c.NameKR,
-                    VideoPosts = allVideoPostsVM
-                        .Where(x => x.CountryId == c.CountryId)
-                        .OrderBy(x => random.Next())
-                        .Take(4)
-                });
-
-            return new OkObjectResult(allVideosVM);
+            return new OkObjectResult(allVideoPostsVM);
         }
+
+        //[HttpGet]
+        //[Route("all-videos")]
+        //public async Task<IActionResult> GetAllVideos()
+        //{
+        //    var allVideoPosts = await _repository.GetAllVideos();
+
+        //    if (allVideoPosts == null)
+        //        return NotFound();
+
+        //    var random = new Random();
+        //    var allVideosVM = new List<AllVideosVM>();
+        //    var allCategories = await _repository.GetAllCategories();
+
+        //    if (allCategories == null)
+        //        return NotFound();
+
+        //    var allVideoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);                  
+
+        //    foreach (var c in allCategories)
+        //        allVideosVM.Add(new AllVideosVM
+        //        {
+        //            Category = c.Name,
+        //            VideoPosts = allVideoPostsVM                     
+        //                .Where(x => x.CategoryId == c.CategoryId)
+        //                .OrderBy(x => random.Next())
+        //                .Take(4)
+        //        });
+
+        //    return new OkObjectResult(allVideosVM);
+        //}
     }
 }

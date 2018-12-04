@@ -50,11 +50,25 @@ namespace ExodusKorea.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Career",
+                columns: table => new
+                {
+                    CareerId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Career", x => x.CareerId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Country",
                 columns: table => new
                 {
                     CountryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BaseCurrency = table.Column<string>(nullable: true),
                     NameEN = table.Column<string>(nullable: true),
                     NameKR = table.Column<string>(nullable: true)
                 },
@@ -97,6 +111,7 @@ namespace ExodusKorea.API.Migrations
                 {
                     MinimumCostOfLivingId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AuthorCountryEN = table.Column<string>(nullable: true),
                     Cell = table.Column<decimal>(nullable: false),
                     City = table.Column<string>(nullable: true),
                     CityId = table.Column<int>(nullable: false),
@@ -427,6 +442,7 @@ namespace ExodusKorea.API.Migrations
                 {
                     VideoPostId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CareerId = table.Column<int>(nullable: false),
                     CountryId = table.Column<int>(nullable: false),
                     Likes = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: true),
@@ -437,6 +453,12 @@ namespace ExodusKorea.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VideoPost", x => x.VideoPostId);
+                    table.ForeignKey(
+                        name: "FK_VideoPost_Career_CareerId",
+                        column: x => x.CareerId,
+                        principalTable: "Career",
+                        principalColumn: "CareerId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VideoPost_Country_CountryId",
                         column: x => x.CountryId,
@@ -846,6 +868,11 @@ namespace ExodusKorea.API.Migrations
                 column: "VideoCommentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_VideoPost_CareerId",
+                table: "VideoPost",
+                column: "CareerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VideoPost_CountryId",
                 table: "VideoPost",
                 column: "CountryId");
@@ -956,6 +983,9 @@ namespace ExodusKorea.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "VideoPost");
+
+            migrationBuilder.DropTable(
+                name: "Career");
 
             migrationBuilder.DropTable(
                 name: "Country");

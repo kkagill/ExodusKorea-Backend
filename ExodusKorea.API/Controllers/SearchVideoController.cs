@@ -28,15 +28,29 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("all-countries")]
-        public IActionResult GetAllCountries()
+        [Route("all-categories")]
+        public async Task<IActionResult> GetAllCategories()
         {
-            var allCountries = _hRepository.GetAllCountries();
+            var allCategories = await _hRepository.GetAllCategories();
 
-            if (allCountries == null)
+            if (allCategories == null)
                 return NotFound();    
 
-            return new OkObjectResult(allCountries);
+            return new OkObjectResult(allCategories);
+        }
+
+        [HttpGet]
+        [Route("all-careers")]
+        public async Task<IActionResult> GetAllCareers()
+        {
+            var allCareers = await _hRepository.GetAllCareers();
+
+            if (allCareers == null)
+                return NotFound();
+
+            allCareers = allCareers.OrderBy(x => x.Name);
+
+            return new OkObjectResult(allCareers);
         }
 
         [HttpGet]
@@ -53,10 +67,11 @@ namespace ExodusKorea.API.Controllers
             return new OkObjectResult(allVideoVM);
         }
 
-        [HttpGet("{countryId}/search-result-country", Name = "GetSearchResultByCountryId")]
-        public IActionResult GetSearchResultByCountry(int countryId)
+        [HttpGet("{categoryId}/search-result-category", Name = "GetSearchResultByCategory")]
+        public IActionResult GetSearchResultByCategory(int categoryId)
         {
-            var videoPosts = _vpRepository.FindBy(vp => vp.CountryId == countryId, vp => vp.Country);
+            var videoPosts = _vpRepository
+                .FindBy(vp => vp.CategoryId == categoryId && vp.CountryId == 2, vp => vp.Country);
              
             if (videoPosts == null)
                 return NotFound();
@@ -64,6 +79,19 @@ namespace ExodusKorea.API.Controllers
             var videoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(videoPosts);         
 
             return new OkObjectResult(videoPostsVM);
-        }          
+        }
+
+        [HttpGet("{careerId}/search-result-career", Name = "GetSearchResultByCareer")]
+        public IActionResult GetSearchResultByCareer(int careerId)
+        {
+            var videoPosts = _vpRepository.FindBy(vp => vp.CareerId == careerId, vp => vp.Country);
+
+            if (videoPosts == null)
+                return NotFound();
+
+            var videoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(videoPosts);
+            
+            return new OkObjectResult(videoPostsVM);
+        }
     }
 }

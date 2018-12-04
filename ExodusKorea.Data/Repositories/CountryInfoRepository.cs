@@ -23,40 +23,12 @@ namespace ExodusKorea.Data.Repositories
         {
             _context = context;
             _config = config;
-        }  
-
-        //public async Task<PromisingField> GetPromisingFieldByCountry(string country)
-        //{
-        //    var result = await _context.PromisingField
-        //        .SingleOrDefaultAsync(x => x.Country.Equals(country));                
-
-        //    return result;
-        //}
-
-        public IEnumerable<PromisingField> GetAllPromisingFields()
-        {
-            var result = _context.PromisingField.AsEnumerable();
-
-            return result;
         }
 
-        public IEnumerable<SettlementGuide> GetAllSettlementGuides()
+        public async Task<CountryInfoKOTRA> GetCountryInfoCanada()
         {
-            var result = _context.SettlementGuide.AsEnumerable();
-
-            return result;
-        }
-
-        public IEnumerable<LivingCondition> GetAllLivingConditions()
-        {
-            var result = _context.LivingCondition.AsEnumerable();
-
-            return result;
-        }
-
-        public IEnumerable<ImmigrationVisa> GetAllImmigrationVisas()
-        {
-            var result = _context.ImmigrationVisa.AsEnumerable();
+            var result = await _context.CountryInfoKOTRA
+                .SingleOrDefaultAsync(x => x.CountryId == 2);
 
             return result;
         }

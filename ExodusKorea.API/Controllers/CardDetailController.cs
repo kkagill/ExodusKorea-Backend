@@ -522,7 +522,7 @@ namespace ExodusKorea.API.Controllers
                 id = videoCommentReplyVM.VideoCommentReplyId
             }, videoCommentReplyVM);
         }
-        #endregion
+        #endregion             
 
         #region Video Post Likes
         [HttpGet]
@@ -546,9 +546,7 @@ namespace ExodusKorea.API.Controllers
 
             return new OkObjectResult(likesCombined);
         }
-        #endregion
 
-        #region Video Post Likes
         [HttpGet("{id}/video-post-like", Name = "FindUserLikedPost")]
         [Authorize]
         public async Task<IActionResult> FindUserLikedPost(int id)

@@ -11,8 +11,8 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    [Migration("20181129062318_Initialbasecurrency")]
-    partial class Initialbasecurrency
+    [Migration("20181129200536_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -72,6 +72,18 @@ namespace ExodusKorea.API.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.Career", b =>
+                {
+                    b.Property<int>("CareerId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("CareerId");
+
+                    b.ToTable("Career");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.City", b =>
@@ -192,6 +204,8 @@ namespace ExodusKorea.API.Migrations
                 {
                     b.Property<int>("MinimumCostOfLivingId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorCountryEN");
 
                     b.Property<decimal>("Cell");
 
@@ -539,6 +553,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoPostId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CareerId");
+
                     b.Property<int>("CountryId");
 
                     b.Property<int>("Likes");
@@ -552,6 +568,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("YouTubeVideoId");
 
                     b.HasKey("VideoPostId");
+
+                    b.HasIndex("CareerId");
 
                     b.HasIndex("CountryId");
 
@@ -892,6 +910,11 @@ namespace ExodusKorea.API.Migrations
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoPost", b =>
                 {
+                    b.HasOne("ExodusKorea.Model.Entities.Career", "Career")
+                        .WithMany()
+                        .HasForeignKey("CareerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")

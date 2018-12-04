@@ -15,8 +15,9 @@ namespace ExodusKorea.Model.ViewModels
         public string Title { get; set; }
         public int Likes { get; set; }
         public string YouTubeVideoId { get; set; }
-        public int CountryId { get; set; }
+        public int CategoryId { get; set; }
         public string CountryKR { get; set; }
         public string CountryEN { get; set; }
+        public string Category { get; set; }
     }
 }

@@ -11,9 +11,10 @@ using System;
 namespace ExodusKorea.API.Migrations
 {
     [DbContext(typeof(ExodusKoreaContext))]
-    partial class ExodusKoreaContextModelSnapshot : ModelSnapshot
+    [Migration("20181203223435_category")]
+    partial class category
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,26 +184,32 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("CountryInfo");
                 });
 
-            modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfoKOTRA", b =>
+            modelBuilder.Entity("ExodusKorea.Model.Entities.ImmigrationVisa", b =>
                 {
-                    b.Property<int>("CountryInfoKOTRAId")
+                    b.Property<int>("ImmigrationVisaId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CountryId");
+                    b.Property<string>("Content");
 
-                    b.Property<string>("ImmigrationVisa");
+                    b.Property<string>("Country");
 
-                    b.Property<string>("LivingCondition");
+                    b.HasKey("ImmigrationVisaId");
 
-                    b.Property<string>("PromosingField");
+                    b.ToTable("ImmigrationVisa");
+                });
 
-                    b.Property<string>("SettlementGuide");
+            modelBuilder.Entity("ExodusKorea.Model.Entities.LivingCondition", b =>
+                {
+                    b.Property<int>("LivingConditionId")
+                        .ValueGeneratedOnAdd();
 
-                    b.HasKey("CountryInfoKOTRAId");
+                    b.Property<string>("Content");
 
-                    b.HasIndex("CountryId");
+                    b.Property<string>("Country");
 
-                    b.ToTable("CountryInfoKOTRA");
+                    b.HasKey("LivingConditionId");
+
+                    b.ToTable("LivingCondition");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.MinimumCostOfLiving", b =>
@@ -441,6 +448,20 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("PriceInfo");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.PromisingField", b =>
+                {
+                    b.Property<int>("PromisingFieldId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("PromisingFieldId");
+
+                    b.ToTable("PromisingField");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.SalaryInfo", b =>
                 {
                     b.Property<int>("SalaryInfoId")
@@ -465,6 +486,20 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("SalaryInfoId");
 
                     b.ToTable("SalaryInfo");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.SettlementGuide", b =>
+                {
+                    b.Property<int>("SettlementGuideId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("SettlementGuideId");
+
+                    b.ToTable("SettlementGuide");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoComment", b =>
@@ -532,8 +567,6 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<int>("CareerId");
 
-                    b.Property<int>("CategoryId");
-
                     b.Property<int>("CountryId");
 
                     b.Property<int>("Likes");
@@ -549,8 +582,6 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("VideoPostId");
 
                     b.HasIndex("CareerId");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CountryId");
 
@@ -841,14 +872,6 @@ namespace ExodusKorea.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ExodusKorea.Model.Entities.CountryInfoKOTRA", b =>
-                {
-                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("ExodusKorea.Model.Entities.PI_Etc", b =>
                 {
                     b.HasOne("ExodusKorea.Model.Entities.PriceInfo", "PriceInfo")
@@ -902,11 +925,6 @@ namespace ExodusKorea.API.Migrations
                     b.HasOne("ExodusKorea.Model.Entities.Career", "Career")
                         .WithMany()
                         .HasForeignKey("CareerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ExodusKorea.Model.Entities.Category", "Category")
-                        .WithMany("VideoPosts")
-                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
