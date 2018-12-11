@@ -25,7 +25,7 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("country-info-canada")]
+        [Route("country-info-canada")]      
         public async Task<IActionResult> GetCountryInfoCanadaAsync()
         {
             var countryInfo = await _repository.GetCountryInfoCanada();

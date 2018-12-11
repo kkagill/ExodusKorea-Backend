@@ -199,6 +199,40 @@ namespace ExodusKorea.API.Controllers
             return new OkResult();
         }
 
+        [HttpPost]
+        [Authorize]
+        [Route("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                string errorMsg = null;
+                foreach (var m in ModelState.Values)
+                    foreach (var msg in m.Errors)
+                        errorMsg = msg.ErrorMessage;
+                return BadRequest(errorMsg);
+            }
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+                if (result.Succeeded)
+                    return new NoContentResult();
+                else
+                {
+                    string errorMsg = null;
+                    foreach (var e in result.Errors)
+                        errorMsg = e.Code;
+                    return new BadRequestObjectResult(errorMsg);
+                }                   
+            }
+
+            return NotFound();
+        }
+
         #region Helpers
         private void AddErrors(IdentityResult result)
         {

@@ -8,8 +8,10 @@ namespace ExodusKorea.Model.ViewModels
     public class RegistrationVM : IValidatableObject
     {               
         public string Email { get; set; }
-        public string NickName { get; set; }
+        public string NickName { get; set; }    
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -80,10 +80,11 @@ namespace ExodusKorea.API
             services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                    .AddJwtBearer(options =>
                    {
-                       options.Audience = "resource-server";
+                       options.Audience = "resource_server";
                        options.Authority = "http://localhost:18691/";
                        //options.Authority = "https://exoduskoreaapi.azurewebsites.net/";
                        options.RequireHttpsMetadata = false;
@@ -103,28 +104,41 @@ namespace ExodusKorea.API
                 options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
                 options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
                 options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
-            });
+            }); 
 
-            // Register the OpenIddict services.
-            services.AddOpenIddict(options =>
-            {
-                // Register the Entity Framework stores.
-                options.AddEntityFrameworkCoreStores<ExodusKoreaContext>();
-                // Register the ASP.NET Core MVC binder used by OpenIddict.
-                // Note: if you don't call this method, you won't be able to
-                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                options.AddMvcBinders();
-                // Enable the token endpoint.
-                options.EnableTokenEndpoint("/connect/token");
-                // Enable the password flow.
-                options.AllowPasswordFlow();
-                // During development, you can disable the HTTPS requirement.
-                options.DisableHttpsRequirement();
+            services.AddOpenIddict()
+                // Register the OpenIddict core services.
+                .AddCore(options =>
+                {
+                    // Register the Entity Framework stores and models.
+                    options.UseEntityFrameworkCore()
+                           .UseDbContext<ExodusKoreaContext>();
+                })
+                // Register the OpenIddict server handler.
+                .AddServer(options =>
+                {
+                    // Register the ASP.NET Core MVC binder used by OpenIddict.
+                    // Note: if you don't call this method, you won't be able to
+                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                    options.UseMvc();
+                    // Enable the token endpoint.
+                    options.EnableTokenEndpoint("/connect/token");
+                    // Enable the password and the refresh token flows.
+                    options.AllowPasswordFlow()
+                           .AllowRefreshTokenFlow();                           
+                           //.SetAccessTokenLifetime(TimeSpan.FromSeconds(10)); // default is 5 minutes
+                    // Accept anonymous clients (i.e clients that don't send a client_id).
+                    options.AcceptAnonymousClients();
+                    // During development, you can disable the HTTPS requirement.
+                    options.DisableHttpsRequirement();
+                    // Note: to use JWT access tokens instead of the default
+                    // encrypted format, the following lines are required:
+                    //
+                    options.UseJsonWebTokens();
+                    options.AddEphemeralSigningKey();
+                });
 
-                options.UseJsonWebTokens();
-                options.AddEphemeralSigningKey();
-            });
-
+            // For confirming email
             services.Configure<DataProtectionTokenProviderOptions>(options =>
             {
                 options.TokenLifespan = TimeSpan.FromHours(3);
@@ -192,7 +206,7 @@ namespace ExodusKorea.API
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:4200");
+                builder.WithOrigins("http://localhost:4200");                
                 //builder.WithOrigins("https://test2-5d022.firebaseapp.com");
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
