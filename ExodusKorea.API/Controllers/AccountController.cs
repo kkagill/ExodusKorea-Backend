@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using ExodusKorea.Model;
 using AutoMapper;
 using ExodusKorea.API.Services.Interfaces;
+using ExodusKorea.Data.Interfaces;
 
 namespace ExodusKorea.API.Controllers
 {
@@ -19,6 +20,7 @@ namespace ExodusKorea.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IAccountRepository _repository;
         private readonly IMessageService _messageService;
         private readonly IDataProtector _protector;
         private readonly IGoogleRecaptchaService _gRecaptchaService;
@@ -27,6 +29,7 @@ namespace ExodusKorea.API.Controllers
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  RoleManager<IdentityRole> roleManager,
+                                 IAccountRepository repository,
                                  IMessageService messageService,
                                  IDataProtectionProvider provider,
                                  IGoogleRecaptchaService gRecaptchaService,
@@ -35,6 +38,7 @@ namespace ExodusKorea.API.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _repository = repository;
             _messageService = messageService;
             _protector = provider.CreateProtector("ExodusKorea");
             _gRecaptchaService = gRecaptchaService;
@@ -99,6 +103,12 @@ namespace ExodusKorea.API.Controllers
                         errorMsg = msg.ErrorMessage;
                 return BadRequest(errorMsg);
             }
+
+            var allUsers = _repository.GetAll();
+
+            foreach (var au in allUsers)
+                if (au.NickName.ToLower().Trim().Equals(model.NickName.ToLower().Trim()))
+                    return BadRequest("DuplicateNickName");
 
             ApplicationUser newUser = new ApplicationUser
             {
@@ -188,15 +198,6 @@ namespace ExodusKorea.API.Controllers
                 return Redirect("http://localhost:4200/token-expired?email=" + user.Email);
 
             return Redirect("http://localhost:4200/confirmed");
-        }
-
-        [HttpPost]
-        [Route("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-
-            return new OkResult();
         }
 
         [HttpPost]

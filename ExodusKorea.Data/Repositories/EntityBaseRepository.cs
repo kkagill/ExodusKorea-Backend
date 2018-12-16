@@ -34,6 +34,7 @@ namespace ExodusKorea.Data.Repositories
         {
             return await _context.Set<T>().CountAsync();
         }
+
         public virtual IEnumerable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = _context.Set<T>();

@@ -1,6 +1,7 @@
 ﻿using ExodusKorea.Model.Entities;
 using ExodusKorea.Model.JsonModels;
 using ExodusKorea.Model.ViewModels;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -32,5 +33,12 @@ namespace ExodusKorea.API.Services.Interfaces
     {
         string GetClientIP(bool tryUseXForwardHeader = true);
         Task<string> GetCountryCodeByIP(string ipAddress);
+    }
+
+    public interface ILogDataService
+    {
+        Task LogInternalServerException(ExceptionContext context);
+        Task LogHttpResponseException(HttpResponseExceptionVM vm);
+        Task LogLoginSession(ApplicationUser user, string loginType);
     }
 }

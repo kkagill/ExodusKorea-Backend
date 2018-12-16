@@ -32,54 +32,43 @@ namespace ExodusKorea.API.Services
         }
 
         public Task SendEmailAsync(string email, string subject, string body, string htmlBody)
-        {
-            try
+        {          
+            //if (_appSettings.Environment.Equals("Development"))
+            //{
+            //    to = "kkagill@gmail.com";
+            //    cc = "kkagill@gmail.com";
+            //}
+
+            var from = "kkagill@gmail.com";
+            var to = "shejongshon@gmail.com";
+            var cc = "shejongshon@gmail.com";
+            var message = new MimeMessage();
+
+            if (from != null && from.Length > 0)
+                message.From.Add(new MailboxAddress(from));
+            if (to != null && to.Length > 0)
+                message.To.Add(new MailboxAddress(to));
+            if (cc != null && cc.Length > 0)
+                message.Cc.Add(new MailboxAddress(cc));            
+
+            message.Subject = subject;
+            var builder = new BodyBuilder() { TextBody = body };
+
+            if (!string.IsNullOrEmpty(htmlBody))
+                builder.HtmlBody = htmlBody;
+
+            message.Body = builder.ToMessageBody();
+
+            // Send email to the user
+            using (var client = new SmtpClient())
             {
-                //if (_appSettings.Environment.Equals("Development"))
-                //{
-                //    to = "kkagill@gmail.com";
-                //    cc = "kkagill@gmail.com";
-                //}
-
-                var from = "kkagill@gmail.com";
-                var to = "shejongshon@gmail.com";
-                var cc = "shejongshon@gmail.com";
-                var message = new MimeMessage();
-
-                if (from != null && from.Length > 0)
-                    message.From.Add(new MailboxAddress(from));
-                if (to != null && to.Length > 0)
-                    message.To.Add(new MailboxAddress(to));
-                if (cc != null && cc.Length > 0)
-                    message.Cc.Add(new MailboxAddress(cc));            
-
-                message.Subject = subject;
-                var builder = new BodyBuilder() { TextBody = body };
-
-                if (!string.IsNullOrEmpty(htmlBody))
-                    builder.HtmlBody = htmlBody;
-
-                message.Body = builder.ToMessageBody();
-
-                // Send email to the user
-                using (var client = new SmtpClient())
-                {
-                    client.Connect("in-v3.mailjet.com", 587);
-                    client.Authenticate("fdbc73a4f6e45650df958986c1f86ab8", "747e139b010e9f4316f53b674be8f334");
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
-
-                return Task.FromResult(1);
+                client.Connect("in-v3.mailjet.com", 587);
+                client.Authenticate("fdbc73a4f6e45650df958986c1f86ab8", "747e139b010e9f4316f53b674be8f334");
+                client.Send(message);
+                client.Disconnect(true);
             }
-            catch (Exception ex)
-            {
-                //bool isDev = _appSettings.Environment == "Development" ? true : false;
-                GlobalException exception = new GlobalException(_httpContextAccessor, _config, _context, this);
-                exception.HandleException(ex.ToString(), ex.Message, ex.StackTrace);
 
-                return Task.FromResult(0);
-            }            
+            return Task.FromResult(1);
         }
     }
 }

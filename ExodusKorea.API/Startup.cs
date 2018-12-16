@@ -125,8 +125,8 @@ namespace ExodusKorea.API
                     options.EnableTokenEndpoint("/connect/token");
                     // Enable the password and the refresh token flows.
                     options.AllowPasswordFlow()
-                           .AllowRefreshTokenFlow();                           
-                           //.SetAccessTokenLifetime(TimeSpan.FromSeconds(10)); // default is 5 minutes
+                           .AllowRefreshTokenFlow()                           
+                           .SetAccessTokenLifetime(TimeSpan.FromSeconds(10)); // default is 5 minutes
                     // Accept anonymous clients (i.e clients that don't send a client_id).
                     options.AcceptAnonymousClients();
                     // During development, you can disable the HTTPS requirement.
@@ -184,6 +184,8 @@ namespace ExodusKorea.API
             services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<INewsDetailRepository, NewsDetailRepository>();
             services.AddScoped<ICountryInfoRepository, CountryInfoRepository>();
+            services.AddScoped<IMyVideosRepository, MyVideosRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             // Services            
             services.AddTransient<DbInitializer>();
             services.AddTransient<IMessageService, MessageService>();
@@ -191,6 +193,7 @@ namespace ExodusKorea.API
             services.AddTransient<IGoogleRecaptchaService, GoogleRecaptchaService>();
             services.AddTransient<IYouTubeService, YoutubeService>();
             services.AddTransient<IClientIPService, ClientIPService>();
+            services.AddTransient<ILogDataService, LogDataService>();
             // Without this controller actions are not forbidden if other roles are trying to access
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
             services.AddSingleton(Configuration);

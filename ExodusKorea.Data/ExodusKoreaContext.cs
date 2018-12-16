@@ -30,6 +30,10 @@ namespace ExodusKorea.Data
         public DbSet<Career> Career { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<CountryInfoKOTRA> CountryInfoKOTRA { get; set; }
+        public DbSet<MyVideos> MyVideos { get; set; }
+        public DbSet<SiteException> SiteException { get; set; }
+        public DbSet<HttpResponseException> HttpResponseException { get; set; }
+        public DbSet<LoginSession> LoginSession { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +65,10 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<Career>().ToTable("Career");
             modelBuilder.Entity<Category>().ToTable("Category");
             modelBuilder.Entity<CountryInfoKOTRA>().ToTable("CountryInfoKOTRA");
+            modelBuilder.Entity<MyVideos>().ToTable("MyVideo");
+            modelBuilder.Entity<SiteException>().ToTable("Log_SiteException");
+            modelBuilder.Entity<HttpResponseException>().ToTable("Log_HttpResponseException");
+            modelBuilder.Entity<LoginSession>().ToTable("Log_LoginSession");
         }
     }
 }

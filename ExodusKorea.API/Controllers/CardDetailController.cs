@@ -30,6 +30,7 @@ namespace ExodusKorea.API.Controllers
         private readonly IVideoPostRepository _vpRepository;
         private readonly INotificationRepository _nRepository;
         private readonly IMinimumCostOfLivingRepository _mcolRepository;
+        private readonly IMyVideosRepository _mvRepository;
         private readonly ICurrencyRatesService _currencyRate;
         private readonly IYouTubeService _youTube;
         private readonly IClientIPService _clientIP;
@@ -44,6 +45,7 @@ namespace ExodusKorea.API.Controllers
                                     IVideoPostRepository vpRepository,
                                     INotificationRepository nRepository,
                                     IMinimumCostOfLivingRepository mcolRepository,
+                                    IMyVideosRepository mvRepository,
                                     ICurrencyRatesService currencyRate,
                                     IYouTubeService youTube,
                                     IClientIPService clientIP,
@@ -58,6 +60,7 @@ namespace ExodusKorea.API.Controllers
             _vpRepository = vpRepository;
             _nRepository = nRepository;
             _mcolRepository = mcolRepository;
+            _mvRepository = mvRepository;
             _currencyRate = currencyRate;
             _youTube = youTube;
             _clientIP = clientIP;
@@ -79,7 +82,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var countryInfoVM = Mapper.Map<CountryInfo, CountryInfoVM>(countryInfo);
-
+          
             return new OkObjectResult(countryInfoVM);
         }
         #endregion
@@ -559,25 +562,13 @@ namespace ExodusKorea.API.Controllers
             if (user == null)
                 return NotFound();
 
-            var videoPostLikes = _vplRepository.FindBy(c => c.UserId.Equals(user.Id));
-            var flag = false;
+            var videoPostLikes = _vplRepository
+                .GetSingle(vpl => vpl.UserId.Equals(user.Id) && vpl.VideoPostId == id);
 
-            if (videoPostLikes != null)
-            {
-                foreach (var vcl in videoPostLikes)
-                    if (vcl.VideoPostId == id)
-                    {
-                        flag = true;
-                        break;
-                    }
-            }               
-            else
-                return NotFound();
-
-            if (flag)
-                return new OkObjectResult(videoPostLikes);
-            else
+            if (videoPostLikes == null)
                 return new NoContentResult();
+
+            return new OkResult();        
         }
 
         [HttpPut]
@@ -644,25 +635,13 @@ namespace ExodusKorea.API.Controllers
             if (user == null)
                 return NotFound();
 
-            var commentLikes = _vclRepository.FindBy(c => c.UserId.Equals(user.Id));
-            var hasLiked = false;
+            var commentLikes = _vclRepository
+                .GetSingle(vcl => vcl.UserId.Equals(user.Id) && vcl.VideoCommentId == id);
 
-            if (commentLikes != null)
-            {
-                foreach (var vcl in commentLikes)
-                    if (vcl.VideoCommentId == id)
-                    {
-                        hasLiked = true;
-                        break;
-                    }
-            }              
-            else
-                return NotFound();
-
-            if (hasLiked)
-                return new OkResult();
-            else
+            if (commentLikes == null)
                 return new NoContentResult();
+
+            return new OkResult();
         }
 
         [HttpPut]
@@ -729,25 +708,13 @@ namespace ExodusKorea.API.Controllers
             if (user == null)
                 return NotFound();
 
-            var commentReplyLikes = _vcrlRepository.FindBy(c => c.UserId.Equals(user.Id));
-            var hasLiked = false;
+            var commentReplyLikes = _vcrlRepository
+                .GetSingle(vcrl => vcrl.UserId.Equals(user.Id) && vcrl.VideoCommentReplyId == id);
 
-            if (commentReplyLikes != null)
-            {
-                foreach (var vcl in commentReplyLikes)
-                    if (vcl.VideoCommentReplyId == id)
-                    {
-                        hasLiked = true;
-                        break;
-                    }
-            }
-            else
-                return NotFound();
-
-            if (hasLiked)
-                return new OkResult();
-            else
+            if (commentReplyLikes == null)
                 return new NoContentResult();
+
+            return new OkResult();      
         }
 
         [HttpPut]
@@ -968,6 +935,84 @@ namespace ExodusKorea.API.Controllers
             await _nRepository.CommitAsync();
 
             return new NoContentResult();
+        }
+        #endregion
+
+        #region Follow
+        [HttpGet("{id}/my-videos", Name = "GetMyVideoById")]
+        public IActionResult GetMyVideoById(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var myVideos = _mvRepository.GetSingle(c => c.MyVideosId == id);
+
+            if (myVideos != null)
+                return new OkObjectResult(myVideos);
+            else
+                return NotFound();
+        }
+
+        [HttpPost]
+        [Route("add-my-videos")]
+        [Authorize]
+        public async Task<IActionResult> AddToMyVideos([FromBody] AddToMyVideosVM vm)
+        {
+            if (vm.VideoPostId <= 0)
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var duplicate = _mvRepository
+                .GetSingle(mv => mv.VideoPostId == vm.VideoPostId && mv.ApplicationUserId.Equals(user.Id));
+
+            if (duplicate != null)
+                return BadRequest("duplicate");
+
+            MyVideos myVideos = new MyVideos
+            {
+                ApplicationUserId = user.Id,
+                VideoPostId = vm.VideoPostId            
+            };
+
+            await _mvRepository.AddAsync(myVideos);
+            await _mvRepository.CommitAsync();
+
+            return CreatedAtRoute("GetMyVideoById", new
+            {
+                controller = "CardDetail",
+                id = myVideos.MyVideosId
+            }, myVideos);
+        }
+        
+        [HttpGet]
+        [Authorize]
+        [Route("my-videos", Name = "GetMyVideos")]
+        public async Task<IActionResult> GetMyVideos()
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var myVideos = _mvRepository.FindBy(mv => mv.ApplicationUserId == user.Id);
+            var allVideos = _vpRepository.AllIncluding(vp => vp.Country);
+
+            if (myVideos == null || allVideos == null)
+                return NotFound();
+
+            var myVideoPosts = new List<VideoPost>();
+
+            foreach (var av in allVideos)
+                if (myVideos.Any(mv => mv.VideoPostId == av.VideoPostId))
+                    myVideoPosts.Add(av);
+
+            var allMyVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(myVideoPosts);
+
+            return new OkObjectResult(allMyVideosVM);
         }
         #endregion
 

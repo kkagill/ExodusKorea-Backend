@@ -37,8 +37,9 @@ namespace ExodusKorea.Data.Interfaces
         Task<CountryInfoKOTRA> GetCountryInfoCanada();    
     }
 
+    public interface IAccountRepository : IEntityBaseRepository<ApplicationUser> { }
     public interface IVideoPostRepository : IEntityBaseRepository<VideoPost> { }
-    public interface IVideoCommentRepository : IEntityBaseRepository<VideoComment> {}
+    public interface IVideoCommentRepository : IEntityBaseRepository<VideoComment> { }
     public interface IVideoCommentReplyRepository : IEntityBaseRepository<VideoCommentReply> { }
     public interface IVideoPostLikeRepository : IEntityBaseRepository<VideoPostLike> { }
     public interface IVideoCommentLikeRepository : IEntityBaseRepository<CommentLike> { }
@@ -46,5 +47,6 @@ namespace ExodusKorea.Data.Interfaces
     public interface INotificationRepository : IEntityBaseRepository<Notification> { }
     public interface IMinimumCostOfLivingRepository : IEntityBaseRepository<MinimumCostOfLiving> { }
     public interface INewsRepository : IEntityBaseRepository<News> { }
-    public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }   
+    public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }
+    public interface IMyVideosRepository : IEntityBaseRepository<MyVideos> { }
 }

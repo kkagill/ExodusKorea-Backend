@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
+using ExodusKorea.API.Services.Interfaces;
 using ExodusKorea.Model.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -19,15 +20,18 @@ namespace ExodusKorea.API.Controllers
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogDataService _logDataService;
 
         public AuthorizationController(
             IOptions<IdentityOptions> identityOptions,
-            SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+            SignInManager<ApplicationUser> signInManager,         
+            UserManager<ApplicationUser> userManager,
+            ILogDataService logDataService)
         {
             _identityOptions = identityOptions;
             _signInManager = signInManager;
             _userManager = userManager;
+            _logDataService = logDataService;
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
@@ -67,6 +71,8 @@ namespace ExodusKorea.API.Controllers
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(request, user);
 
+                await _logDataService.LogLoginSession(user, "password");
+
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
@@ -102,6 +108,8 @@ namespace ExodusKorea.API.Controllers
                 // Create a new authentication ticket, but reuse the properties stored
                 // in the refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(request, user, info.Properties);
+
+                await _logDataService.LogLoginSession(user, "refresh");
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
