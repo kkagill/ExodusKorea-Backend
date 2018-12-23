@@ -7,5 +7,6 @@ namespace ExodusKorea.Model.Entities
     {
         public int CareerId { get; set; }
         public string Name { get; set; }
+        public string NameEN { get; set; }
     }
 }

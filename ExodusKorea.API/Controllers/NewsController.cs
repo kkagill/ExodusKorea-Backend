@@ -73,12 +73,18 @@ namespace ExodusKorea.API.Controllers
         {
             var categories = new List<CategoryVM>
             {
-                new CategoryVM { CategoryId = 0, Name = "전체" },
-                new CategoryVM { CategoryId = 1, Name = "경제/무역" },
-                new CategoryVM { CategoryId = 2, Name = "통상/규제" },
-                new CategoryVM { CategoryId = 3, Name = "일자리 동향" }
+                new CategoryVM { CategoryId = 0, Name = "전체" }
             };
 
+            var allCategories = _repository.GetAll();
+
+            foreach (var c in allCategories)
+                categories.Add(new CategoryVM
+                {
+                    CategoryId = c.NewsId,
+                    Name = c.Topic
+                });
+            
             return new OkObjectResult(categories);
         }
 
@@ -118,6 +124,8 @@ namespace ExodusKorea.API.Controllers
                 foreach (var and in allNewsDetailsVM)
                     and.NewsId = 0;
 
+                allNewsDetailsVM = allNewsDetailsVM.OrderByDescending(x => x.DateCreated);
+
                 return new OkObjectResult(allNewsDetailsVM);
             }
 
@@ -127,6 +135,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var newsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(newsDetails);
+            newsDetailsVM = newsDetailsVM.OrderByDescending(x => x.DateCreated);
 
             return new OkObjectResult(newsDetailsVM);
         }

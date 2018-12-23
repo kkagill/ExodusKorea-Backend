@@ -28,6 +28,8 @@ namespace ExodusKorea.Model.ViewModels.Mapping
             CreateMap<MinimumCostOfLiving, MinimumCostOfLivingVM>();
             CreateMap<News, NewsVM>();
             CreateMap<NewsDetail, NewsDetailVM>();
+            CreateMap<Career, CareerInfoVM>();
+            CreateMap<JobSite, JobSiteVM>();
             CreateMap<VideoComment, VideoCommentVM>()
                .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vc => vc.Country))
                .ForMember(vm => vm.VideoCommentReplies,

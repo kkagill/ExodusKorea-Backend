@@ -159,6 +159,22 @@ namespace ExodusKorea.Data.Repositories
             return result.Name;
         }
 
+        public async Task<Career> GetCareerByVideoPostId(int videoPostId)
+        {
+            var result = await _context.VideoPosts
+                .Include(x => x.Career)
+                .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
+
+            return result.Career;
+        }
+
+        public IEnumerable<JobSite> GetAllJobSites()
+        {
+            var result = _context.JobSite.AsEnumerable(); 
+
+            return result;
+        }
+
         // This is used when we know Hospital/Clinic doesn't send multiple ExamTypes per HL7 Message
         //public stp_GetWaitTimeAndCount GetWaitTimeAndCount(string code, string offset)
         //{

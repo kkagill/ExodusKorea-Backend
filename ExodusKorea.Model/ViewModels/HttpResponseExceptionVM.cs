@@ -8,7 +8,7 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class HttpResponseExceptionVM
     {               
-        public int Status { get; set; }
+        public int? Status { get; set; }
         public DateTime CreateDate { get; set; }
         public string Error { get; set; }
         public string IpAddress { get; set; }

@@ -30,10 +30,14 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<DateTime>("DateCreated");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("HasCanceledSubscription");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -79,6 +83,8 @@ namespace ExodusKorea.API.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
+
+                    b.Property<string>("NameEN");
 
                     b.HasKey("CareerId");
 
@@ -225,6 +231,22 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("HttpResponseExceptionId");
 
                     b.ToTable("Log_HttpResponseException");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.JobSite", b =>
+                {
+                    b.Property<int>("JobSiteId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Category");
+
+                    b.Property<string>("Link");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("JobSiteId");
+
+                    b.ToTable("JobSite");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.LoginSession", b =>
@@ -646,6 +668,24 @@ namespace ExodusKorea.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("VideoPostLikes");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.WithdrawUser", b =>
+                {
+                    b.Property<long>("WithdrawUserId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateWithdrew");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("NickName");
+
+                    b.Property<string>("Reason");
+
+                    b.HasKey("WithdrawUserId");
+
+                    b.ToTable("Log_WithdrawUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

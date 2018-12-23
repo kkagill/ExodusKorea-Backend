@@ -125,8 +125,8 @@ namespace ExodusKorea.API
                     options.EnableTokenEndpoint("/connect/token");
                     // Enable the password and the refresh token flows.
                     options.AllowPasswordFlow()
-                           .AllowRefreshTokenFlow()                           
-                           .SetAccessTokenLifetime(TimeSpan.FromSeconds(10)); // default is 5 minutes
+                           .AllowRefreshTokenFlow();                           
+                           //.SetAccessTokenLifetime(TimeSpan.FromSeconds(10)); // default is 5 minutes
                     // Accept anonymous clients (i.e clients that don't send a client_id).
                     options.AcceptAnonymousClients();
                     // During development, you can disable the HTTPS requirement.

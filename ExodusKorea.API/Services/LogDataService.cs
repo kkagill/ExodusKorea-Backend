@@ -37,16 +37,16 @@ namespace ExodusKorea.API.Services
 
             HttpContext = _httpContextAccessor.HttpContext;
         }
-
+        // Log 500 errors
         public async Task LogInternalServerException(ExceptionContext context)
         {
             string username = "UNKNOWN";
             string userId = "ANONYMOUS";
-
+          
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                username = HttpContext.User.Identity.Name;
-                userId = _context.Users.Where(x => x.UserName.Equals(username)).SingleOrDefault().Id;
+                userId = HttpContext.User.Identity.Name;
+                username = _context.Users.Where(x => x.Id.Equals(userId)).SingleOrDefault().Email;
             }
 
             string domain = HttpContext.Request.Host.Value;
@@ -93,7 +93,7 @@ namespace ExodusKorea.API.Services
 
             await _email.SendEmailAsync("admin@exoduscorea.com", subject, body, null);
         }
-
+        // Log 404 or 400 errors
         public async Task LogHttpResponseException(HttpResponseExceptionVM vm)
         {           
             string domain = HttpContext.Request.Host.Value;         
@@ -118,28 +118,28 @@ namespace ExodusKorea.API.Services
                 await _email.SendEmailAsync("admin@exoduscorea.com", "*** 엑소더스 코리아 HttpResponseException 추가 오류 ***", ex.ToString(), null);
             }
             // Skip sending email notification for Not Found 404 error
-            if (vm.Status != 404)
-            {
-                vm.Username = vm.Username ?? "ANONYMOUS";
+            //if (vm.Status != 404)
+            //{
+            //    vm.Username = vm.Username ?? "ANONYMOUS";
 
-                string subject = "*** 엑소더스 코리아 " + vm.Status + " 오류 ***";
-                string body = "Domain: " + domain + "\r\n\r\n"
-                               + "Status: " + vm.Status + "\r\n\r\n"
-                               + "Username: " + vm.Username + "\r\n\r\n"
-                               + "IP Address: " + ipAddress + "\r\n\r\n"
-                               + "Error: " + vm.Error + "\r\n\r\n"
-                               + "Message: " + vm.Message + "\r\n\r\n"
-                               + "Inputs: " + "\r\n\r\n";
+            //    string subject = "*** 엑소더스 코리아 " + vm.Status + " 오류 ***";
+            //    string body = "Domain: " + domain + "\r\n\r\n"
+            //                   + "Status: " + vm.Status + "\r\n\r\n"
+            //                   + "Username: " + vm.Username + "\r\n\r\n"
+            //                   + "IP Address: " + ipAddress + "\r\n\r\n"
+            //                   + "Error: " + vm.Error + "\r\n\r\n"
+            //                   + "Message: " + vm.Message + "\r\n\r\n"
+            //                   + "Inputs: " + "\r\n\r\n";
 
-                if (HttpContext.Request.HasFormContentType)
-                {
-                    var form = HttpContext.Request.Form.ToDictionary(x => x.Key, x => x.Value.ToString());
-                    foreach (KeyValuePair<string, string> entry in form)
-                        body += "Control: " + entry.Key + "; Value: " + entry.Value + "\r\n";
-                }
+            //    if (HttpContext.Request.HasFormContentType)
+            //    {
+            //        var form = HttpContext.Request.Form.ToDictionary(x => x.Key, x => x.Value.ToString());
+            //        foreach (KeyValuePair<string, string> entry in form)
+            //            body += "Control: " + entry.Key + "; Value: " + entry.Value + "\r\n";
+            //    }
 
-                await _email.SendEmailAsync("admin@exoduscorea.com", subject, body, null);
-            }           
+            //    await _email.SendEmailAsync("admin@exoduscorea.com", subject, body, null);
+            //}           
         }
 
         public async Task LogLoginSession(ApplicationUser user, string loginType)
@@ -159,7 +159,7 @@ namespace ExodusKorea.API.Services
 
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
                 await _email.SendEmailAsync("admin@exoduscorea.com", "*** 엑소더스 코리아 LoginSession 추가 오류 ***", ex.ToString(), null);
             }

@@ -114,7 +114,8 @@ namespace ExodusKorea.API.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
-                NickName = model.NickName
+                NickName = model.NickName,
+                DateCreated = DateTime.UtcNow
             };
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
@@ -134,7 +135,9 @@ namespace ExodusKorea.API.Controllers
 
                 await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);
 
-                return CreatedAtRoute("GetUser", new { controller = "Account", id = user.Id }, user);
+                var userVM = Mapper.Map<ApplicationUser, ApplicationUserVM>(user);
+
+                return CreatedAtRoute("GetUser", new { controller = "Account", id = user.Id }, userVM);
             }            
 
             return new BadRequestObjectResult(result.Errors);
@@ -198,6 +201,103 @@ namespace ExodusKorea.API.Controllers
                 return Redirect("http://localhost:4200/token-expired?email=" + user.Email);
 
             return Redirect("http://localhost:4200/confirmed");
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("profile", Name = "GetProfile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var profileVM = new ProfileVM
+            {
+                Email = user.Email,
+                NickName = user.NickName,
+                DateCreated = user.DateCreated,
+                DateVisitedRecent = await _repository.GetUserRecentVisit(user.Id),
+                VisitCount = await _repository.GetVisitCountByUserId(user.Id),
+                HasCanceledSubscription = user.HasCanceledSubscription
+            };
+
+            return new OkObjectResult(profileVM);
+        }
+        
+        [HttpPut]
+        [Route("{nickName}/change-nickName")]
+        [Authorize]
+        public async Task<IActionResult> ChangeNickName(string nickName)
+        {
+            if (string.IsNullOrWhiteSpace(nickName))
+                return BadRequest();
+
+            if (!(nickName.Length > 0 && nickName.Length < 10))
+                return BadRequest("MaxLengthExceeded");
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var allUsers = _repository.GetAll();
+
+            foreach (var au in allUsers)
+                if (au.NickName.ToLower().Trim().Equals(nickName.ToLower().Trim()))
+                    return BadRequest("DuplicateNickName");
+
+            user.NickName = nickName;
+            await _repository.CommitAsync();
+
+            var userVM = Mapper.Map<ApplicationUser, ApplicationUserVM>(user);
+
+            return new OkObjectResult(userVM);
+        }
+
+        [HttpPut]
+        [Route("{hasCanceledSubscription}/update-subscription")]
+        [Authorize]
+        public async Task<IActionResult> UpdateSubscription(bool hasCanceledSubscription)
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            user.HasCanceledSubscription = hasCanceledSubscription;
+
+            _repository.Update(user);
+            await _repository.CommitAsync();
+
+            return new NoContentResult();
+        }
+
+        [HttpDelete("{reason}/{password}/delete-account")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAccount(string reason, string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                return BadRequest();
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            var result = await _signInManager.PasswordSignInAsync(user.Email, password, false, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                await _repository.LogWithdrewUser(reason, user);
+                await _userManager.DeleteAsync(user);
+                await _repository.DeleteMyVideosAsync(user.Id);
+
+                return new NoContentResult();
+            }
+            else
+                return BadRequest("InvalidAttempt");
         }
 
         [HttpPost]

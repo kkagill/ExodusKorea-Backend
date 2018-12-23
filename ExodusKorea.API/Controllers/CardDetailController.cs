@@ -304,6 +304,41 @@ namespace ExodusKorea.API.Controllers
         }
         #endregion
 
+        #region Career Info
+        [HttpGet]
+        [Route("{videoPostId}/career-info", Name = "CareerInfo")]
+        public async Task<IActionResult> GetCareerInfo(int videoPostId)
+        {
+            if (videoPostId <= 0)
+                return NotFound();
+
+            var career = await _repository.GetCareerByVideoPostId(videoPostId);
+            
+            if (career == null)
+                return NotFound();
+
+            var careerInfoVM = Mapper.Map<Career, CareerInfoVM>(career);
+
+            return new OkObjectResult(careerInfoVM);
+        }
+        #endregion
+
+        #region Job Sites
+        [HttpGet]
+        [Route("job-sites", Name = "JobSites")]
+        public IActionResult GetJobSites()
+        {         
+            var jobSites = _repository.GetAllJobSites();
+
+            if (jobSites == null)
+                return NotFound();
+
+            var jobSitesVM = Mapper.Map<IEnumerable<JobSite>, IEnumerable<JobSiteVM>>(jobSites);
+
+            return new OkObjectResult(jobSitesVM);
+        }
+        #endregion       
+
         #region Currency Info
         [HttpGet]
         [Route("{videoPostId}/currency-info", Name = "CurrencyInfo")]
@@ -847,7 +882,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var notifications = _nRepository
-                .FindBy(nv => nv.UserId.Equals(user.Id) && nv.DateCreated >= DateTime.Now.Date.AddDays(-7));
+                .FindBy(nv => nv.UserId.Equals(user.Id) && nv.DateCreated >= DateTime.Now.Date.AddDays(-14));
             var notificationsVM = Mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationVM>>(notifications);
 
             notificationsVM = notificationsVM.OrderByDescending(x => x.DateCreated);
