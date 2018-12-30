@@ -70,7 +70,7 @@ namespace ExodusKorea.API.Controllers
             var emailTemplateVM = new EmailTemplateVM(user.Email, "http://localhost:4200/", passwordRequirement);
             var emailFormat = emailTemplateVM.GetForgotPasswordEmailFormat();
 
-            await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);         
+            await _messageService.SendEmailAsync("admin@exoduscorea.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);         
 
             return new OkResult();
         }
@@ -133,7 +133,7 @@ namespace ExodusKorea.API.Controllers
                 var emailTemplateVM = new EmailTemplateVM(user.Email, callbackUrl.AbsoluteUri);
                 var emailFormat = emailTemplateVM.GetConfirmEmailFormat();
 
-                await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);
+                await _messageService.SendEmailAsync("admin@exoduscorea.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);
 
                 var userVM = Mapper.Map<ApplicationUser, ApplicationUserVM>(user);
 
@@ -178,7 +178,7 @@ namespace ExodusKorea.API.Controllers
             var emailTemplateVM = new EmailTemplateVM(user.Email, callbackUrl.AbsoluteUri);
             var emailFormat = emailTemplateVM.GetConfirmEmailFormat();
 
-            await _messageService.SendEmailAsync(user.Email, emailFormat.Item1, null, emailFormat.Item2);         
+            await _messageService.SendEmailAsync("admin@exoduscorea.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);         
 
             return new OkResult();
         }

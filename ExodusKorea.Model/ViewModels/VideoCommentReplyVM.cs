@@ -14,10 +14,12 @@ namespace ExodusKorea.Model.ViewModels
         public string Comment { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
+        public int VideoPostId { get; set; }
         public int Likes { get; set; }
         public string UserId { get; set; }
         public string RepliedTo { get; set; }
         public string CountryEN { get; set; }
+        public bool IsSharer { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

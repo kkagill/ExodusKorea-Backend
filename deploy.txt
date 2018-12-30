@@ -1,0 +1,19 @@
+frontend deploying:
+
+1. firebase init
+2. y
+3. dist/ExodusKorea-SPA
+4. y
+5. n
+6. ng build --prod
+7. firebase deploy
+
+
+backend deploying:
+
+1. startup.cs
+2. connectionstring to ExodusKoreaAzure
+3. options.Authority
+4. builder.withOrigins
+5. appsettings.json
+6. Use appropriate GoogleReCaptcha

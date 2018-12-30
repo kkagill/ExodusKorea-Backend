@@ -14,6 +14,8 @@ namespace ExodusKorea.Model.Entities
         public string UserId { get; set; }
         public string RepliedTo { get; set; }
         public string Country { get; set; }
+        public string IPAddress { get; set; }
+        public bool IsSharer { get; set; }
 
         public long VideoCommentId { get; set; }
         public VideoComment VideoComment { get; set; }

@@ -13,6 +13,8 @@ namespace ExodusKorea.Model.Entities
         public int Likes { get; set; }
         public string UserId { get; set; }
         public string Country { get; set; }
+        public string IPAddress { get; set; }
+        public bool IsSharer { get; set; }
 
         public int VideoPostId { get; set; }
         public VideoPost VideoPost { get; set; }

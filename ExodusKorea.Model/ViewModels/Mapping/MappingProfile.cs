@@ -45,7 +45,8 @@ namespace ExodusKorea.Model.ViewModels.Mapping
                            Likes = vcr.Likes,
                            UserId = vcr.UserId,
                            RepliedTo = vcr.RepliedTo,
-                           CountryEN = vcr.Country
+                           CountryEN = vcr.Country,
+                           IsSharer = vcr.IsSharer
                        })));
             CreateMap<VideoCommentReply, VideoCommentReplyVM>()
                 .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vc => vc.Country));

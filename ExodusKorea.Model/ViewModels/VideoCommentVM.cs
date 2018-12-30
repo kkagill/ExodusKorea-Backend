@@ -19,6 +19,7 @@ namespace ExodusKorea.Model.ViewModels
         public int VideoPostId { get; set; }
         public string UserId { get; set; }
         public string CountryEN { get; set; }
+        public bool IsSharer { get; set; }
 
         public IEnumerable<VideoCommentReplyVM> VideoCommentReplies { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

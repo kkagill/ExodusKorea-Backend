@@ -31,25 +31,22 @@ namespace ExodusKorea.API.Services
             _context = context;
         }
 
-        public Task SendEmailAsync(string email, string subject, string body, string htmlBody)
-        {          
+        public Task SendEmailAsync(string from, string to, string subject, string body, string htmlBody)
+        {
             //if (_appSettings.Environment.Equals("Development"))
             //{
             //    to = "kkagill@gmail.com";
             //    cc = "kkagill@gmail.com";
             //}
 
-            var from = "kkagill@gmail.com";
-            var to = "shejongshon@gmail.com";
-            var cc = "shejongshon@gmail.com";
+            to = "admin@exoduscorea.com";
+
             var message = new MimeMessage();
 
             if (from != null && from.Length > 0)
                 message.From.Add(new MailboxAddress(from));
             if (to != null && to.Length > 0)
-                message.To.Add(new MailboxAddress(to));
-            if (cc != null && cc.Length > 0)
-                message.Cc.Add(new MailboxAddress(cc));            
+                message.To.Add(new MailboxAddress(to));                  
 
             message.Subject = subject;
             var builder = new BodyBuilder() { TextBody = body };

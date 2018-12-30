@@ -58,4 +58,5 @@ namespace ExodusKorea.Data.Interfaces
     public interface INewsRepository : IEntityBaseRepository<News> { }
     public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }
     public interface IMyVideosRepository : IEntityBaseRepository<MyVideos> { }
+    public interface IUploadVideoRepository : IEntityBaseRepository<UploadVideo> { }
 }

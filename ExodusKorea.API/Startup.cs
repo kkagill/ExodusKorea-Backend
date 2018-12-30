@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -186,6 +187,7 @@ namespace ExodusKorea.API
             services.AddScoped<ICountryInfoRepository, CountryInfoRepository>();
             services.AddScoped<IMyVideosRepository, MyVideosRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IUploadVideoRepository, UploadVideoRepository>();
             // Services            
             services.AddTransient<DbInitializer>();
             services.AddTransient<IMessageService, MessageService>();

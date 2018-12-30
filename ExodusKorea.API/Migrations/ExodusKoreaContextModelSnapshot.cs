@@ -224,7 +224,7 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<string>("Message");
 
-                    b.Property<int>("Status");
+                    b.Property<int?>("Status");
 
                     b.Property<string>("UserId");
 
@@ -385,6 +385,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<long>("VideoCommentReplyId");
 
                     b.Property<int>("VideoPostId");
+
+                    b.Property<long>("VimeoId");
 
                     b.Property<string>("YouTubeVideoId");
 
@@ -567,6 +569,26 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("Log_SiteException");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.UploadVideo", b =>
+                {
+                    b.Property<int>("UploadVideoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Country");
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("IpAddress");
+
+                    b.Property<string>("YoutubeAddress");
+
+                    b.HasKey("UploadVideoId");
+
+                    b.ToTable("UploadVideo");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoComment", b =>
                 {
                     b.Property<long>("VideoCommentId")
@@ -581,6 +603,10 @@ namespace ExodusKorea.API.Migrations
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<DateTime?>("DateUpdated");
+
+                    b.Property<string>("IPAddress");
+
+                    b.Property<bool>("IsSharer");
 
                     b.Property<int>("Likes");
 
@@ -610,6 +636,10 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<DateTime?>("DateUpdated");
 
+                    b.Property<string>("IPAddress");
+
+                    b.Property<bool>("IsSharer");
+
                     b.Property<int>("Likes");
 
                     b.Property<string>("RepliedTo");
@@ -638,11 +668,15 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<int>("Likes");
 
+                    b.Property<string>("SharerId");
+
                     b.Property<string>("Title");
 
                     b.Property<DateTime>("UploadedDate");
 
                     b.Property<string>("Uploader");
+
+                    b.Property<long>("VimeoId");
 
                     b.Property<string>("YouTubeVideoId");
 

@@ -36,6 +36,7 @@ namespace ExodusKorea.Data
         public DbSet<LoginSession> LoginSession { get; set; }
         public DbSet<WithdrawUser> WithdrawUser { get; set; }
         public DbSet<JobSite> JobSite { get; set; }
+        public DbSet<UploadVideo> UploadVideo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +74,7 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<LoginSession>().ToTable("Log_LoginSession");
             modelBuilder.Entity<WithdrawUser>().ToTable("Log_WithdrawUser");
             modelBuilder.Entity<JobSite>().ToTable("JobSite");
+            modelBuilder.Entity<UploadVideo>().ToTable("UploadVideo");
         }
     }
 }

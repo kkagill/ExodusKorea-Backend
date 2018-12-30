@@ -20,7 +20,7 @@ namespace ExodusKorea.API.Services.Interfaces
 
     public interface IMessageService
     {
-        Task SendEmailAsync(string email, string subject, string message, string htmlBody);
+        Task SendEmailAsync(string from, string to, string subject, string message, string htmlBody);
     }
 
     public interface IYouTubeService

@@ -270,7 +270,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();
-            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
+            //var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             MinimumCostOfLiving newMinimumCostOfLiving = new MinimumCostOfLiving
             {
@@ -288,7 +288,7 @@ namespace ExodusKorea.API.Controllers
                 NickName = user.NickName,
                 Total = vm.Rent + vm.Transportation + vm.Food + vm.Cell + vm.Internet,
                 DateCreated = DateTime.Now,
-                AuthorCountryEN = countryCode
+                //AuthorCountryEN = countryCode
             };
 
             await _mcolRepository.AddAsync(newMinimumCostOfLiving);
@@ -365,16 +365,23 @@ namespace ExodusKorea.API.Controllers
 
         #region Video Comments
         [HttpGet]
-        [Route("{videoPostId}/{videoId}/video-comments-combined", Name = "GetVideoCommentsCombined")]
-        public async Task<IActionResult> GetVideoCommentsCombined(int videoPostId, string videoId)
+        [Route("{videoPostId}/{videoId}/{vimeoId}/video-comments-combined", Name = "GetVideoCommentsCombined")]
+        public async Task<IActionResult> GetVideoCommentsCombined(int videoPostId, string videoId, long vimeoId)
         {
             if (videoPostId <= 0 || string.IsNullOrWhiteSpace(videoId))
                 return NotFound();
 
             var videoComments = _vcRepository
                 .FindBy(nv => nv.VideoPostId == videoPostId, vcr => vcr.VideoCommentReplies);
-            var youTubeComments = await _youTube.GetYouTubeCommentsByVideoId(videoId);       
             var videoCommentVM = Mapper.Map<IEnumerable<VideoComment>, IEnumerable<VideoCommentVM>>(videoComments);
+
+            if (vimeoId > 0)
+            {
+                videoCommentVM = videoCommentVM.OrderByDescending(x => x.DateCreated);
+                return new OkObjectResult(videoCommentVM);
+            }                
+
+            var youTubeComments = await _youTube.GetYouTubeCommentsByVideoId(videoId);   
             // Add youtube comments on top of comments from database   
             if (youTubeComments.Comments.Count > 0)
                 foreach (var yc in youTubeComments.Comments)
@@ -446,9 +453,9 @@ namespace ExodusKorea.API.Controllers
 
             if (user == null)
                 return NotFound();
-
+         
             var ipAddress = _clientIP.GetClientIP();          
-            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
+            //var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             VideoComment newVideoComment = new VideoComment
             {
@@ -457,7 +464,9 @@ namespace ExodusKorea.API.Controllers
                 VideoPostId = vm.VideoPostId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                Country = countryCode
+                IPAddress = ipAddress,
+                //Country = countryCode,
+                IsSharer = await CheckSharer(user, vm.VideoPostId)
             };
 
             await _vcRepository.AddAsync(newVideoComment);
@@ -492,7 +501,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();
-            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
+            //var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             VideoCommentReply newVideoCommentReply = new VideoCommentReply
             {
@@ -501,7 +510,9 @@ namespace ExodusKorea.API.Controllers
                 VideoCommentId = vm.VideoCommentId,
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
-                Country = countryCode
+                IPAddress = ipAddress,
+                //Country = countryCode,
+                IsSharer = await CheckSharer(user, vm.VideoPostId)
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -536,7 +547,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var ipAddress = _clientIP.GetClientIP();
-            var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
+            //var countryCode = await _clientIP.GetCountryCodeByIP(ipAddress);
 
             VideoCommentReply newVideoCommentReply = new VideoCommentReply
             {
@@ -546,7 +557,9 @@ namespace ExodusKorea.API.Controllers
                 AuthorDisplayName = user.NickName.Trim(),
                 UserId = user.Id,
                 RepliedTo = vm.AuthorDisplayName,
-                Country = countryCode
+                IPAddress = ipAddress,
+                //Country = countryCode,
+                IsSharer = await CheckSharer(user, vm.VideoPostId)
             };
 
             await _vcrRepository.AddAsync(newVideoCommentReply);
@@ -564,8 +577,8 @@ namespace ExodusKorea.API.Controllers
 
         #region Video Post Likes
         [HttpGet]
-        [Route("{videoPostId}/{videoId}/video-post-likes", Name = "GetVideoPostLikesCombined")]
-        public async Task<IActionResult> GetVideoPostLikesCombined(int videoPostId, string videoId)
+        [Route("{videoPostId}/{videoId}/{vimeoId}/video-post-likes", Name = "GetVideoPostLikesCombined")]
+        public async Task<IActionResult> GetVideoPostLikesCombined(int videoPostId, string videoId, long vimeoId)
         {
             if (videoPostId <= 0 || string.IsNullOrWhiteSpace(videoId))
                 return NotFound();
@@ -574,6 +587,9 @@ namespace ExodusKorea.API.Controllers
 
             if (videoPost == null)
                 return NotFound();
+
+            if (vimeoId > 0)
+                return new OkObjectResult(videoPost.Likes);
 
             var youTubeLikes = await _youTube.GetYouTubeLikesByVideoId(videoId);
 
@@ -933,6 +949,7 @@ namespace ExodusKorea.API.Controllers
                VideoCommentReplyId = vm.VideoCommentReplyId,
                VideoPostId = vm.VideoPostId,
                YouTubeVideoId = vm.YouTubeVideoId,
+               VimeoId = vm.VimeoId,
                UserId = vm.UserId,
                NickName = user.NickName,
                Comment = vm.Comment,
@@ -1052,6 +1069,19 @@ namespace ExodusKorea.API.Controllers
         #endregion
 
         #region Private Functions
+        private async Task<bool> CheckSharer(ApplicationUser user, int videoPostId)
+        {            
+            var sharerId = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId).SharerId;
+
+            if (user.Id.Equals(sharerId))
+            {
+                var userRole = await _userManager.GetRolesAsync(user);
+                return userRole.SingleOrDefault().ToLower().Equals("sharer") ? true : false;
+            }
+
+            return false;
+        }
+
         private string ComparePrices(decimal korea, decimal country)
         {
             var difference = korea - country;

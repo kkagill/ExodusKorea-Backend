@@ -67,7 +67,7 @@ namespace ExodusKorea.API.Services
         public async Task<string> GetCountryCodeByIP(string ipAddress)
         {
             var country = "";
-            var url = "http://api.ipstack.com/" + ipAddress + "?access_key=afba48e8935e8f0d723c349c8b09884c";
+            var url = "http://api.ipstack.com/" + ipAddress + "?access_key=9d4f2a12307de0f196d758674051ea2d";
             var request = WebRequest.Create(url);
 
             using (WebResponse wrs = await request.GetResponseAsync())

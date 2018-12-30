@@ -12,6 +12,8 @@ namespace ExodusKorea.Model.Entities
         public string Title { get; set; }
         public int Likes { get; set; }
         public string YouTubeVideoId { get; set; }
+        public string SharerId { get; set; }
+        public long VimeoId { get; set; }
 
         public int CountryId { get; set; }     
         public int CareerId { get; set; }      
