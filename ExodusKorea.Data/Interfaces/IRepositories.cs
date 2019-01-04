@@ -32,12 +32,15 @@ namespace ExodusKorea.Data.Interfaces
         Task<int> GetCountryInfoIdByCountry(string country);
         Task<string> GetCityById(int city);
         Task<Career> GetCareerByVideoPostId(int videoPostId);
-        IEnumerable<JobSite> GetAllJobSites();
+        Task<IEnumerable<JobSite>> GetJobSitesByCountryId(int countryId);
     }
 
     public interface ICountryInfoRepository : IEntityBaseRepository<object>
     {
-        Task<CountryInfoKOTRA> GetCountryInfoCanada();    
+        IEnumerable<PromisingField> GetAllPromisingFields();
+        IEnumerable<SettlementGuide> GetAllSettlementGuides();
+        IEnumerable<LivingCondition> GetAllLivingConditions();
+        IEnumerable<ImmigrationVisa> GetAllImmigrationVisas();
     }
 
     public interface IAccountRepository : IEntityBaseRepository<ApplicationUser>
@@ -47,7 +50,10 @@ namespace ExodusKorea.Data.Interfaces
         Task LogWithdrewUser(string reason, ApplicationUser user);
         Task DeleteMyVideosAsync(string userId);
     }
-    public interface IVideoPostRepository : IEntityBaseRepository<VideoPost> { }
+    public interface IVideoPostRepository : IEntityBaseRepository<VideoPost>
+    {
+        Task<IEnumerable<Country>> GetAllCountries();
+    }
     public interface IVideoCommentRepository : IEntityBaseRepository<VideoComment> { }
     public interface IVideoCommentReplyRepository : IEntityBaseRepository<VideoCommentReply> { }
     public interface IVideoPostLikeRepository : IEntityBaseRepository<VideoPostLike> { }

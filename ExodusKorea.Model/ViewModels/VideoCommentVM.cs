@@ -16,12 +16,15 @@ namespace ExodusKorea.Model.ViewModels
         public DateTime? DateUpdated { get; set; }
         public int Likes { get; set; }
         public bool IsYouTubeComment { get; set; }
+        public long TotalReplyCount { get; set; }
+        //public string ParentId { get; set; }
         public int VideoPostId { get; set; }
         public string UserId { get; set; }
         public string CountryEN { get; set; }
         public bool IsSharer { get; set; }
 
         public IEnumerable<VideoCommentReplyVM> VideoCommentReplies { get; set; }
+        public IEnumerable<YouTubeCommentReplyVM> YouTubeCommentReplies { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var validator = new VideoCommentVMValidator();

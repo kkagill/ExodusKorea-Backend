@@ -168,9 +168,11 @@ namespace ExodusKorea.Data.Repositories
             return result.Career;
         }
 
-        public IEnumerable<JobSite> GetAllJobSites()
+        public async Task<IEnumerable<JobSite>> GetJobSitesByCountryId(int countryId)
         {
-            var result = _context.JobSite.AsEnumerable(); 
+            var result = await _context.JobSite
+                .Where(x => x.CountryId == countryId)
+                .ToListAsync(); 
 
             return result;
         }

@@ -9,5 +9,7 @@ namespace ExodusKorea.Model.Entities
         public string Name { get; set; }
         public string Link { get; set; }       
         public string Category { get; set; }
+
+        public int CountryId { get; set; }
     }
 }

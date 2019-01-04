@@ -31,7 +31,6 @@ namespace ExodusKorea.Data.Repositories
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
                 //.Where(x => x.UploadedDate >= twoWeeks)
-                .Where(x => x.CountryId == 2)
                 .OrderByDescending(x => x.UploadedDate)
                 .Take(8)
                 .ToListAsync();
@@ -43,8 +42,6 @@ namespace ExodusKorea.Data.Repositories
         {
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
-                .Where(x => x.CountryId == 2)
-                .Take(12)
                 .ToListAsync();
 
             return result;

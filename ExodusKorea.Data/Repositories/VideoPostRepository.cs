@@ -23,6 +23,14 @@ namespace ExodusKorea.Data.Repositories
         {
             _context = context;
             _config = config;
-        }       
+        }
+
+        public async Task<IEnumerable<Country>> GetAllCountries()
+        {
+            var result = await _context.Country
+              .ToListAsync();
+
+            return result;
+        }
     }
 }

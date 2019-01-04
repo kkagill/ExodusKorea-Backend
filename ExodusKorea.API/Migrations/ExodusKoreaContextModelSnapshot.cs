@@ -233,12 +233,28 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("Log_HttpResponseException");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.ImmigrationVisa", b =>
+                {
+                    b.Property<int>("ImmigrationVisaId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("ImmigrationVisaId");
+
+                    b.ToTable("ImmigrationVisa");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.JobSite", b =>
                 {
                     b.Property<int>("JobSiteId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Category");
+
+                    b.Property<int>("CountryId");
 
                     b.Property<string>("Link");
 
@@ -247,6 +263,20 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("JobSiteId");
 
                     b.ToTable("JobSite");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.LivingCondition", b =>
+                {
+                    b.Property<int>("LivingConditionId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("LivingConditionId");
+
+                    b.ToTable("LivingCondition");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.LoginSession", b =>
@@ -523,6 +553,20 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("PriceInfo");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.PromisingField", b =>
+                {
+                    b.Property<int>("PromisingFieldId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("PromisingFieldId");
+
+                    b.ToTable("PromisingField");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.SalaryInfo", b =>
                 {
                     b.Property<int>("SalaryInfoId")
@@ -547,6 +591,20 @@ namespace ExodusKorea.API.Migrations
                     b.HasKey("SalaryInfoId");
 
                     b.ToTable("SalaryInfo");
+                });
+
+            modelBuilder.Entity("ExodusKorea.Model.Entities.SettlementGuide", b =>
+                {
+                    b.Property<int>("SettlementGuideId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Country");
+
+                    b.HasKey("SettlementGuideId");
+
+                    b.ToTable("SettlementGuide");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.SiteException", b =>

@@ -25,15 +25,51 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("country-info-canada")]      
-        public async Task<IActionResult> GetCountryInfoCanadaAsync()
+        [Route("promising-fields")]
+        public IActionResult GetAllPromisingField()
         {
-            var countryInfo = await _repository.GetCountryInfoCanada();
+            var allPromisingFields = _repository.GetAllPromisingFields();
 
-            if (countryInfo == null)
+            if (allPromisingFields == null)
                 return NotFound();
 
-            return new OkObjectResult(countryInfo);
+            return new OkObjectResult(allPromisingFields);
+        }
+
+        [HttpGet]
+        [Route("settlement-guides")]
+        public IActionResult GetAllSettlementGuide()
+        {
+            var allSettlementGuides = _repository.GetAllSettlementGuides();
+
+            if (allSettlementGuides == null)
+                return NotFound();
+
+            return new OkObjectResult(allSettlementGuides);
+        }
+
+        [HttpGet]
+        [Route("living-conditions")]
+        public IActionResult GetAllLivingConditions()
+        {
+            var allLivingConditions = _repository.GetAllLivingConditions();
+
+            if (allLivingConditions == null)
+                return NotFound();
+
+            return new OkObjectResult(allLivingConditions);
+        }
+
+        [HttpGet]
+        [Route("immigration-visas")]
+        public IActionResult GetAllImmigrationVisas()
+        {
+            var allImmigrationVisas = _repository.GetAllImmigrationVisas();
+
+            if (allImmigrationVisas == null)
+                return NotFound();
+
+            return new OkObjectResult(allImmigrationVisas);
         }
     }
 }

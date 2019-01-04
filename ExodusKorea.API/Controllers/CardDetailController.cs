@@ -324,11 +324,19 @@ namespace ExodusKorea.API.Controllers
         #endregion
 
         #region Job Sites
-        [HttpGet]
-        [Route("job-sites", Name = "JobSites")]
-        public IActionResult GetJobSites()
-        {         
-            var jobSites = _repository.GetAllJobSites();
+        [HttpGet]     
+        [Route("{videoPostId}/job-sites", Name = "JobSites")]
+        public async Task<IActionResult> GetJobSites(int videoPostId)
+        {
+            if (videoPostId <= 0)
+                return NotFound();
+
+            var videoPost = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId);
+
+            if (videoPost == null)
+                return NotFound();
+
+            var jobSites = await _repository.GetJobSitesByCountryId(videoPost.CountryId);
 
             if (jobSites == null)
                 return NotFound();
@@ -391,13 +399,45 @@ namespace ExodusKorea.API.Controllers
                         Comment = yc.TextDisplay,
                         DateCreated = yc.UpdatedAt.DateTime,
                         Likes = Convert.ToInt32(yc.Likes),
-                        IsYouTubeComment = true
+                        IsYouTubeComment = true,
+                        TotalReplyCount = yc.TotalReplyCount,
+                        YouTubeCommentReplies = MappReplies(yc.Replies)
+                        //ParentId = yc.ParentId
                     });         
 
             videoCommentVM = videoCommentVM.OrderByDescending(x => x.DateCreated);
 
             return new OkObjectResult(videoCommentVM);
         }
+
+        //[HttpGet("{parentId}/youtube-replies", Name = "GetYouTubeReplies")]
+        //public async Task<IActionResult> GetYouTubeReplies(string parentId)
+        //{
+        //    if (string.IsNullOrWhiteSpace(parentId))
+        //        return NotFound();
+
+        //    var youTubeReplies = await _youTube.GetYouTubeRepliesByParentId(parentId);
+        //    var videoCommentVM = new List<VideoCommentVM>();
+
+        //    if (youTubeReplies.Comments.Count > 0)
+        //    {
+        //        youTubeReplies.Comments.OrderBy(x => x.UpdatedAt);
+
+        //        foreach (var yc in youTubeReplies.Comments)
+        //            videoCommentVM.Add(new VideoCommentVM
+        //            {
+        //                AuthorDisplayName = yc.AuthorDisplayName,
+        //                Comment = yc.TextDisplay,
+        //                DateCreated = yc.UpdatedAt.DateTime,
+        //                Likes = Convert.ToInt32(yc.Likes),
+        //                IsYouTubeComment = true
+        //            });
+
+        //        return new OkObjectResult(videoCommentVM);
+        //    }               
+        //    else
+        //        return new NoContentResult();
+        //}
 
         [HttpGet("{id}/video-comment", Name = "GetVideoComment")]
         public IActionResult GetVideoComment(long? id)
@@ -575,10 +615,10 @@ namespace ExodusKorea.API.Controllers
         }
         #endregion             
 
-        #region Video Post Likes
+        #region Video Post Owner, Title, Likes
         [HttpGet]
-        [Route("{videoPostId}/{videoId}/{vimeoId}/video-post-likes", Name = "GetVideoPostLikesCombined")]
-        public async Task<IActionResult> GetVideoPostLikesCombined(int videoPostId, string videoId, long vimeoId)
+        [Route("{videoPostId}/{videoId}/{vimeoId}/video-post-info", Name = "GetVideoPostInfo")]
+        public async Task<IActionResult> GetVideoPostInfo(int videoPostId, string videoId, long vimeoId)
         {
             if (videoPostId <= 0 || string.IsNullOrWhiteSpace(videoId))
                 return NotFound();
@@ -588,17 +628,33 @@ namespace ExodusKorea.API.Controllers
             if (videoPost == null)
                 return NotFound();
 
+            VideoPostInfoVM videoPostInfoVM = null;
+
             if (vimeoId > 0)
-                return new OkObjectResult(videoPost.Likes);
+            {
+                videoPostInfoVM = new VideoPostInfoVM
+                {
+                    Likes = videoPost.Likes,
+                    Owner = videoPost.Uploader,
+                    Title = videoPost.Title
+                };
 
-            var youTubeLikes = await _youTube.GetYouTubeLikesByVideoId(videoId);
+                return new OkObjectResult(videoPostInfoVM);
+            }              
 
-            if (youTubeLikes == null)
+            var youTubeInfoVM = await _youTube.GetYouTubeInfoByVideoId(videoId);
+
+            if (youTubeInfoVM == null)
                 return NotFound();
 
-            var likesCombined = videoPost.Likes + Convert.ToInt32(youTubeLikes);
+            videoPostInfoVM = new VideoPostInfoVM
+            {
+                Likes = videoPost.Likes + youTubeInfoVM.Likes,
+                Owner = youTubeInfoVM.Owner,
+                Title = youTubeInfoVM.Title
+            };
 
-            return new OkObjectResult(likesCombined);
+            return new OkObjectResult(videoPostInfoVM);
         }
 
         [HttpGet("{id}/video-post-like", Name = "FindUserLikedPost")]
@@ -1069,6 +1125,23 @@ namespace ExodusKorea.API.Controllers
         #endregion
 
         #region Private Functions
+        private IEnumerable<YouTubeCommentReplyVM> MappReplies(List<Reply> replies)
+        {
+            var ycr = new List<YouTubeCommentReplyVM>();
+
+            if (replies.Count > 0)
+                foreach (var r in replies)
+                    ycr.Add(new YouTubeCommentReplyVM
+                    {
+                        AuthorDisplayName = r.AuthorDisplayName,
+                        Comment = r.TextDisplay,
+                        Likes = Convert.ToInt32(r.Likes),
+                        DateCreated = r.UpdatedAt.DateTime
+                    });
+
+            return ycr.AsEnumerable().OrderBy(x => x.DateCreated);
+        }
+
         private async Task<bool> CheckSharer(ApplicationUser user, int videoPostId)
         {            
             var sharerId = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId).SharerId;

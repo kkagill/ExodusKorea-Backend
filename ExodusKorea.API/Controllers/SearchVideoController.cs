@@ -71,7 +71,7 @@ namespace ExodusKorea.API.Controllers
         public IActionResult GetSearchResultByCategory(int categoryId)
         {
             var videoPosts = _vpRepository
-                .FindBy(vp => vp.CategoryId == categoryId && vp.CountryId == 2, vp => vp.Country);
+                .FindBy(vp => vp.CategoryId == categoryId, vp => vp.Country);
              
             if (videoPosts == null)
                 return NotFound();
@@ -92,6 +92,17 @@ namespace ExodusKorea.API.Controllers
             var videoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(videoPosts);
             
             return new OkObjectResult(videoPostsVM);
+        }
+
+        [HttpGet("all-countries", Name = "GetAllCountries")]
+        public async Task<IActionResult> GetAllCountries()
+        {
+            var allCountries = await _vpRepository.GetAllCountries();
+
+            if (allCountries == null)
+                return NotFound();
+
+            return new OkObjectResult(allCountries);
         }
     }
 }

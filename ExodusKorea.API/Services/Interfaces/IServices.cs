@@ -25,8 +25,9 @@ namespace ExodusKorea.API.Services.Interfaces
 
     public interface IYouTubeService
     {
-        Task<string> GetYouTubeLikesByVideoId(string videoId);
+        Task<YouTubeInfoVM> GetYouTubeInfoByVideoId(string videoId);
         Task<YouTubeCommentVM> GetYouTubeCommentsByVideoId(string videoId);
+        //Task<YouTubeCommentVM> GetYouTubeRepliesByParentId(string parentId);
     }
 
     public interface IClientIPService

@@ -29,7 +29,6 @@ namespace ExodusKorea.Data
         public DbSet<News> News { get; set; }
         public DbSet<Career> Career { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<CountryInfoKOTRA> CountryInfoKOTRA { get; set; }
         public DbSet<MyVideos> MyVideos { get; set; }
         public DbSet<SiteException> SiteException { get; set; }
         public DbSet<HttpResponseException> HttpResponseException { get; set; }
@@ -37,6 +36,10 @@ namespace ExodusKorea.Data
         public DbSet<WithdrawUser> WithdrawUser { get; set; }
         public DbSet<JobSite> JobSite { get; set; }
         public DbSet<UploadVideo> UploadVideo { get; set; }
+        public DbSet<PromisingField> PromisingField { get; set; }
+        public DbSet<SettlementGuide> SettlementGuide { get; set; }
+        public DbSet<LivingCondition> LivingCondition { get; set; }
+        public DbSet<ImmigrationVisa> ImmigrationVisa { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,7 +70,6 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<News>().ToTable("News");   
             modelBuilder.Entity<Career>().ToTable("Career");
             modelBuilder.Entity<Category>().ToTable("Category");
-            modelBuilder.Entity<CountryInfoKOTRA>().ToTable("CountryInfoKOTRA");
             modelBuilder.Entity<MyVideos>().ToTable("MyVideo");
             modelBuilder.Entity<SiteException>().ToTable("Log_SiteException");
             modelBuilder.Entity<HttpResponseException>().ToTable("Log_HttpResponseException");
@@ -75,6 +77,10 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<WithdrawUser>().ToTable("Log_WithdrawUser");
             modelBuilder.Entity<JobSite>().ToTable("JobSite");
             modelBuilder.Entity<UploadVideo>().ToTable("UploadVideo");
+            modelBuilder.Entity<PromisingField>().ToTable("PromisingField");
+            modelBuilder.Entity<SettlementGuide>().ToTable("SettlementGuide");
+            modelBuilder.Entity<LivingCondition>().ToTable("LivingCondition");
+            modelBuilder.Entity<ImmigrationVisa>().ToTable("ImmigrationVisa");
         }
     }
 }
