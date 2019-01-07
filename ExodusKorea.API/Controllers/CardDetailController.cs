@@ -90,17 +90,17 @@ namespace ExodusKorea.API.Controllers
         #region Salary Info
         [HttpGet]
         [Route("{videoPostId}/salary-info", Name = "SalaryInfo")]
-        public async Task<IActionResult> GetSalaryInfo(int videoPostId)
+        public IActionResult GetSalaryInfo(int videoPostId)
         {
             if (videoPostId <= 0)
                 return NotFound();
-         
-            var salaryInfo = await _repository.GetSalaryInfoByVideoPostId(videoPostId);
 
-            if (salaryInfo == null)
+            var videoPost = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId, vp => vp.SalaryInfo);
+
+            if (videoPost == null)
                 return NotFound();
 
-            var salaryInfoVM = Mapper.Map<SalaryInfo, SalaryInfoVM>(salaryInfo);
+            var salaryInfoVM = Mapper.Map<SalaryInfo, SalaryInfoVM>(videoPost.SalaryInfo);
 
             return new OkObjectResult(salaryInfoVM);
         }
@@ -1107,7 +1107,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var myVideos = _mvRepository.FindBy(mv => mv.ApplicationUserId == user.Id);
-            var allVideos = _vpRepository.AllIncluding(vp => vp.Country);
+            var allVideos = _vpRepository.FindBy(vp => !vp.IsDisabled, vp => vp.Country);
 
             if (myVideos == null || allVideos == null)
                 return NotFound();

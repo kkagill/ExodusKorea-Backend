@@ -57,7 +57,7 @@ namespace ExodusKorea.API.Controllers
         [Route("all-search-result")]
         public IActionResult GetAllSearchResult()
         {
-            var allVideoPosts = _vpRepository.AllIncluding(vp => vp.Country);
+            var allVideoPosts = _vpRepository.FindBy(vp => !vp.IsDisabled, vp => vp.Country);
 
             if (allVideoPosts == null)
                 return NotFound();
@@ -71,7 +71,7 @@ namespace ExodusKorea.API.Controllers
         public IActionResult GetSearchResultByCategory(int categoryId)
         {
             var videoPosts = _vpRepository
-                .FindBy(vp => vp.CategoryId == categoryId, vp => vp.Country);
+                .FindBy(vp => vp.CategoryId == categoryId && !vp.IsDisabled, vp => vp.Country);
              
             if (videoPosts == null)
                 return NotFound();
@@ -84,7 +84,7 @@ namespace ExodusKorea.API.Controllers
         [HttpGet("{careerId}/search-result-career", Name = "GetSearchResultByCareer")]
         public IActionResult GetSearchResultByCareer(int careerId)
         {
-            var videoPosts = _vpRepository.FindBy(vp => vp.CareerId == careerId, vp => vp.Country);
+            var videoPosts = _vpRepository.FindBy(vp => vp.CareerId == careerId && !vp.IsDisabled, vp => vp.Country);
 
             if (videoPosts == null)
                 return NotFound();

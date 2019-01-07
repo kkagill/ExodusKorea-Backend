@@ -18,7 +18,7 @@ namespace ExodusKorea.Data.Interfaces
         Task<int> GetCountryIdByVideoPostId(int videoPostId);
         Task<Country> GetCountryByVideoPostId(int videoPostId);
         Task<VideoPost> GetVideoPostByVideoPostId(int videoPostId);
-        Task<SalaryInfo> GetSalaryInfoByVideoPostId(int videoPostId);
+        //Task<SalaryInfo> GetSalaryInfoByVideoPostId(int videoPostId);
         Task<CountryInfo> GetCountryInfoByCountryId(int countryId);
         Task<PriceInfo> GetPriceInfoByCountry(string country);
         Task<string> GetBaseCurrencyByCountry(string country);
@@ -65,4 +65,11 @@ namespace ExodusKorea.Data.Interfaces
     public interface INewsDetailRepository : IEntityBaseRepository<NewsDetail> { }
     public interface IMyVideosRepository : IEntityBaseRepository<MyVideos> { }
     public interface IUploadVideoRepository : IEntityBaseRepository<UploadVideo> { }
+    public interface ISalaryInfoRepository : IEntityBaseRepository<SalaryInfo> { }
+    public interface IAdminRepository : IEntityBaseRepository<object>
+    {
+        Task<IEnumerable<Country>> GetCountries();
+        Task<IEnumerable<Category>> GetCategories();
+        Task<IEnumerable<SalaryInfo>> GetSalaryInfoOccupations(string country);
+    }
 }

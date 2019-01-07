@@ -52,13 +52,13 @@ namespace ExodusKorea.Data.Repositories
             return result;
         }
 
-        public async Task<SalaryInfo> GetSalaryInfoByVideoPostId(int videoPostId)
-        {
-            var result = await _context.SalaryInfo
-                     .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
+        //public async Task<SalaryInfo> GetSalaryInfoByVideoPostId(int videoPostId)
+        //{
+        //    var result = await _context.SalaryInfo
+        //             .SingleOrDefaultAsync(x => x.VideoPostId == videoPostId);
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public async Task<PriceInfo> GetPriceInfoByCountry(string country)
         {    

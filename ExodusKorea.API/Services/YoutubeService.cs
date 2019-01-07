@@ -76,7 +76,7 @@ namespace ExodusKorea.API.Services
             while (result.NextPageToken != null && count > 0)
             {
                 var resNext = await httpClient
-                    .GetAsync($"https://www.googleapis.com/youtube/v3/commentThreads?pageToken={result.NextPageToken}&part=snippet&videoId={videoId}&maxResults=100&key={_apiKey.Key}");
+                    .GetAsync($"https://www.googleapis.com/youtube/v3/commentThreads?pageToken={result.NextPageToken}&part=snippet,replies&videoId={videoId}&maxResults=100&key={_apiKey.Key}");
 
                 if (resNext.StatusCode != HttpStatusCode.OK)
                     return youTubeCommentVM;

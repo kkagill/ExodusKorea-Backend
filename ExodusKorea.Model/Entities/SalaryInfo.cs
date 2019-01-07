@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ExodusKorea.Model.Entities
 {
@@ -12,6 +13,7 @@ namespace ExodusKorea.Model.Entities
         public decimal Median { get; set; }
         public decimal High { get; set; }
         public bool IsDisplayable { get; set; }
-        public int VideoPostId { get; set; }
+        //public int VideoPostId { get; set; }
+        public ICollection<VideoPost> VideoPosts { get; set; }
     }
 }

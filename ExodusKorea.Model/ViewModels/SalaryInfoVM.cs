@@ -9,6 +9,7 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class SalaryInfoVM
     {
+        public int SalaryInfoId { get; set; }
         public string Country { get; set; }
         public string Occupation { get; set; }
         public string Currency { get; set; }
