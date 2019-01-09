@@ -15,7 +15,7 @@ namespace ExodusKorea.API.Services.Interfaces
 
     public interface IGoogleRecaptchaService
     {
-        Task<bool> ReCaptchaPassedAsync(string response, string secret);
+        Task<bool> ReCaptchaPassedAsync(string response);
     }
 
     public interface IMessageService

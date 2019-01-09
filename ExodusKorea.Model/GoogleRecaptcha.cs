@@ -9,4 +9,10 @@ namespace ExodusKorea.Model
         public string Key { get; set; }
         public string Secret { get; set; }
     }
+
+    public class GoogleReCaptchaDev
+    {
+        public string Key { get; set; }
+        public string Secret { get; set; }
+    }
 }

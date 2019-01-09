@@ -111,11 +111,18 @@ namespace ExodusKorea.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public virtual SqlConnection Connection()
+        public virtual SqlConnection GetCorrectConnection()
         {
-            string _connectionString = _config.GetConnectionString("ExodusKorea");
-            //string _connectionString = _config.GetConnectionString("ExodusKoreaAzure");
-            return new SqlConnection(_connectionString);
+            string connectionString = null;
+
+            //if (_appSettings.Environment.Equals("Development"))
+            //    connectionString = _config.GetConnectionString("ExodusKorea");
+            //else
+            //    connectionString = _config.GetConnectionString("ExodusKoreaAzure");
+
+            connectionString = _config.GetConnectionString("ExodusKorea");
+
+            return new SqlConnection(connectionString);
         }
     }
 }

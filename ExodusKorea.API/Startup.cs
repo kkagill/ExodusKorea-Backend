@@ -37,23 +37,32 @@ namespace ExodusKorea.API
 {
     public class Startup
     {
+        private readonly string _appSettingsEnv;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            // Get value from Azure's App Settings when deployed. Debug (local) mode gets value from appsettings.json
+            _appSettingsEnv = Configuration["APPSETTINGS:ENVIRONMENT"];
         }
-
+        
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {          
             // Add database configurations  
             services.AddDbContext<ExodusKoreaContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("ExodusKorea"),
-                b => b.MigrationsAssembly("ExodusKorea.API"));
+                if (_appSettingsEnv.Equals("Live"))
+                    options.UseSqlServer(Configuration.GetConnectionString("ExodusKoreaAzure"),
+                        b => b.MigrationsAssembly("ExodusKorea.API"));
+                else if (_appSettingsEnv.Equals("Development"))
+                    options.UseSqlServer(Configuration.GetConnectionString("ExodusKorea"),
+                        b => b.MigrationsAssembly("ExodusKorea.API"));
+               
                 options.UseOpenIddict();
-            });
+            });           
 
             // Add membership
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -86,8 +95,10 @@ namespace ExodusKorea.API
                    .AddJwtBearer(options =>
                    {
                        options.Audience = "resource_server";
-                       options.Authority = "http://localhost:18691/";
-                       //options.Authority = "https://exoduskoreaapi.azurewebsites.net/";
+                       if (_appSettingsEnv.Equals("Live"))
+                           options.Authority = "https://exoduskoreaapi.azurewebsites.net/";
+                       else if (_appSettingsEnv.Equals("Development"))
+                           options.Authority = "http://localhost:18691/";                      
                        options.RequireHttpsMetadata = false;
                        options.IncludeErrorDetails = true;
                        options.TokenValidationParameters = new TokenValidationParameters
@@ -130,8 +141,9 @@ namespace ExodusKorea.API
                            //.SetAccessTokenLifetime(TimeSpan.FromSeconds(10)); // default is 5 minutes
                     // Accept anonymous clients (i.e clients that don't send a client_id).
                     options.AcceptAnonymousClients();
-                    // During development, you can disable the HTTPS requirement.
-                    options.DisableHttpsRequirement();
+                    // During development, you can disable the HTTPS requirement.                 
+                    if (_appSettingsEnv.Equals("Development"))
+                        options.DisableHttpsRequirement();
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
                     //
@@ -158,9 +170,8 @@ namespace ExodusKorea.API
                 // Custom Global Exception Handler
                 config.Filters.Add(typeof(CustomExceptionFilter));
                 // Force https in production mode
-#if !DEBUG
-                config.Filters.Add(new RequireHttpsAttribute());               
-#endif
+                if (_appSettingsEnv.Equals("Live"))
+                    config.Filters.Add(new RequireHttpsAttribute()); 
             })
                 .AddJsonOptions(options =>
                 {
@@ -168,8 +179,11 @@ namespace ExodusKorea.API
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 });
 
+            // Configure Azure appsettings & appsettings.json
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<GoogleReCaptcha>(Configuration.GetSection("GoogleReCaptcha"));
-            services.Configure<YoutubeData>(Configuration.GetSection("YoutubeData"));
+            services.Configure<GoogleReCaptchaDev>(Configuration.GetSection("GoogleReCaptchaDev"));
+            services.Configure<YoutubeData>(Configuration.GetSection("YoutubeData"));          
 
             // Repositories
             services.AddScoped<IHomeRepository, HomeRepository>();
@@ -213,8 +227,10 @@ namespace ExodusKorea.API
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:4200");                
-                //builder.WithOrigins("https://test2-5d022.firebaseapp.com");
+                if (_appSettingsEnv.Equals("Live"))
+                    builder.WithOrigins("https://test2-5d022.firebaseapp.com");
+                else if (_appSettingsEnv.Equals("Development"))
+                    builder.WithOrigins("http://localhost:4200");
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
                 builder.AllowCredentials();

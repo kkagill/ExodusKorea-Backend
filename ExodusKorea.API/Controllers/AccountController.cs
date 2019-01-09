@@ -24,7 +24,6 @@ namespace ExodusKorea.API.Controllers
         private readonly IMessageService _messageService;
         private readonly IDataProtector _protector;
         private readonly IGoogleRecaptchaService _gRecaptchaService;
-        private readonly GoogleReCaptcha _accessor;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
@@ -32,8 +31,7 @@ namespace ExodusKorea.API.Controllers
                                  IAccountRepository repository,
                                  IMessageService messageService,
                                  IDataProtectionProvider provider,
-                                 IGoogleRecaptchaService gRecaptchaService,
-                                 IOptionsSnapshot<GoogleReCaptcha> gReCaptchaAccessor)
+                                 IGoogleRecaptchaService gRecaptchaService)
         {         
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,7 +40,6 @@ namespace ExodusKorea.API.Controllers
             _messageService = messageService;
             _protector = provider.CreateProtector("ExodusKorea");
             _gRecaptchaService = gRecaptchaService;
-            _accessor = gReCaptchaAccessor.Value;
         }
 
         [HttpPost]
@@ -82,7 +79,7 @@ namespace ExodusKorea.API.Controllers
             if (string.IsNullOrWhiteSpace(model.Response))
                 return BadRequest();
 
-            var response = await _gRecaptchaService.ReCaptchaPassedAsync(model.Response, _accessor.Secret);
+            var response = await _gRecaptchaService.ReCaptchaPassedAsync(model.Response);
 
             if (response)
                 return new OkResult();
