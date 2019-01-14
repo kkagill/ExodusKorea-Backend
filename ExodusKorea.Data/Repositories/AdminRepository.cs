@@ -39,6 +39,13 @@ namespace ExodusKorea.Data.Repositories
             return result;
         }
 
+        public async Task<IEnumerable<Uploader>> GetUploaders()
+        {
+            var result = await _context.Uploader.ToListAsync();
+
+            return result;
+        }
+
         public async Task<IEnumerable<SalaryInfo>> GetSalaryInfoOccupations(string country)
         {
             var result = await _context.SalaryInfo

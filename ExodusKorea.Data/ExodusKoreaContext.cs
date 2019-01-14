@@ -40,6 +40,7 @@ namespace ExodusKorea.Data
         public DbSet<SettlementGuide> SettlementGuide { get; set; }
         public DbSet<LivingCondition> LivingCondition { get; set; }
         public DbSet<ImmigrationVisa> ImmigrationVisa { get; set; }
+        public DbSet<Uploader> Uploader { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -81,6 +82,7 @@ namespace ExodusKorea.Data
             modelBuilder.Entity<SettlementGuide>().ToTable("SettlementGuide");
             modelBuilder.Entity<LivingCondition>().ToTable("LivingCondition");
             modelBuilder.Entity<ImmigrationVisa>().ToTable("ImmigrationVisa");
+            modelBuilder.Entity<Uploader>().ToTable("Uploader");
         }
     }
 }

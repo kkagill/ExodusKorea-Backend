@@ -30,6 +30,7 @@ namespace ExodusKorea.Data.Repositories
             //var twoWeeks = DateTime.Now.Date.AddDays(-21);
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
+                .Include(x => x.Uploader)
                 .Where(x => !x.IsDisabled)
                 //.Where(x => x.UploadedDate >= twoWeeks)
                 .OrderByDescending(x => x.UploadedDate)
@@ -43,6 +44,7 @@ namespace ExodusKorea.Data.Repositories
         {
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
+                .Include(x => x.Uploader)
                 .Where(x => !x.IsDisabled)
                 .ToListAsync();
 

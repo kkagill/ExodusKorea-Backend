@@ -66,10 +66,16 @@ namespace ExodusKorea.Data.Interfaces
     public interface IMyVideosRepository : IEntityBaseRepository<MyVideos> { }
     public interface IUploadVideoRepository : IEntityBaseRepository<UploadVideo> { }
     public interface ISalaryInfoRepository : IEntityBaseRepository<SalaryInfo> { }
+    public interface IUploaderRepository : IEntityBaseRepository<Uploader> { }
+    public interface IRankingRepository : IEntityBaseRepository<object>
+    {
+        Task<IEnumerable<Uploader>> GetAllUploaderVideoPosts();
+    }
     public interface IAdminRepository : IEntityBaseRepository<object>
     {
         Task<IEnumerable<Country>> GetCountries();
         Task<IEnumerable<Category>> GetCategories();
+        Task<IEnumerable<Uploader>> GetUploaders();
         Task<IEnumerable<SalaryInfo>> GetSalaryInfoOccupations(string country);
     }
 }

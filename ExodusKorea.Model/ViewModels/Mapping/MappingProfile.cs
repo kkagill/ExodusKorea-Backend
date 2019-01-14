@@ -15,6 +15,7 @@ namespace ExodusKorea.Model.ViewModels.Mapping
                 .ForMember(vm => vm.CategoryId, opt => opt.MapFrom(vp => vp.CategoryId))
                 .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vp => vp.Country.NameEN))
                 .ForMember(vm => vm.CountryKR, opt => opt.MapFrom(vp => vp.Country.NameKR))
+                .ForMember(vm => vm.Uploader, opt => opt.MapFrom(vp => vp.Uploader.Name))
                 .ForMember(vm => vm.Category, opt => opt.MapFrom(vp => vp.Category.Name));
             CreateMap<CountryInfo, CountryInfoVM>()
                 .ForMember(vm => vm.CountryEN, opt => opt.MapFrom(vp => vp.Country.NameEN))

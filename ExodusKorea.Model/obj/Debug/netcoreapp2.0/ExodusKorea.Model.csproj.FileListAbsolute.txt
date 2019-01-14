@@ -6,3 +6,4 @@ C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\De
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.AssemblyInfo.cs
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.dll
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.pdb
+C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.csprojAssemblyReference.cache

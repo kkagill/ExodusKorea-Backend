@@ -373,8 +373,8 @@ namespace ExodusKorea.API.Controllers
 
         #region Video Comments
         [HttpGet]
-        [Route("{videoPostId}/{videoId}/{vimeoId}/video-comments-combined", Name = "GetVideoCommentsCombined")]
-        public async Task<IActionResult> GetVideoCommentsCombined(int videoPostId, string videoId, long vimeoId)
+        [Route("{videoPostId}/{videoId}/{isGoogleDriveVideo}/video-comments-combined", Name = "GetVideoCommentsCombined")]
+        public async Task<IActionResult> GetVideoCommentsCombined(int videoPostId, string videoId, byte isGoogleDriveVideo)
         {
             if (videoPostId <= 0 || string.IsNullOrWhiteSpace(videoId))
                 return NotFound();
@@ -383,7 +383,7 @@ namespace ExodusKorea.API.Controllers
                 .FindBy(nv => nv.VideoPostId == videoPostId, vcr => vcr.VideoCommentReplies);
             var videoCommentVM = Mapper.Map<IEnumerable<VideoComment>, IEnumerable<VideoCommentVM>>(videoComments);
 
-            if (vimeoId > 0)
+            if (isGoogleDriveVideo == 1)
             {
                 videoCommentVM = videoCommentVM.OrderByDescending(x => x.DateCreated);
                 return new OkObjectResult(videoCommentVM);
@@ -617,25 +617,25 @@ namespace ExodusKorea.API.Controllers
 
         #region Video Post Owner, Title, Likes
         [HttpGet]
-        [Route("{videoPostId}/{videoId}/{vimeoId}/video-post-info", Name = "GetVideoPostInfo")]
-        public async Task<IActionResult> GetVideoPostInfo(int videoPostId, string videoId, long vimeoId)
+        [Route("{videoPostId}/{videoId}/{isGoogleDriveVideo}/video-post-info", Name = "GetVideoPostInfo")]
+        public async Task<IActionResult> GetVideoPostInfo(int videoPostId, string videoId, byte isGoogleDriveVideo)
         {
             if (videoPostId <= 0 || string.IsNullOrWhiteSpace(videoId))
                 return NotFound();
 
-            var videoPost = _vpRepository.GetSingle(x => x.VideoPostId == videoPostId);
+            var videoPost = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId, vp => vp.Uploader);
 
             if (videoPost == null)
                 return NotFound();
 
             VideoPostInfoVM videoPostInfoVM = null;
 
-            if (vimeoId > 0)
+            if (isGoogleDriveVideo == 1)
             {
                 videoPostInfoVM = new VideoPostInfoVM
                 {
                     Likes = videoPost.Likes,
-                    Owner = videoPost.Uploader,
+                    Owner = videoPost.Uploader.Name,
                     Title = videoPost.Title
                 };
 
@@ -649,7 +649,8 @@ namespace ExodusKorea.API.Controllers
 
             videoPostInfoVM = new VideoPostInfoVM
             {
-                Likes = videoPost.Likes + youTubeInfoVM.Likes,
+                //Likes = videoPost.Likes + youTubeInfoVM.Likes,
+                Likes = videoPost.Likes,
                 Owner = youTubeInfoVM.Owner,
                 Title = youTubeInfoVM.Title
             };
@@ -1005,7 +1006,7 @@ namespace ExodusKorea.API.Controllers
                VideoCommentReplyId = vm.VideoCommentReplyId,
                VideoPostId = vm.VideoPostId,
                YouTubeVideoId = vm.YouTubeVideoId,
-               VimeoId = vm.VimeoId,
+               IsGoogleDriveVideo = vm.IsGoogleDriveVideo,
                UserId = vm.UserId,
                NickName = user.NickName,
                Comment = vm.Comment,
@@ -1107,7 +1108,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var myVideos = _mvRepository.FindBy(mv => mv.ApplicationUserId == user.Id);
-            var allVideos = _vpRepository.FindBy(vp => !vp.IsDisabled, vp => vp.Country);
+            var allVideos = _vpRepository.FindBy(vp => !vp.IsDisabled, vp => vp.Country, vp => vp.Uploader);
 
             if (myVideos == null || allVideos == null)
                 return NotFound();

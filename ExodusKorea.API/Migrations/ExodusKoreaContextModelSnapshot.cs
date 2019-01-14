@@ -384,6 +384,8 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<bool>("HasRead");
 
+                    b.Property<byte>("IsGoogleDriveVideo");
+
                     b.Property<string>("NickName");
 
                     b.Property<string>("UserId");
@@ -393,8 +395,6 @@ namespace ExodusKorea.API.Migrations
                     b.Property<long>("VideoCommentReplyId");
 
                     b.Property<int>("VideoPostId");
-
-                    b.Property<long>("VimeoId");
 
                     b.Property<string>("YouTubeVideoId");
 
@@ -603,6 +603,18 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("Log_SiteException");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.Uploader", b =>
+                {
+                    b.Property<int>("UploaderId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("UploaderId");
+
+                    b.ToTable("Uploader");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.UploadVideo", b =>
                 {
                     b.Property<int>("UploadVideoId")
@@ -702,6 +714,8 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<bool>("IsDisabled");
 
+                    b.Property<byte>("IsGoogleDriveVideo");
+
                     b.Property<int>("Likes");
 
                     b.Property<int?>("SalaryInfoId");
@@ -712,9 +726,7 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<DateTime>("UploadedDate");
 
-                    b.Property<string>("Uploader");
-
-                    b.Property<long>("VimeoId");
+                    b.Property<int>("UploaderId");
 
                     b.Property<string>("YouTubeVideoId");
 
@@ -727,6 +739,8 @@ namespace ExodusKorea.API.Migrations
                     b.HasIndex("CountryId");
 
                     b.HasIndex("SalaryInfoId");
+
+                    b.HasIndex("UploaderId");
 
                     b.ToTable("VideoPost");
                 });
@@ -1139,6 +1153,11 @@ namespace ExodusKorea.API.Migrations
                     b.HasOne("ExodusKorea.Model.Entities.SalaryInfo", "SalaryInfo")
                         .WithMany("VideoPosts")
                         .HasForeignKey("SalaryInfoId");
+
+                    b.HasOne("ExodusKorea.Model.Entities.Uploader", "Uploader")
+                        .WithMany("VideoPosts")
+                        .HasForeignKey("UploaderId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoPostLike", b =>

@@ -14,7 +14,7 @@ namespace ExodusKorea.Model.ViewModels
         public long VideoCommentReplyId { get; set; }
         public int VideoPostId { get; set; }
         public string YouTubeVideoId { get; set; }
-        public long VimeoId { get; set; }
+        public byte IsGoogleDriveVideo { get; set; }
         public string UserId { get; set; }
         public string NickName { get; set; }
         public string Comment { get; set; }

@@ -204,6 +204,8 @@ namespace ExodusKorea.API
             services.AddScoped<IUploadVideoRepository, UploadVideoRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<ISalaryInfoRepository, SalaryInfoRepository>();
+            services.AddScoped<IRankingRepository, RankingRepository>();
+            services.AddScoped<IUploaderRepository, UploaderRepository>();
             // Services            
             services.AddTransient<DbInitializer>();
             services.AddTransient<IMessageService, MessageService>();

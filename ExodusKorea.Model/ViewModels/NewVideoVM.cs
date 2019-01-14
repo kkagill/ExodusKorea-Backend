@@ -11,11 +11,13 @@ namespace ExodusKorea.Model.ViewModels
         [Required]
         public string Title { get; set; }
         [Required]
-        public string Uploader { get; set; }
+        public int UploaderId { get; set; }
         [Required]
         public string YouTubeVideoId { get; set; }
+        [Required]
+        public int Likes { get; set; }
         public int? SalaryInfoId { get; set; }
-        public long VimeoId { get; set; }
-        public string SharerId { get; set; }
+        public string SharerId { get; set; }     
+        public bool IsGoogleDriveVideo { get; set; }
     }
 }
