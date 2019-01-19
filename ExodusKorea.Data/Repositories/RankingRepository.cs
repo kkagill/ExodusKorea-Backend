@@ -29,6 +29,7 @@ namespace ExodusKorea.Data.Repositories
         {
             var result = await _context.Uploader             
                 .Include(x => x.VideoPosts)            
+                .Where(x => x.VideoPosts.Any(vp => !vp.IsDisabled))
                 .ToListAsync();
 
             return result;

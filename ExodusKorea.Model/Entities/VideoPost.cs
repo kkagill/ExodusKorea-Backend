@@ -13,13 +13,13 @@ namespace ExodusKorea.Model.Entities
         public string YouTubeVideoId { get; set; }
         public string SharerId { get; set; }
         public bool IsDisabled { get; set; }
-        public byte IsGoogleDriveVideo { get; set; }
+        public byte IsGoogleDriveVideo { get; set; }       
 
         public int CountryId { get; set; }     
         public int CareerId { get; set; }      
         public int CategoryId { get; set; }
         public int? SalaryInfoId { get; set; }
-        public int UploaderId { get; set; }
+        public int? UploaderId { get; set; }
         public Country Country { get; set; }
         public Career Career { get; set; }
         public Category Category { get; set; }

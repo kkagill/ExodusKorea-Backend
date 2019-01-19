@@ -10,6 +10,7 @@ namespace ExodusKorea.Model.ViewModels
     public class UploaderRankingVM
     {
         public string Name { get; set; }
+        public string ThumbnailDefaultUrl { get; set; }
         public int UploaderId { get; set; }
         public SpecificInfoVM SpecificInfo { get; set; }
     }

@@ -610,6 +610,8 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("YouTubeChannelThumbnailUrl");
+
                     b.HasKey("UploaderId");
 
                     b.ToTable("Uploader");
@@ -726,7 +728,7 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<DateTime>("UploadedDate");
 
-                    b.Property<int>("UploaderId");
+                    b.Property<int?>("UploaderId");
 
                     b.Property<string>("YouTubeVideoId");
 
@@ -1156,8 +1158,7 @@ namespace ExodusKorea.API.Migrations
 
                     b.HasOne("ExodusKorea.Model.Entities.Uploader", "Uploader")
                         .WithMany("VideoPosts")
-                        .HasForeignKey("UploaderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UploaderId");
                 });
 
             modelBuilder.Entity("ExodusKorea.Model.Entities.VideoPostLike", b =>

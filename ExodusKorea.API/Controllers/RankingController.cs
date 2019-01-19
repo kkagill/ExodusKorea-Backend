@@ -38,12 +38,13 @@ namespace ExodusKorea.API.Controllers
                 uploaderRankingVM.Add(new UploaderRankingVM
                 {
                     Name = u.Name,
+                    ThumbnailDefaultUrl = u.YouTubeChannelThumbnailUrl,
                     UploaderId = u.UploaderId,
                     SpecificInfo = GetSpecificInfo(u)
                 });
             }
 
-            uploaderRankingVM = uploaderRankingVM.Take(5).OrderByDescending(x => x.SpecificInfo.TotalScore).ToList();
+            uploaderRankingVM = uploaderRankingVM.OrderByDescending(x => x.SpecificInfo.TotalScore).ToList();
 
             return new OkObjectResult(uploaderRankingVM);            
         }

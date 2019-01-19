@@ -10,36 +10,32 @@ using System.Linq;
 using MailKit.Net.Smtp;
 using System.Threading.Tasks;
 using ExodusKorea.API.Services.Interfaces;
+using ExodusKorea.Model;
 
 namespace ExodusKorea.API.Services
 {
     public class MessageService : IMessageService
     {
-        //private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
+        private readonly AppSettings _appSettings;
         private readonly ExodusKoreaContext _context;
 
-        public MessageService(/*IOptions<AppSettings> appSettings,*/
-                              IHttpContextAccessor httpContextAccessor,
+        public MessageService(IHttpContextAccessor httpContextAccessor,
                               IConfiguration config,
+                              IOptions<AppSettings> appSettings,
                               ExodusKoreaContext context)
         {
-            //_appSettings = appSettings.Value;
             _httpContextAccessor = httpContextAccessor;
             _config = config;
+            _appSettings = appSettings.Value;
             _context = context;
         }
 
         public Task SendEmailAsync(string from, string to, string subject, string body, string htmlBody)
         {
-            //if (_appSettings.Environment.Equals("Development"))
-            //{
-            //    to = "kkagill@gmail.com";
-            //    cc = "kkagill@gmail.com";
-            //}
-
-            to = "admin@exoduscorea.com";
+            if (_appSettings.Environment.Equals("Development"))
+                to = "admin@exoduscorea.com";
 
             var message = new MimeMessage();
 

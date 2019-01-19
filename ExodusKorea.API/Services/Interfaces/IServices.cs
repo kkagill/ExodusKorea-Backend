@@ -25,6 +25,7 @@ namespace ExodusKorea.API.Services.Interfaces
 
     public interface IYouTubeService
     {
+        Task<YouTubeChannelInfoVM> GetYouTubeChannelInfoByChannelId(string channelId);
         Task<YouTubeInfoVM> GetYouTubeInfoByVideoId(string videoId);
         Task<YouTubeCommentVM> GetYouTubeCommentsByVideoId(string videoId);
         //Task<YouTubeCommentVM> GetYouTubeRepliesByParentId(string parentId);

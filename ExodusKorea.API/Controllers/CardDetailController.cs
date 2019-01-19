@@ -34,6 +34,7 @@ namespace ExodusKorea.API.Controllers
         private readonly ICurrencyRatesService _currencyRate;
         private readonly IYouTubeService _youTube;
         private readonly IClientIPService _clientIP;
+        private readonly IMessageService _email;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public CardDetailController(ICardDetailRepository repository,
@@ -49,6 +50,7 @@ namespace ExodusKorea.API.Controllers
                                     ICurrencyRatesService currencyRate,
                                     IYouTubeService youTube,
                                     IClientIPService clientIP,
+                                    IMessageService email,
                                     UserManager<ApplicationUser> userManager)
         {
             _repository = repository;
@@ -64,6 +66,7 @@ namespace ExodusKorea.API.Controllers
             _currencyRate = currencyRate;
             _youTube = youTube;
             _clientIP = clientIP;
+            _email = email;
             _userManager = userManager;
         }
 
@@ -645,7 +648,15 @@ namespace ExodusKorea.API.Controllers
             var youTubeInfoVM = await _youTube.GetYouTubeInfoByVideoId(videoId);
 
             if (youTubeInfoVM == null)
-                return NotFound();
+            {
+                string subject = "[엑소더스 코리아] 404 유튜브 오류";
+                string body = "VideoPostId: " + videoPost.VideoPostId + "\r\n\r\n"
+                               + "YouTubeVideoId: " + videoPost.YouTubeVideoId + "\r\n\r\n";
+
+                await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", subject, body, null);
+
+                return NotFound("youtube");
+            }             
 
             videoPostInfoVM = new VideoPostInfoVM
             {
@@ -902,7 +913,6 @@ namespace ExodusKorea.API.Controllers
                     _vcrRepository.Delete(r);
 
                 _vcRepository.Delete(comment);
-
                 await _vcRepository.CommitAsync();
 
                 return new NoContentResult();
@@ -933,7 +943,6 @@ namespace ExodusKorea.API.Controllers
             if (commentReply.UserId.Equals(user.Id))
             {
                 _vcrRepository.Delete(commentReply);
-
                 await _vcrRepository.CommitAsync();
 
                 return new NoContentResult();

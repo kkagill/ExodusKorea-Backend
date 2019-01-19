@@ -9,6 +9,7 @@ namespace ExodusKorea.Model.ViewModels
 {    
     public class NewUploaderVM
     {
-        public string Name { get; set; }     
+        public string Name { get; set; }
+        public string ThumbnailUrl { get; set; }
     }
 }

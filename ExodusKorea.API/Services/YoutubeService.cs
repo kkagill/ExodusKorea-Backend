@@ -21,6 +21,29 @@ namespace ExodusKorea.API.Services
             _apiKey = youtubeDataAccessor.Value;
         }
 
+        public async Task<YouTubeChannelInfoVM> GetYouTubeChannelInfoByChannelId(string channelId)
+        {
+            var httpClient = new HttpClient();
+            var res = await httpClient
+                .GetAsync($"https://www.googleapis.com/youtube/v3/channels?part=snippet&id={channelId}&key={_apiKey.Key}");
+         
+            if (res.StatusCode != HttpStatusCode.OK)
+                return null;
+
+            var jsonRes = await res.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<YouTubeChannelInfoJM>(jsonRes);
+            YouTubeChannelInfoVM youTubeChannelInfoVM = null;
+
+            if (result != null)
+                foreach (var c in result.Items)
+                    youTubeChannelInfoVM = new YouTubeChannelInfoVM
+                    {
+                        ThumbnailUrl = c.Snippet.Thumbnails.High.Url.AbsoluteUri
+                    };
+
+            return youTubeChannelInfoVM;
+        }
+
         public async Task<YouTubeInfoVM> GetYouTubeInfoByVideoId(string videoId)
         {
             var httpClient = new HttpClient();
@@ -40,7 +63,8 @@ namespace ExodusKorea.API.Services
                     {
                         Likes = c.Statistics.LikeCount,
                         Title = c.Snippet.Title,
-                        Owner = c.Snippet.ChannelTitle
+                        Owner = c.Snippet.ChannelTitle,
+                        ChannelId = c.Snippet.ChannelId
                     };
 
             return youTubeInfoVM;

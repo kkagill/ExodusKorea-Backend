@@ -211,7 +211,8 @@ namespace ExodusKorea.API.Controllers
 
                 Uploader newUploader = new Uploader
                 {                  
-                    Name = vm.Name.Trim()
+                    Name = vm.Name.Trim(),
+                    YouTubeChannelThumbnailUrl = vm.ThumbnailUrl.Trim()
                 };
 
                 await _uRepository.AddAsync(newUploader);
@@ -296,13 +297,69 @@ namespace ExodusKorea.API.Controllers
                 {
                     Likes = (long)Math.Ceiling((double)youTubeInfoVM.Likes / 10),    
                     Title = youTubeInfoVM.Title,
-                    Owner = youTubeInfoVM.Owner
+                    Owner = youTubeInfoVM.Owner,
+                    ChannelId = youTubeInfoVM.ChannelId
                 };
 
                 return new OkObjectResult(videoPostInfoVM);
             }
 
             return StatusCode(401);
+        }
+
+        [HttpGet]
+        [Route("{channelId}/channel-info-by-id", Name = "GetChannelInfo")]
+        public async Task<IActionResult> GetChannelInfo(string channelId)
+        {
+            if (string.IsNullOrWhiteSpace(channelId))
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                var youTubeChannelInfoVM = await _youTube.GetYouTubeChannelInfoByChannelId(channelId);
+
+                if (youTubeChannelInfoVM == null)
+                    return NotFound();           
+
+                return new OkObjectResult(youTubeChannelInfoVM);
+            }
+
+            return StatusCode(401);
+        }
+
+        [HttpDelete("{videoPostId}/disable-video")]
+        public async Task<IActionResult> DisableVideoComment(int videoPostId)
+        {
+            if (videoPostId <= 0)
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(User.Identity.Name);
+
+            if (user == null)
+                return NotFound();
+
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                var videoPost = _vpRepository.GetSingle(vp => vp.VideoPostId == videoPostId);
+
+                if (videoPost == null)
+                    return NotFound();
+
+                videoPost.UploaderId = null;
+                videoPost.IsDisabled = true;
+
+                _vpRepository.Update(videoPost);
+                await _vpRepository.CommitAsync();
+
+                return new NoContentResult();
+            }
+            else
+                return BadRequest();
         }
     }
 }

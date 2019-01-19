@@ -12,5 +12,6 @@ namespace ExodusKorea.Model.ViewModels
         public long Likes { get; set; }
         public string Title { get; set; }
         public string Owner { get; set; }
+        public string ChannelId { get; set; }
     }
 }
