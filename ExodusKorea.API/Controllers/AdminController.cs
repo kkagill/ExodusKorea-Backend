@@ -351,6 +351,7 @@ namespace ExodusKorea.API.Controllers
                     return NotFound();
 
                 videoPost.UploaderId = null;
+                videoPost.JobsInDemandId = null;
                 videoPost.IsDisabled = true;
 
                 _vpRepository.Update(videoPost);

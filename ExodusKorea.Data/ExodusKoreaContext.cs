@@ -41,6 +41,7 @@ namespace ExodusKorea.Data
         public DbSet<LivingCondition> LivingCondition { get; set; }
         public DbSet<ImmigrationVisa> ImmigrationVisa { get; set; }
         public DbSet<Uploader> Uploader { get; set; }
+        public DbSet<JobsInDemand> JobsInDemand { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

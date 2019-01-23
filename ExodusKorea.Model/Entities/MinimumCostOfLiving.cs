@@ -14,6 +14,7 @@ namespace ExodusKorea.Model.Entities
         public decimal Food { get; set; }
         public decimal Cell { get; set; }
         public decimal Internet { get; set; }
+        public decimal Other { get; set; }
         public string Etc { get; set; }
         public string IpAddress { get; set; }
         public string AuthorCountryEN { get; set; }

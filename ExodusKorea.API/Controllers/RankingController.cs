@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ExodusKorea.API.Controllers
@@ -23,6 +24,7 @@ namespace ExodusKorea.API.Controllers
             _vpRepository = vpRepository;
         }
 
+        #region Uploader Ranking
         [HttpGet("uploader-ranking", Name = "GetUploaderRanking")]
         public async Task<IActionResult> GetUploaderRanking()
         {
@@ -46,13 +48,14 @@ namespace ExodusKorea.API.Controllers
 
             uploaderRankingVM = uploaderRankingVM.OrderByDescending(x => x.SpecificInfo.TotalScore).ToList();
 
-            return new OkObjectResult(uploaderRankingVM);            
+            return new OkObjectResult(uploaderRankingVM);
         }
 
         [HttpGet("{uploaderId}/uploader-videos", Name = "GetUploaderVideos")]
         public IActionResult GetUploaderVideos(int uploaderId)
         {
-            var uploaderVideos = _vpRepository.FindBy(vp => vp.UploaderId == uploaderId, vp => vp.Uploader, vp => vp.Country);
+            var uploaderVideos = _vpRepository
+                .FindBy(vp => vp.UploaderId == uploaderId, vp => vp.Uploader, vp => vp.Country);
 
             if (uploaderVideos == null)
                 return NotFound();
@@ -60,8 +63,84 @@ namespace ExodusKorea.API.Controllers
             var uploaderVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(uploaderVideos);
 
             return new OkObjectResult(uploaderVideosVM);
+        }       
+        #endregion
+
+        #region Job Ranking
+        [HttpGet("jobsindemand-random-countries", Name = "GetJobsInDemandByRandomCountries")]
+        public async Task<IActionResult> GetJobsInDemandByRandomCountries()
+        {
+            var countries = await _repository.GetAllCountries();
+
+            if (countries == null)
+                return NotFound();
+
+            var random = new Random();
+            var randomCountries = countries.OrderBy(x => random.Next()).Take(2).ToList();
+            var jobsInDemands = await _repository.GetJobsInDemandByCountryIds(randomCountries);
+
+            if (jobsInDemands == null)
+                return NotFound();
+
+            var jobsInDemandVM = new List<JobsInDemandVM>();
+
+            foreach (var rc in randomCountries)
+                jobsInDemandVM.Add(new JobsInDemandVM
+                {
+                    CountryKR = rc.NameKR,
+                    Details = GetDetails(jobsInDemands
+                    .Where(x => x.CountryId == rc.CountryId)
+                    .OrderBy(x => x.TitleKR)
+                    .ToList())
+                });
+
+            return new OkObjectResult(jobsInDemandVM);
         }
 
+        [HttpGet("jobsindemand-all-countries", Name = "GetJobsInDemandByAllCountries")]
+        public async Task<IActionResult> GetJobsInDemandByAllCountries()
+        {
+            var countries = await _repository.GetAllCountries();
+
+            if (countries == null)
+                return NotFound();
+
+            var jobsInDemands = await _repository.GetAllJobInDemands();
+
+            if (jobsInDemands == null)
+                return NotFound();
+
+            var jobsInDemandVM = new List<JobsInDemandVM>();
+
+            foreach (var c in countries)
+                jobsInDemandVM.Add(new JobsInDemandVM
+                {
+                    CountryKR = c.NameKR,
+                    Details = GetDetails(jobsInDemands
+                    .Where(x => x.CountryId == c.CountryId)
+                    .OrderBy(x => x.TitleKR)
+                    .ToList())
+                });
+
+            return new OkObjectResult(jobsInDemandVM);
+        }
+
+        [HttpGet("{jobsInDemandId}/jobsindemand-videos", Name = "GetJobsInDemandVideos")]
+        public IActionResult GetJobsInDemandVideos(int jobsInDemandId)
+        {
+            var jobsInDemandVideos = _vpRepository
+                .FindBy(vp => vp.JobsInDemandId == jobsInDemandId, vp => vp.JobsInDemand, vp => vp.Country);
+
+            if (jobsInDemandVideos == null)
+                return NotFound();
+
+            var jobsInDemandVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(jobsInDemandVideos);
+
+            return new OkObjectResult(jobsInDemandVideosVM);
+        }
+        #endregion
+
+        #region Private Functions
         private SpecificInfoVM GetSpecificInfo(Uploader uploader)
         {
             int uploaderVpCount = uploader.VideoPosts.Count;
@@ -80,5 +159,26 @@ namespace ExodusKorea.API.Controllers
 
             return specificInfoVM;
         }
+
+        private List<Detail> GetDetails(List<JobsInDemand> jobsInDemand)
+        {
+            var details = new List<Detail>();
+
+            foreach (var j in jobsInDemand)
+            {
+                var videoPosts = _vpRepository.FindBy(vp => vp.JobsInDemandId == j.JobsInDemandId).ToList();
+
+                details.Add(new Detail
+                {
+                    JobsInDemandId = j.JobsInDemandId,
+                    TitleKR = j.TitleKR,
+                    Description = j.Description,
+                    HasVideoPost = videoPosts.Count <= 0 ? false : true
+                });
+            }              
+
+            return details;
+        }
+        #endregion
     }
 }

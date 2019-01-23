@@ -225,6 +225,28 @@ namespace ExodusKorea.API.Migrations
                     b.ToTable("ImmigrationVisa");
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.JobsInDemand", b =>
+                {
+                    b.Property<int>("JobsInDemandId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CountryId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsDisabled");
+
+                    b.Property<string>("TitleEN");
+
+                    b.Property<string>("TitleKR");
+
+                    b.HasKey("JobsInDemandId");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("JobsInDemand");
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.JobSite", b =>
                 {
                     b.Property<int>("JobSiteId")
@@ -305,6 +327,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<string>("IpAddress");
 
                     b.Property<string>("NickName");
+
+                    b.Property<decimal>("Other");
 
                     b.Property<decimal>("Rent");
 
@@ -608,6 +632,8 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("UploaderId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("IsDisabled");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("YouTubeChannelThumbnailUrl");
@@ -718,6 +744,8 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<byte>("IsGoogleDriveVideo");
 
+                    b.Property<int?>("JobsInDemandId");
+
                     b.Property<int>("Likes");
 
                     b.Property<int?>("SalaryInfoId");
@@ -739,6 +767,8 @@ namespace ExodusKorea.API.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CountryId");
+
+                    b.HasIndex("JobsInDemandId");
 
                     b.HasIndex("SalaryInfoId");
 
@@ -1079,6 +1109,14 @@ namespace ExodusKorea.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ExodusKorea.Model.Entities.JobsInDemand", b =>
+                {
+                    b.HasOne("ExodusKorea.Model.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ExodusKorea.Model.Entities.MyVideos", b =>
                 {
                     b.HasOne("ExodusKorea.Model.Entities.VideoPost", "VideoPost")
@@ -1151,6 +1189,10 @@ namespace ExodusKorea.API.Migrations
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ExodusKorea.Model.Entities.JobsInDemand", "JobsInDemand")
+                        .WithMany("VideoPosts")
+                        .HasForeignKey("JobsInDemandId");
 
                     b.HasOne("ExodusKorea.Model.Entities.SalaryInfo", "SalaryInfo")
                         .WithMany("VideoPosts")

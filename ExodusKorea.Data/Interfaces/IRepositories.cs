@@ -70,6 +70,9 @@ namespace ExodusKorea.Data.Interfaces
     public interface IRankingRepository : IEntityBaseRepository<object>
     {
         Task<IEnumerable<Uploader>> GetAllUploaderVideoPosts();
+        Task<IEnumerable<Country>> GetAllCountries();
+        Task<IEnumerable<JobsInDemand>> GetJobsInDemandByCountryIds(List<Country> countries);
+        Task<IEnumerable<JobsInDemand>> GetAllJobInDemands();
     }
     public interface IAdminRepository : IEntityBaseRepository<object>
     {

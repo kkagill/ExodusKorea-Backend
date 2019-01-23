@@ -286,10 +286,11 @@ namespace ExodusKorea.API.Controllers
                 Food = vm.Food,
                 Cell = vm.Cell,
                 Internet = vm.Internet,
+                Other = vm.Other,
                 Etc = vm.Etc,
                 IpAddress = ipAddress,
                 NickName = user.NickName,
-                Total = vm.Rent + vm.Transportation + vm.Food + vm.Cell + vm.Internet,
+                Total = vm.Rent + vm.Transportation + vm.Food + vm.Cell + vm.Internet + vm.Other,
                 DateCreated = DateTime.Now,
                 //AuthorCountryEN = countryCode
             };

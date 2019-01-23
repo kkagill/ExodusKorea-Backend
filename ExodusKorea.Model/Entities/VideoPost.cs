@@ -20,11 +20,13 @@ namespace ExodusKorea.Model.Entities
         public int CategoryId { get; set; }
         public int? SalaryInfoId { get; set; }
         public int? UploaderId { get; set; }
+        public int? JobsInDemandId { get; set; }
         public Country Country { get; set; }
         public Career Career { get; set; }
         public Category Category { get; set; }
         public SalaryInfo SalaryInfo { get; set; }
         public Uploader Uploader { get; set; }
+        public JobsInDemand JobsInDemand { get; set; }
         public ICollection<VideoPostLike> VideoPostLikes { get; set; }
     }
 }

@@ -29,7 +29,45 @@ namespace ExodusKorea.Data.Repositories
         {
             var result = await _context.Uploader             
                 .Include(x => x.VideoPosts)            
+                .Where(x => !x.IsDisabled)
                 .Where(x => x.VideoPosts.Any(vp => !vp.IsDisabled))
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Country>> GetAllCountries()
+        {
+            var result = await _context.Country
+                .OrderBy(x => x.CountryId)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<JobsInDemand>> GetJobsInDemandByCountryIds(List<Country> countries)
+        {
+            var countryIds = new List<int>();
+
+            foreach (var c in countries)
+                countryIds.Add(c.CountryId);
+
+            var result = await _context.JobsInDemand
+                .Include(x => x.Country)
+                .Include(x => x.VideoPosts)
+                .Where(x => !x.IsDisabled)
+                .Where(x => countryIds.Contains(x.CountryId))
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<JobsInDemand>> GetAllJobInDemands()
+        {
+            var result = await _context.JobsInDemand
+                .Include(x => x.Country)
+                .Include(x => x.VideoPosts)
+                .Where(x => !x.IsDisabled)
                 .ToListAsync();
 
             return result;

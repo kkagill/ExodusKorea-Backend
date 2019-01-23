@@ -8,6 +8,7 @@ namespace ExodusKorea.Model.Entities
         public int UploaderId { get; set; }
         public string Name { get; set; }
         public string YouTubeChannelThumbnailUrl { get; set; }
+        public bool IsDisabled { get; set; }
         public ICollection<VideoPost> VideoPosts { get; set; }
     }
 }

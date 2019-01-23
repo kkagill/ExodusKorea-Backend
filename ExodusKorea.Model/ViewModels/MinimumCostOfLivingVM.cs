@@ -17,6 +17,7 @@ namespace ExodusKorea.Model.ViewModels
         public decimal Food { get; set; }
         public decimal Cell { get; set; }
         public decimal Internet { get; set; }
+        public decimal Other { get; set; }
         public string Etc { get; set; }
         public string NickName { get; set; }
         public decimal Total { get; set; }

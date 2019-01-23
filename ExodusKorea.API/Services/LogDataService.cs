@@ -115,7 +115,8 @@ namespace ExodusKorea.API.Services
             }
             catch (Exception ex)
             {
-                await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", "[엑소더스 코리아] HttpResponseException 추가 오류", ex.ToString(), null);
+                // 이멜 너무 많이 들어올까봐 커맨트아웃함
+                //await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", "[엑소더스 코리아] HttpResponseException 추가 오류", ex.ToString(), null);
             }
             // Skip sending email notification for Not Found 404 error
             //if (vm.Status != 404)
