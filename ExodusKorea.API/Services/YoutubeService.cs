@@ -64,7 +64,8 @@ namespace ExodusKorea.API.Services
                         Likes = c.Statistics.LikeCount,
                         Title = c.Snippet.Title,
                         Owner = c.Snippet.ChannelTitle,
-                        ChannelId = c.Snippet.ChannelId
+                        ChannelId = c.Snippet.ChannelId,
+                        DateTime = c.Snippet.PublishedAt
                     };
 
             return youTubeInfoVM;
@@ -85,18 +86,31 @@ namespace ExodusKorea.API.Services
 
             if (result != null)
                 foreach (var c in result.Items)
-                    youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
-                    {
-                        AuthorDisplayName = c.Snippet.TopLevelComment.Snippet.AuthorDisplayName,
-                        TextDisplay = c.Snippet.TopLevelComment.Snippet.TextDisplay,
-                        UpdatedAt = c.Snippet.TopLevelComment.Snippet.UpdatedAt,
-                        Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString(),
-                        TotalReplyCount = c.Snippet.TotalReplyCount,
-                        //ParentId = c.Snippet.TopLevelComment.Id,
-                        Replies = AddReplies(c.Replies)
-                    });
+                    if (c.Snippet.TotalReplyCount > 5) 
+                        youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
+                        {
+                            AuthorDisplayName = c.Snippet.TopLevelComment.Snippet.AuthorDisplayName,
+                            TextDisplay = c.Snippet.TopLevelComment.Snippet.TextDisplay,
+                            UpdatedAt = c.Snippet.TopLevelComment.Snippet.UpdatedAt,
+                            Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString(),
+                            TotalReplyCount = c.Snippet.TotalReplyCount,
+                            //ParentId = c.Snippet.TopLevelComment.Id,
+                            Replies = await GetYouTubeRepliesByParentId(c.Snippet.TopLevelComment.Id)
+                        });
+                    else
+                        youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
+                        {
+                            AuthorDisplayName = c.Snippet.TopLevelComment.Snippet.AuthorDisplayName,
+                            TextDisplay = c.Snippet.TopLevelComment.Snippet.TextDisplay,
+                            UpdatedAt = c.Snippet.TopLevelComment.Snippet.UpdatedAt,
+                            Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString(),
+                            TotalReplyCount = c.Snippet.TotalReplyCount,
+                            //ParentId = c.Snippet.TopLevelComment.Id,
+                            Replies = AddReplies(c.Replies)
+                        });
 
             int count = 2;
+
             while (result.NextPageToken != null && count > 0)
             {
                 var resNext = await httpClient
@@ -110,49 +124,61 @@ namespace ExodusKorea.API.Services
 
                 if (nextResult != null)
                     foreach (var c in nextResult.Items)
-                        youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
-                        {
-                            AuthorDisplayName = c.Snippet.TopLevelComment.Snippet.AuthorDisplayName,
-                            TextDisplay = c.Snippet.TopLevelComment.Snippet.TextDisplay,
-                            UpdatedAt = c.Snippet.TopLevelComment.Snippet.UpdatedAt,
-                            Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString(),
-                            TotalReplyCount = c.Snippet.TotalReplyCount,
-                            //ParentId = c.Snippet.TopLevelComment.Id,
-                            Replies = AddReplies(c.Replies)
-                        });
+                        if (c.Snippet.TotalReplyCount > 5)
+                            youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
+                            {
+                                AuthorDisplayName = c.Snippet.TopLevelComment.Snippet.AuthorDisplayName,
+                                TextDisplay = c.Snippet.TopLevelComment.Snippet.TextDisplay,
+                                UpdatedAt = c.Snippet.TopLevelComment.Snippet.UpdatedAt,
+                                Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString(),
+                                TotalReplyCount = c.Snippet.TotalReplyCount,
+                                //ParentId = c.Snippet.TopLevelComment.Id,
+                                Replies = await GetYouTubeRepliesByParentId(c.Snippet.TopLevelComment.Id)
+                            });
+                        else
+                            youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
+                            {
+                                AuthorDisplayName = c.Snippet.TopLevelComment.Snippet.AuthorDisplayName,
+                                TextDisplay = c.Snippet.TopLevelComment.Snippet.TextDisplay,
+                                UpdatedAt = c.Snippet.TopLevelComment.Snippet.UpdatedAt,
+                                Likes = c.Snippet.TopLevelComment.Snippet.LikeCount.ToString(),
+                                TotalReplyCount = c.Snippet.TotalReplyCount,
+                                //ParentId = c.Snippet.TopLevelComment.Id,
+                                Replies = AddReplies(c.Replies)
+                            });
 
                 result.NextPageToken = nextResult.NextPageToken;
-                count--;             
+                count--;
             }
 
             return youTubeCommentVM;
         }
 
-        //public async Task<YouTubeCommentVM> GetYouTubeRepliesByParentId(string parentId)
-        //{
-        //    var httpClient = new HttpClient();
-        //    var res = await httpClient
-        //        .GetAsync($"https://www.googleapis.com/youtube/v3/comments?part=snippet&parentId={parentId}&maxResults=100&key={_apiKey.Key}");
+        public async Task<List<Reply>> GetYouTubeRepliesByParentId(string parentId)
+        {
+            var httpClient = new HttpClient();
+            var res = await httpClient
+                .GetAsync($"https://www.googleapis.com/youtube/v3/comments?part=snippet&parentId={parentId}&maxResults=100&key={_apiKey.Key}");
 
-        //    if (res.StatusCode != HttpStatusCode.OK)
-        //        return null;
+            if (res.StatusCode != HttpStatusCode.OK)
+                return null;
 
-        //    var jsonRes = await res.Content.ReadAsStringAsync();
-        //    var result = JsonConvert.DeserializeObject<YouTubeRepliesJM>(jsonRes);
-        //    var youTubeCommentVM = new YouTubeCommentVM();
+            var jsonRes = await res.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<YouTubeRepliesJM>(jsonRes);
+            var mappedReplies = new List<Reply>();
 
-        //    if (result != null)
-        //        foreach (var c in result.Items)
-        //            youTubeCommentVM.Comments.Add(new Model.ViewModels.Comment
-        //            {
-        //                AuthorDisplayName = c.Snippet.AuthorDisplayName,
-        //                TextDisplay = c.Snippet.TextDisplay,
-        //                UpdatedAt = c.Snippet.UpdatedAt,
-        //                Likes = c.Snippet.LikeCount.ToString()
-        //            });          
+            if (result != null)
+                foreach (var c in result.Items)
+                    mappedReplies.Add(new Reply
+                    {
+                        AuthorDisplayName = c.Snippet.AuthorDisplayName,
+                        TextDisplay = c.Snippet.TextDisplay,
+                        UpdatedAt = c.Snippet.UpdatedAt,
+                        Likes = c.Snippet.LikeCount.ToString()
+                    });
 
-        //    return youTubeCommentVM;
-        //}
+            return mappedReplies;
+        }
 
         private List<Reply> AddReplies(Replies replies) 
         {

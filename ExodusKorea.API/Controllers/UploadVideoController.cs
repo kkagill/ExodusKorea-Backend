@@ -60,10 +60,10 @@ namespace ExodusKorea.API.Controllers
             await _repository.AddAsync(newUploadVideo);
             await _repository.CommitAsync();
 
-            var body = "엑소더스 코리아 이메일: " + vm.Email + "\r\n\r\n" +
+            var body = "탈조선 가입 이메일: " + vm.Email + "\r\n\r\n" +
                        "유튜브 영상 주소: " + vm.YoutubeAddress + "\r\n\r\n";
 
-            await _email.SendEmailAsync(vm.Email, "admin@exoduscorea.com", "[엑소더스 코리아] 영상 신청", body, null);
+            await _email.SendEmailAsync(vm.Email, "admin@talchoseon.com", "[탈조선] 영상 신청", body, null);
 
             var uploadVideoVM = Mapper.Map<UploadVideo, UploadVideoVM>(newUploadVideo);
 

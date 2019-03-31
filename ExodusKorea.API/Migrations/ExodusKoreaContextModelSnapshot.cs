@@ -234,7 +234,17 @@ namespace ExodusKorea.API.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("DifficultyLevel");
+
                     b.Property<bool>("IsDisabled");
+
+                    b.Property<bool>("IsRecommended");
+
+                    b.Property<string>("JobSite");
+
+                    b.Property<string>("Link");
+
+                    b.Property<decimal>("Salary");
 
                     b.Property<string>("TitleEN");
 
@@ -734,7 +744,7 @@ namespace ExodusKorea.API.Migrations
                     b.Property<int>("VideoPostId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CareerId");
+                    b.Property<int?>("CareerId");
 
                     b.Property<int>("CategoryId");
 
@@ -1177,8 +1187,7 @@ namespace ExodusKorea.API.Migrations
                 {
                     b.HasOne("ExodusKorea.Model.Entities.Career", "Career")
                         .WithMany()
-                        .HasForeignKey("CareerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CareerId");
 
                     b.HasOne("ExodusKorea.Model.Entities.Category", "Category")
                         .WithMany("VideoPosts")

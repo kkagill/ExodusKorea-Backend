@@ -35,7 +35,7 @@ namespace ExodusKorea.API.Services
         public Task SendEmailAsync(string from, string to, string subject, string body, string htmlBody)
         {
             if (_appSettings.Environment.Equals("Development"))
-                to = "admin@exoduscorea.com";
+                to = "admin@talchoseon.com";
 
             var message = new MimeMessage();
 

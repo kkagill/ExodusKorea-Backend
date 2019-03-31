@@ -11,6 +11,7 @@ namespace ExodusKorea.Model.ViewModels
     {
         public int VideoPostId { get; set; }
         public string Uploader { get; set; }
+        public string UploaderOriginal { get; set; }
         public DateTime UploadedDate { get; set; }
         public string Title { get; set; }
         public int Likes { get; set; }

@@ -319,7 +319,7 @@ namespace ExodusKorea.API.Controllers
             var career = await _repository.GetCareerByVideoPostId(videoPostId);
             
             if (career == null)
-                return NotFound();
+                return new NoContentResult(); // 카테고리 이민, 생활정보일 경우 404 리턴 방지
 
             var careerInfoVM = Mapper.Map<Career, CareerInfoVM>(career);
 
@@ -395,7 +395,7 @@ namespace ExodusKorea.API.Controllers
 
             var youTubeComments = await _youTube.GetYouTubeCommentsByVideoId(videoId);   
             // Add youtube comments on top of comments from database   
-            if (youTubeComments.Comments.Count > 0)
+            if (youTubeComments != null && youTubeComments.Comments.Count > 0)
                 foreach (var yc in youTubeComments.Comments)
                     videoCommentVM = videoCommentVM.Append(new VideoCommentVM
                     {
@@ -648,16 +648,16 @@ namespace ExodusKorea.API.Controllers
 
             var youTubeInfoVM = await _youTube.GetYouTubeInfoByVideoId(videoId);
 
-            if (youTubeInfoVM == null)
-            {
-                string subject = "[엑소더스 코리아] 404 유튜브 오류";
-                string body = "VideoPostId: " + videoPost.VideoPostId + "\r\n\r\n"
-                               + "YouTubeVideoId: " + videoPost.YouTubeVideoId + "\r\n\r\n";
+            //if (youTubeInfoVM == null)
+            //{
+            //    string subject = "[탈조선] 404 유튜브 오류";
+            //    string body = "VideoPostId: " + videoPost.VideoPostId + "\r\n\r\n"
+            //                   + "YouTubeVideoId: " + videoPost.YouTubeVideoId + "\r\n\r\n";
 
-                await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", subject, body, null);
+            //    await _email.SendEmailAsync("admin@talchoseon.com", "admin@talchoseon.com", subject, body, null);
 
-                return NotFound("youtube");
-            }             
+            //    return NotFound("youtube");
+            //}             
 
             videoPostInfoVM = new VideoPostInfoVM
             {
@@ -1118,7 +1118,7 @@ namespace ExodusKorea.API.Controllers
                 return NotFound();
 
             var myVideos = _mvRepository.FindBy(mv => mv.ApplicationUserId == user.Id);
-            var allVideos = _vpRepository.FindBy(vp => !vp.IsDisabled, vp => vp.Country, vp => vp.Uploader);
+            var allVideos = _vpRepository.FindBy(vp => !vp.IsDisabled, vp => vp.Country, vp => vp.Uploader, vp => vp.Category);
 
             if (myVideos == null || allVideos == null)
                 return NotFound();
@@ -1130,6 +1130,13 @@ namespace ExodusKorea.API.Controllers
                     myVideoPosts.Add(av);
 
             var allMyVideosVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(myVideoPosts);
+
+            foreach (var av in allMyVideosVM)
+                if (av.Uploader.Trim().Length > 6)
+                {
+                    var substringed = av.Uploader.Substring(0, 6);
+                    av.Uploader = string.Concat(substringed + "..");
+                }
 
             return new OkObjectResult(allMyVideosVM);
         }
@@ -1159,7 +1166,12 @@ namespace ExodusKorea.API.Controllers
 
             if (user.Id.Equals(sharerId))
             {
+                // admin@talchoseon.com has access to sharer role as well
+                if (user.Email.Equals("admin@talchoseon.com"))
+                    return true;
+
                 var userRole = await _userManager.GetRolesAsync(user);
+
                 return userRole.SingleOrDefault().ToLower().Equals("sharer") ? true : false;
             }
 

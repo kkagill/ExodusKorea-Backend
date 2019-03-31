@@ -42,24 +42,26 @@ namespace ExodusKorea.API.Controllers
         }
 
         [HttpGet]
-        [Route("categories-countries-uploaders", Name = "GetCategoryCountryUploader")]
-        public async Task<IActionResult> GetCategoryCountryUploader()
+        [Route("categories-countries-careers-uploaders", Name = "GetCategoryCountryCareersUploader")]
+        public async Task<IActionResult> GetCategoryCountryCareersUploader()
         {
             var categories = await _repository.GetCategories();
             var countries = await _repository.GetCountries();
+            var careers = await _repository.GetCareers();
             var uploaders = await _repository.GetUploaders();
 
-            if (categories == null || countries == null || uploaders == null)
+            if (categories == null || countries == null || careers == null || uploaders == null)
                 return NotFound();
 
-            var categoryCountryVM = new CategoryCountryUploaderVM
+            var categoryCountryCareerUploaderVM = new CategoryCountryCareerUploaderVM
             {
                 Categories = categories,
                 Countries = countries,
+                Careers = careers,
                 Uploaders = uploaders
             };
 
-            return new OkObjectResult(categoryCountryVM);
+            return new OkObjectResult(categoryCountryCareerUploaderVM);
         }
 
         [HttpGet("{country}/salary-info-occupations", Name = "GetSalaryInfoOccupations")]
@@ -155,7 +157,7 @@ namespace ExodusKorea.API.Controllers
             {
                 VideoPost newVideoPost = new VideoPost
                 {
-                    CareerId = 1,
+                    CareerId = vm.CareerId ?? null,
                     CategoryId = vm.CategoryId,
                     CountryId = vm.CountryId,
                     UploaderId = vm.UploaderId,

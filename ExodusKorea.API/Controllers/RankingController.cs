@@ -36,17 +36,33 @@ namespace ExodusKorea.API.Controllers
             var uploaderRankingVM = new List<UploaderRankingVM>();
 
             foreach (var u in uploaders)
-            {
-                uploaderRankingVM.Add(new UploaderRankingVM
+            {    
+                if (u.Name.Trim().Length > 10)
                 {
-                    Name = u.Name,
-                    ThumbnailDefaultUrl = u.YouTubeChannelThumbnailUrl,
-                    UploaderId = u.UploaderId,
-                    SpecificInfo = GetSpecificInfo(u)
-                });
+                    var substringed = u.Name.Substring(0, 10);
+                    var concat = string.Concat(substringed + "..");
+
+                    uploaderRankingVM.Add(new UploaderRankingVM
+                    {
+                        Name = concat,
+                        NameOriginal = u.Name,
+                        ThumbnailDefaultUrl = u.YouTubeChannelThumbnailUrl,
+                        UploaderId = u.UploaderId,
+                        SpecificInfo = GetSpecificInfo(u)
+                    });
+                } 
+                else
+                    uploaderRankingVM.Add(new UploaderRankingVM
+                    {
+                        Name = u.Name,
+                        NameOriginal = u.Name,
+                        ThumbnailDefaultUrl = u.YouTubeChannelThumbnailUrl,
+                        UploaderId = u.UploaderId,
+                        SpecificInfo = GetSpecificInfo(u)
+                    });      
             }
 
-            uploaderRankingVM = uploaderRankingVM.OrderByDescending(x => x.SpecificInfo.TotalScore).ToList();
+            uploaderRankingVM = uploaderRankingVM.OrderByDescending(x => x.SpecificInfo.TotalScore).ToList();              
 
             return new OkObjectResult(uploaderRankingVM);
         }
@@ -55,7 +71,7 @@ namespace ExodusKorea.API.Controllers
         public IActionResult GetUploaderVideos(int uploaderId)
         {
             var uploaderVideos = _vpRepository
-                .FindBy(vp => vp.UploaderId == uploaderId, vp => vp.Uploader, vp => vp.Country);
+                .FindBy(vp => vp.UploaderId == uploaderId, vp => vp.Uploader, vp => vp.Country, vp => vp.Uploader, vp => vp.Category);
 
             if (uploaderVideos == null)
                 return NotFound();
@@ -75,8 +91,7 @@ namespace ExodusKorea.API.Controllers
             if (countries == null)
                 return NotFound();
 
-            var random = new Random();
-            var randomCountries = countries.OrderBy(x => random.Next()).Take(2).ToList();
+            var randomCountries = countries.OrderBy(x => new Random().Next()).Take(2).ToList();
             var jobsInDemands = await _repository.GetJobsInDemandByCountryIds(randomCountries);
 
             if (jobsInDemands == null)
@@ -129,7 +144,7 @@ namespace ExodusKorea.API.Controllers
         public IActionResult GetJobsInDemandVideos(int jobsInDemandId)
         {
             var jobsInDemandVideos = _vpRepository
-                .FindBy(vp => vp.JobsInDemandId == jobsInDemandId, vp => vp.JobsInDemand, vp => vp.Country);
+                .FindBy(vp => vp.JobsInDemandId == jobsInDemandId, vp => vp.Uploader, vp => vp.JobsInDemand, vp => vp.Country, vp => vp.Category);
 
             if (jobsInDemandVideos == null)
                 return NotFound();
@@ -172,8 +187,15 @@ namespace ExodusKorea.API.Controllers
                 {
                     JobsInDemandId = j.JobsInDemandId,
                     TitleKR = j.TitleKR,
+                    TitleEN = j.TitleEN,
                     Description = j.Description,
-                    HasVideoPost = videoPosts.Count <= 0 ? false : true
+                    HasVideoPost = videoPosts.Count <= 0 ? false : true,
+                    IsRecommended = j.IsRecommended,
+                    DifficultyLevel = j.DifficultyLevel,
+                    Link = j.Link,
+                    JobSite = j.JobSite,
+                    Salary = j.Salary,
+                    Currency = j.Country.BaseCurrency
                 });
             }              
 

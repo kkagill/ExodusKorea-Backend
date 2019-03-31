@@ -72,10 +72,10 @@ namespace ExodusKorea.API.Services
             }
             catch (Exception ex)
             {
-                await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", "[엑소더스 코리아] SiteException 추가 오류", ex.ToString(), null);
+                await _email.SendEmailAsync("admin@talchoseon.com", "admin@talchoseon.com", "[탈조선] SiteException 추가 오류", ex.ToString(), null);
             }
 
-            string subject = "[엑소더스 코리아] 500 오류";
+            string subject = "[탈조선] 500 오류";
             string body = "Domain: " + domain + "\r\n\r\n"
                            + "Page Url: " + pageUrl + "\r\n\r\n"
                            + "Username: " + username + "\r\n\r\n"
@@ -91,7 +91,7 @@ namespace ExodusKorea.API.Services
                     body += "Control: " + entry.Key + "; Value: " + entry.Value + "\r\n";
             }
 
-            await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", subject, body, null);
+            //await _email.SendEmailAsync("admin@talchoseon.com", "admin@talchoseon.com", subject, body, null);
         }
         // Log 404 or 400 errors
         public async Task LogHttpResponseException(HttpResponseExceptionVM vm)
@@ -162,7 +162,7 @@ namespace ExodusKorea.API.Services
             }
             catch (Exception ex) 
             {
-                await _email.SendEmailAsync("admin@exoduscorea.com", "admin@exoduscorea.com", "[엑소더스 코리아] LoginSession 추가 오류", ex.ToString(), null);
+                await _email.SendEmailAsync("admin@talchoseon.com", "admin@talchoseon.com", "[탈조선] LoginSession 추가 오류", ex.ToString(), null);
             }
         }      
     }

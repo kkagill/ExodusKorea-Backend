@@ -9,6 +9,8 @@ using ExodusKorea.Data;
 using ExodusKorea.Model.Entities;
 using ExodusKorea.Data.Interfaces;
 using ExodusKorea.Data.Repositories;
+using ExodusKorea.Model;
+using Microsoft.Extensions.Options;
 
 namespace ExodusKorea.Data.Repositories
 {
@@ -16,13 +18,16 @@ namespace ExodusKorea.Data.Repositories
     {
         private readonly ExodusKoreaContext _context;
         private readonly IConfiguration _config;
+        private readonly AppSettings _appSettings;
 
         public AdminRepository(ExodusKoreaContext context,
-                              IConfiguration config)
-            : base(context, config)
+                                   IConfiguration config,
+                                   IOptions<AppSettings> appSettings)
+            : base(context, config, appSettings)
         {
             _context = context;
             _config = config;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<IEnumerable<Country>> GetCountries()
@@ -35,6 +40,13 @@ namespace ExodusKorea.Data.Repositories
         public async Task<IEnumerable<Category>> GetCategories()
         {
             var result = await _context.Category.ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Career>> GetCareers()
+        {
+            var result = await _context.Career.ToListAsync();
 
             return result;
         }

@@ -16,7 +16,7 @@ namespace ExodusKorea.Model.Entities
         public byte IsGoogleDriveVideo { get; set; }       
 
         public int CountryId { get; set; }     
-        public int CareerId { get; set; }      
+        public int? CareerId { get; set; }      
         public int CategoryId { get; set; }
         public int? SalaryInfoId { get; set; }
         public int? UploaderId { get; set; }

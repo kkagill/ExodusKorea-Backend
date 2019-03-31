@@ -28,7 +28,7 @@ namespace ExodusKorea.API.Services.Interfaces
         Task<YouTubeChannelInfoVM> GetYouTubeChannelInfoByChannelId(string channelId);
         Task<YouTubeInfoVM> GetYouTubeInfoByVideoId(string videoId);
         Task<YouTubeCommentVM> GetYouTubeCommentsByVideoId(string videoId);
-        //Task<YouTubeCommentVM> GetYouTubeRepliesByParentId(string parentId);
+        Task<List<Reply>> GetYouTubeRepliesByParentId(string parentId);
     }
 
     public interface IClientIPService
@@ -42,5 +42,10 @@ namespace ExodusKorea.API.Services.Interfaces
         Task LogInternalServerException(ExceptionContext context);
         Task LogHttpResponseException(HttpResponseExceptionVM vm);
         Task LogLoginSession(ApplicationUser user, string loginType);
+    }
+
+    public interface IKotraNewsService
+    {
+        Task<List<KotraNewsVM>> GetKotraNewsByCountry(string country);
     }
 }

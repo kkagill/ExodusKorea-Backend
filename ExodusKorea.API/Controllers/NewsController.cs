@@ -9,6 +9,7 @@ using ExodusKorea.Model.Entities;
 using ExodusKorea.Model.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,14 +21,20 @@ namespace ExodusKorea.API.Controllers
         private readonly INewsRepository _repository;
         private readonly INewsDetailRepository _ndRepository;
         private readonly IYouTubeService _youTube;
+        private readonly IKotraNewsService _kotraNews;
+        private readonly IMemoryCache _memoryCache;
 
         public NewsController(INewsRepository repository,
                               INewsDetailRepository ndRepository,
-                              IYouTubeService youTube)
+                              IYouTubeService youTube,
+                              IKotraNewsService kotraNews,
+                              IMemoryCache memoryCache)
         {
             _repository = repository;
             _ndRepository = ndRepository;
             _youTube = youTube;
+            _kotraNews = kotraNews;
+            _memoryCache = memoryCache;
         }
 
         //[HttpGet]
@@ -71,11 +78,7 @@ namespace ExodusKorea.API.Controllers
         [Route("all-categories")]
         public IActionResult GetAllCategories()
         {
-            var categories = new List<CategoryVM>
-            {
-                new CategoryVM { CategoryId = 0, Name = "전체" }
-            };
-
+            var categories = new List<CategoryVM>();
             var allCategories = _repository.GetAll();
 
             foreach (var c in allCategories)
@@ -107,38 +110,59 @@ namespace ExodusKorea.API.Controllers
 
         [HttpGet]
         [Route("{newsId}/news-list", Name = "GetNewsList")]
-        public IActionResult GetNewsList(int newsId)
+        public async Task<IActionResult> GetNewsList(int newsId)
         {
             if (newsId < 0)
                 return NotFound();
 
-            if (newsId == 0)
-            {
-                var allNewsDetails = _ndRepository.GetAll();
+            var news = _repository.GetSingle(n => n.NewsId == newsId);      
+            var cache = _memoryCache.Get<List<KotraNewsVM>>(news.Topic);
 
-                if (allNewsDetails == null)
-                    return NotFound();
+            if (cache != null)
+                return new OkObjectResult(cache);
 
-                var allNewsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(allNewsDetails);
-
-                foreach (var and in allNewsDetailsVM)
-                    and.NewsId = 0;
-
-                allNewsDetailsVM = allNewsDetailsVM.OrderByDescending(x => x.DateCreated);
-
-                return new OkObjectResult(allNewsDetailsVM);
-            }
-
-            var newsDetails = _ndRepository.FindBy(nd => nd.NewsId == newsId);
+            var newsDetails = await _kotraNews.GetKotraNewsByCountry(news.Topic);
 
             if (newsDetails == null)
                 return NotFound();
 
-            var newsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(newsDetails);
-            newsDetailsVM = newsDetailsVM.OrderByDescending(x => x.DateCreated);
-
-            return new OkObjectResult(newsDetailsVM);
+            return new OkObjectResult(newsDetails);
         }
+
+        //[HttpGet]
+        //[Route("{newsId}/news-list", Name = "GetNewsList")]
+        //public IActionResult GetNewsList(int newsId)
+        //{
+        //    if (newsId < 0)
+        //        return NotFound();
+
+        //    if (newsId == 0)
+        //    {
+        //        var allNewsDetails = _ndRepository.GetAll();
+
+        //        if (allNewsDetails == null)
+        //            return NotFound();
+
+        //        var allNewsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(allNewsDetails);
+
+        //        foreach (var and in allNewsDetailsVM)
+        //            and.NewsId = 0;
+
+        //        allNewsDetailsVM = allNewsDetailsVM.OrderByDescending(x => x.DateCreated);
+
+        //        return new OkObjectResult(allNewsDetailsVM);
+        //    }
+
+        //    var newsDetails = _ndRepository.FindBy(nd => nd.NewsId == newsId);
+
+        //    if (newsDetails == null)
+        //        return NotFound();
+
+        //    var newsDetailsVM = Mapper.Map<IEnumerable<NewsDetail>, IEnumerable<NewsDetailVM>>(newsDetails);
+        //    newsDetailsVM = newsDetailsVM.OrderByDescending(x => x.DateCreated);
+
+        //    return new OkObjectResult(newsDetailsVM);
+        //}
 
         [HttpPut]
         [Route("{newsDetailId}/update-views-count")]

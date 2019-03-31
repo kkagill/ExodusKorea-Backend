@@ -8,6 +8,7 @@ namespace ExodusKorea.Data.Interfaces
     public interface IHomeRepository : IEntityBaseRepository<object>
     {
         Task<IEnumerable<VideoPost>> GetAllNewVideos();
+        Task<IEnumerable<VideoPost>> GetPopularVideos();
         Task<IEnumerable<VideoPost>> GetAllVideos();
         Task<IEnumerable<Category>> GetAllCategories();
         Task<IEnumerable<Career>> GetAllCareers();
@@ -78,6 +79,7 @@ namespace ExodusKorea.Data.Interfaces
     {
         Task<IEnumerable<Country>> GetCountries();
         Task<IEnumerable<Category>> GetCategories();
+        Task<IEnumerable<Career>> GetCareers();
         Task<IEnumerable<Uploader>> GetUploaders();
         Task<IEnumerable<SalaryInfo>> GetSalaryInfoOccupations(string country);
     }

@@ -41,7 +41,13 @@ namespace ExodusKorea.API.Controllers
 
             var random = new Random();
             var convertedToList = allVideoPosts.OrderBy(x => random.Next()).Take(1).ToList();
-            var recommendedVideoVM = Mapper.Map<VideoPost, VideoPostVM>(convertedToList[0]);         
+            var recommendedVideoVM = Mapper.Map<VideoPost, VideoPostVM>(convertedToList[0]);
+
+            if (recommendedVideoVM.Uploader.Trim().Length > 10)
+            {
+                var substringed = recommendedVideoVM.Uploader.Substring(0, 10);
+                recommendedVideoVM.Uploader = string.Concat(substringed + "..");
+            }
 
             return new OkObjectResult(recommendedVideoVM);
         }
@@ -71,23 +77,69 @@ namespace ExodusKorea.API.Controllers
 
             var allVideoVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts); 
 
+            foreach (var av in allVideoVM)
+                if (av.Uploader.Trim().Length > 10)
+                {
+                    var substringed = av.Uploader.Substring(0, 10);
+                    av.Uploader = string.Concat(substringed + "..");
+                }
+
+            return new OkObjectResult(allVideoVM);
+        }
+
+        [HttpGet]
+        [Route("popular-videos")]
+        public async Task<IActionResult> GetPopularVideos()
+        {
+            var allVideoPosts = await _repository.GetPopularVideos();
+
+            if (allVideoPosts == null)
+                return NotFound();
+
+            var allVideoVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);
+
+            foreach (var av in allVideoVM)
+                if (av.Uploader.Trim().Length > 10)
+                {
+                    var substringed = av.Uploader.Substring(0, 10);
+                    av.Uploader = string.Concat(substringed + "..");
+                }
+
             return new OkObjectResult(allVideoVM);
         }
 
         [HttpGet]
         [Route("all-videos")]
         public async Task<IActionResult> GetAllVideos()
-        {
+        {         
             var allVideoPosts = await _repository.GetAllVideos();
+            // Update youtube video's date and likes
+            //foreach (var vp in allVideoPosts)
+            //{
+            //    var youtube = await _youTube.GetYouTubeInfoByVideoId(vp.YouTubeVideoId);
+            //    vp.UploadedDate = youtube.DateTime.DateTime;
+            //    vp.Likes = (int)Math.Ceiling((double)youtube.Likes / 10);  
+            //    _repository.Update(vp);
+            //    await _repository.CommitAsync();
+            //}
+
             var random = new Random();
 
             if (allVideoPosts == null)
                 return NotFound();
 
-            var allVideoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);
+            var allVideoPostsVM = Mapper.Map<IEnumerable<VideoPost>, IEnumerable<VideoPostVM>>(allVideoPosts);          
+
+            foreach (var av in allVideoPostsVM)
+                if (av.Uploader.Trim().Length > 10)
+                {
+                    var substringed = av.Uploader.Substring(0, 10);
+                    av.Uploader = string.Concat(substringed + "..");
+                }
+
             allVideoPostsVM = allVideoPostsVM
-                .OrderBy(x => random.Next())
-                .Take(12);
+              .OrderBy(x => random.Next())
+              .Take(12);
 
             return new OkObjectResult(allVideoPostsVM);
         }

@@ -9,6 +9,8 @@ using ExodusKorea.Data;
 using ExodusKorea.Model.Entities;
 using ExodusKorea.Data.Interfaces;
 using ExodusKorea.Data.Repositories;
+using ExodusKorea.Model;
+using Microsoft.Extensions.Options;
 
 namespace ExodusKorea.Data.Repositories
 {
@@ -16,14 +18,17 @@ namespace ExodusKorea.Data.Repositories
     {
         private readonly ExodusKoreaContext _context;
         private readonly IConfiguration _config;
+        private readonly AppSettings _appSettings;
 
         public HomeRepository(ExodusKoreaContext context,
-                              IConfiguration config)
-            : base(context, config)
+                                   IConfiguration config,
+                                   IOptions<AppSettings> appSettings)
+            : base(context, config, appSettings)
         {
             _context = context;
             _config = config;
-        }  
+            _appSettings = appSettings.Value;
+        }
 
         public async Task<IEnumerable<VideoPost>> GetAllNewVideos()
         {
@@ -31,9 +36,24 @@ namespace ExodusKorea.Data.Repositories
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
                 .Include(x => x.Uploader)
+                .Include(x => x.Category)
                 .Where(x => !x.IsDisabled)
                 //.Where(x => x.UploadedDate >= twoWeeks)
                 .OrderByDescending(x => x.UploadedDate)
+                .Take(12)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<VideoPost>> GetPopularVideos()
+        {            
+            var result = await _context.VideoPosts
+                .Include(x => x.Country)
+                .Include(x => x.Uploader)
+                .Include(x => x.Category)
+                .Where(x => !x.IsDisabled)
+                .OrderByDescending(x => x.Likes)
                 .Take(8)
                 .ToListAsync();
 
@@ -45,6 +65,7 @@ namespace ExodusKorea.Data.Repositories
             var result = await _context.VideoPosts
                 .Include(x => x.Country)
                 .Include(x => x.Uploader)
+                .Include(x => x.Category)
                 .Where(x => !x.IsDisabled)
                 .ToListAsync();
 

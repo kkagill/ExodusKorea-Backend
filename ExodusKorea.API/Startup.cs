@@ -15,6 +15,7 @@ using ExodusKorea.Data.Interfaces;
 using ExodusKorea.Data.Repositories;
 using ExodusKorea.Model;
 using ExodusKorea.Model.Entities;
+using ExodusKorea.Model.ViewModels;
 using ExodusKorea.Model.ViewModels.Mapping;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
@@ -26,6 +27,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -58,7 +60,7 @@ namespace ExodusKorea.API
                     options.UseSqlServer(Configuration.GetConnectionString("ExodusKoreaAzure"),
                         b => b.MigrationsAssembly("ExodusKorea.API"));
                 else if (_appSettingsEnv.Equals("Development"))
-                    options.UseSqlServer(Configuration.GetConnectionString("ExodusKorea"),
+                    options.UseSqlServer(Configuration.GetConnectionString("ExodusKoreaAzure"),
                         b => b.MigrationsAssembly("ExodusKorea.API"));
                
                 options.UseOpenIddict();
@@ -165,6 +167,7 @@ namespace ExodusKorea.API
 
             services.AddCors();
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+            services.AddMemoryCache();
             services.AddMvc(config =>
             {
                 // Custom Global Exception Handler
@@ -183,7 +186,8 @@ namespace ExodusKorea.API
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<GoogleReCaptcha>(Configuration.GetSection("GoogleReCaptcha"));
             services.Configure<GoogleReCaptchaDev>(Configuration.GetSection("GoogleReCaptchaDev"));
-            services.Configure<YoutubeData>(Configuration.GetSection("YoutubeData"));          
+            services.Configure<YoutubeData>(Configuration.GetSection("YoutubeData"));
+            services.Configure<KotraNews>(Configuration.GetSection("KotraNews"));
 
             // Repositories
             services.AddScoped<IHomeRepository, HomeRepository>();
@@ -214,14 +218,23 @@ namespace ExodusKorea.API
             services.AddTransient<IYouTubeService, YoutubeService>();
             services.AddTransient<IClientIPService, ClientIPService>();
             services.AddTransient<ILogDataService, LogDataService>();
+            services.AddTransient<IKotraNewsService, KotraNewsService>();
             // Without this controller actions are not forbidden if other roles are trying to access
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
             services.AddSingleton(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DbInitializer seeder, IAntiforgery antiforgery)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DbInitializer seeder, IAntiforgery antiforgery, IKotraNewsService kotra, IMemoryCache memoryCache, ExodusKoreaContext ekcontext)
         {
+            // load kotra news in background and store in cache
+            //foreach (var c in ekcontext.News)
+            //{
+            //    var cache = memoryCache.Get<List<KotraNewsVM>>(c.Topic);
+            //    if (cache == null)
+            //        kotra.GetKotraNewsByCountry(c.Topic);
+            //}
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
@@ -230,7 +243,7 @@ namespace ExodusKorea.API
             app.UseCors(builder =>
             {
                 if (_appSettingsEnv.Equals("Live"))
-                    builder.WithOrigins("https://test2-5d022.firebaseapp.com");
+                    builder.WithOrigins("https://talchoseon.com");
                 else if (_appSettingsEnv.Equals("Development"))
                     builder.WithOrigins("http://localhost:4200");
                 builder.AllowAnyHeader();

@@ -13,5 +13,6 @@ namespace ExodusKorea.Model.ViewModels
         public string Title { get; set; }
         public string Owner { get; set; }
         public string ChannelId { get; set; }
+        public DateTimeOffset DateTime { get; set; }
     }
 }

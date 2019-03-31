@@ -23,8 +23,8 @@ namespace ExodusKorea.Model.ViewModels
 
         public Tuple<string, string> GetConfirmEmailFormat()
         {
-            string subject = "[엑소더스 코리아] 가입을 위해 이메일 인증을 완료해주세요.";
-            string htmlBody = 
+            string subject = "[탈조선] 가입을 위해 이메일 인증을 완료해주세요.";
+            string htmlBody =
                 @"<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
                 <html style='width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;'>
                  <head> 
@@ -33,7 +33,7 @@ namespace ExodusKorea.Model.ViewModels
                   <meta name='x-apple-disable-message-reformatting'> 
                   <meta http-equiv='X-UA-Compatible' content='IE=edge'> 
                   <meta content='telephone=no' name='format-detection'> 
-                  <title>엑소더스 코리아 회원 인증</title> 
+                  <title>탈조선 회원 인증</title> 
                   <!--[if (mso 16)]>
                     <style type='text/css'>
                     a {text-decoration: none;}
@@ -100,12 +100,12 @@ namespace ExodusKorea.Model.ViewModels
                                   <td align='left' width='518' style='padding:0;Margin:0;'> 
                                    <table width='100%' cellspacing='0' cellpadding='0' style='mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;'> 
                                      <tr style='border-collapse:collapse;'> 
-                                      <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;'> <h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'>엑소더스 코리아&nbsp;</h2>                      
+                                      <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;'> <h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'>탈조선&nbsp;</h2>                      
                                         <h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'></h2><h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'>이메일 인증을 완료해 주세요.</h2> </td> 
                                      </tr> 
                                      <tr style='border-collapse:collapse;'> 
                                       <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;padding-top:15px;'> 
-                                        <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>엑소더스 코리아 회원이 되신걸 진심으로 환영합니다.</p>                      
+                                        <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>탈조선 회원이 되신걸 진심으로 환영합니다.</p>                      
                                         <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>이메일: " + _email + @"</p>                      
                                         <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>아래 인증 완료 버튼을 클릭하시고 인증을 완료해주세요.</p>
                                         <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>감사합니다.</p> 
@@ -151,7 +151,7 @@ namespace ExodusKorea.Model.ViewModels
                                       <td align='center' style='padding:0;Margin:0;padding-top:10px;padding-bottom:10px;'> <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'><u>본 이메일은 서비스 안내용으로 발신전용이며 회신이 불가능합니다.</u></p> </td> 
                                      </tr> 
                                      <tr style='border-collapse:collapse;'> 
-                                      <td align='center' style='padding:0;Margin:0;padding-top:10px;padding-bottom:10px;'> <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'>© 2018 엑소더스 코리아</p> </td> 
+                                      <td align='center' style='padding:0;Margin:0;padding-top:10px;padding-bottom:10px;'> <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'>Copyright © talchoseon.com</p> </td> 
                                      </tr> 
                                    </table> </td> 
                                  </tr> 
@@ -192,7 +192,7 @@ namespace ExodusKorea.Model.ViewModels
 
         public Tuple<string, string> GetForgotPasswordEmailFormat()
         {
-            string subject = "[엑소더스 코리아] 비밀번호 찾기";
+            string subject = "[탈조선] 비밀번호 찾기";
             string htmlBody =
                 @"<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
                 <html style='width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;'>
@@ -202,7 +202,7 @@ namespace ExodusKorea.Model.ViewModels
                   <meta name='x-apple-disable-message-reformatting'> 
                   <meta http-equiv='X-UA-Compatible' content='IE=edge'> 
                   <meta content='telephone=no' name='format-detection'> 
-                  <title>엑소더스 코리아 회원 인증</title> 
+                  <title>탈조선 회원 인증</title> 
                   <!--[if (mso 16)]>
                     <style type='text/css'>
                     a {text-decoration: none;}
@@ -269,12 +269,12 @@ namespace ExodusKorea.Model.ViewModels
                                   <td align='left' width='518' style='padding:0;Margin:0;'> 
                                    <table width='100%' cellspacing='0' cellpadding='0' style='mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;'> 
                                      <tr style='border-collapse:collapse;'> 
-                                      <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;'> <h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'>엑소더스 코리아&nbsp;</h2>                      
+                                      <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;'> <h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'>탈조선&nbsp;</h2>                      
                                         <h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'></h2><h2 style='Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333;'>임시 비밀번호 발급</h2> </td> 
                                      </tr> 
                                      <tr style='border-collapse:collapse;'> 
                                       <td class='es-m-txt-c' align='center' style='padding:0;Margin:0;padding-top:15px;'> 
-                                        <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>안녕하세요 엑소더스 코리아 회원님.</p>                      
+                                        <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>안녕하세요 탈조선 회원님.</p>                      
                                         <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>이메일: " + _email + @"</p>                      
                                         <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>비밀번호: " + _password + @"</p>
                                         <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'></p><p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;text-align:center;'>임시 비밀번호를 통해 로그인하시고 곧바로 비밀번호를 재변경하시기 바랍니다.</p>
@@ -289,7 +289,7 @@ namespace ExodusKorea.Model.ViewModels
                                                         <tr>
                                                             <td align='center' style='border-radius: 3px;' bgcolor='#539be2'>
                                                                 <a href='" + _callUrl + @"' target='_blank' style='font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #539be2; display: inline-block;'>
-                                                                    엑소더스 코리아 홈
+                                                                    탈조선 홈
                                                                 </a>
                                                             </td>
                                                         </tr>
@@ -321,7 +321,7 @@ namespace ExodusKorea.Model.ViewModels
                                       <td align='center' style='padding:0;Margin:0;padding-top:10px;padding-bottom:10px;'> <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'><u>본 이메일은 서비스 안내용으로 발신전용이며 회신이 불가능합니다.</u></p> </td> 
                                      </tr> 
                                      <tr style='border-collapse:collapse;'> 
-                                      <td align='center' style='padding:0;Margin:0;padding-top:10px;padding-bottom:10px;'> <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'>© 2018 엑소더스 코리아</p> </td> 
+                                      <td align='center' style='padding:0;Margin:0;padding-top:10px;padding-bottom:10px;'> <p style='Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;'>Copyright © talchoseon.com</p> </td> 
                                      </tr> 
                                    </table> </td> 
                                  </tr> 

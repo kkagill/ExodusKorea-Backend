@@ -20,6 +20,7 @@ namespace ExodusKorea.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppSettings _appSettings;
         private readonly IAccountRepository _repository;
         private readonly IMessageService _messageService;
         private readonly IDataProtector _protector;
@@ -28,6 +29,7 @@ namespace ExodusKorea.API.Controllers
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  RoleManager<IdentityRole> roleManager,
+                                 IOptions<AppSettings> appSettings,
                                  IAccountRepository repository,
                                  IMessageService messageService,
                                  IDataProtectionProvider provider,
@@ -36,6 +38,7 @@ namespace ExodusKorea.API.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _appSettings = appSettings.Value;
             _repository = repository;
             _messageService = messageService;
             _protector = provider.CreateProtector("ExodusKorea");
@@ -64,10 +67,10 @@ namespace ExodusKorea.API.Controllers
             var passwordRequirement = "P" + temporaryPwd + "n1"; // 숫자, 대소문자 requirement
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);           
             var result = await _userManager.ResetPasswordAsync(user, token, passwordRequirement); // Temporary password is now the user's current password            
-            var emailTemplateVM = new EmailTemplateVM(user.Email, "http://localhost:4200/", passwordRequirement);
+            var emailTemplateVM = new EmailTemplateVM(user.Email, _appSettings.Environment.Equals("Live") ? "https://talchoseon.com/" : "http://localhost:4200/", passwordRequirement);
             var emailFormat = emailTemplateVM.GetForgotPasswordEmailFormat();
 
-            await _messageService.SendEmailAsync("admin@exoduscorea.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);         
+            await _messageService.SendEmailAsync("admin@talchoseon.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);         
 
             return new OkResult();
         }
@@ -130,7 +133,7 @@ namespace ExodusKorea.API.Controllers
                 var emailTemplateVM = new EmailTemplateVM(user.Email, callbackUrl.AbsoluteUri);
                 var emailFormat = emailTemplateVM.GetConfirmEmailFormat();
 
-                await _messageService.SendEmailAsync("admin@exoduscorea.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);
+                await _messageService.SendEmailAsync("admin@talchoseon.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);
 
                 var userVM = Mapper.Map<ApplicationUser, ApplicationUserVM>(user);
 
@@ -175,7 +178,7 @@ namespace ExodusKorea.API.Controllers
             var emailTemplateVM = new EmailTemplateVM(user.Email, callbackUrl.AbsoluteUri);
             var emailFormat = emailTemplateVM.GetConfirmEmailFormat();
 
-            await _messageService.SendEmailAsync("admin@exoduscorea.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);         
+            await _messageService.SendEmailAsync("admin@talchoseon.com", user.Email, emailFormat.Item1, null, emailFormat.Item2);         
 
             return new OkResult();
         }
@@ -185,19 +188,34 @@ namespace ExodusKorea.API.Controllers
         public async Task<IActionResult> ConfirmEmail(string id, string token)
         {
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(token))
-                return Redirect("http://localhost:4200/error");
+            {
+                if (_appSettings.Environment.Equals("Live"))
+                    return Redirect("https://talchoseon.com/error");
+                else
+                    return Redirect("http://localhost:4200/error");
+            }              
 
             var user = await _userManager.FindByIdAsync(_protector.Unprotect(id));
 
             if (user == null)
-                return Redirect("http://localhost:4200/error");
+            {
+                if (_appSettings.Environment.Equals("Live"))
+                    return Redirect("https://talchoseon.com/error");
+                else
+                    return Redirect("http://localhost:4200/error");
+            }               
 
             var emailConfirmationResult = await _userManager.ConfirmEmailAsync(user, token);
 
             if (!emailConfirmationResult.Succeeded)
-                return Redirect("http://localhost:4200/token-expired?email=" + user.Email);
+            {
+                if (_appSettings.Environment.Equals("Live"))
+                    return Redirect("https://talchoseon.com/token-expired?email=" + user.Email);
+                else
+                    return Redirect("http://localhost:4200/token-expired?email=" + user.Email);
+            }
 
-            return Redirect("http://localhost:4200/confirmed");
+            return _appSettings.Environment.Equals("Live") ? Redirect("https://talchoseon.com/confirmed") : Redirect("http://localhost:4200/confirmed");
         }
 
         [HttpGet]

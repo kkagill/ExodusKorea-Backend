@@ -41,15 +41,15 @@ namespace ExodusKorea.Data
                 await _roleManager.CreateAsync(userRole);
             }
 
-            var findAdminAccount = await _userManager.FindByNameAsync("admin@gmail.com");
+            var findAdminAccount = await _userManager.FindByNameAsync("admin@talchoseon.com");
 
             //If there is no user account "admin@adps.com", create it       
             if (findAdminAccount == null)
             {
                 var admin = new ApplicationUser()
                 {
-                    UserName = "admin@gmail.com",
-                    Email = "admin@gmail.com",                 
+                    UserName = "admin@talchoseon.com",
+                    Email = "admin@talchoseon.com",                 
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
 
@@ -70,7 +70,7 @@ namespace ExodusKorea.Data
                 }
             }
 
-            var adminAccount = await _userManager.FindByNameAsync("admin@gmail.com");
+            var adminAccount = await _userManager.FindByNameAsync("admin@talchoseon.com");
             //If Admin account is not in an admin role, add it to the role.
             if (!await _userManager.IsInRoleAsync(adminAccount, adminRole.Name))
             {

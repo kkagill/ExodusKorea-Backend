@@ -7,7 +7,8 @@ namespace ExodusKorea.Model.ViewModels
         [Required]
         public int CategoryId { get; set; }
         [Required]
-        public int CountryId { get; set; }
+        public int CountryId { get; set; }      
+        public int? CareerId { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
