@@ -60,7 +60,7 @@ namespace ExodusKorea.API
                     options.UseSqlServer(Configuration.GetConnectionString("ExodusKoreaAzure"),
                         b => b.MigrationsAssembly("ExodusKorea.API"));
                 else if (_appSettingsEnv.Equals("Development"))
-                    options.UseSqlServer(Configuration.GetConnectionString("ExodusKoreaAzure"),
+                    options.UseSqlServer(Configuration.GetConnectionString("ExodusKorea"),
                         b => b.MigrationsAssembly("ExodusKorea.API"));
                
                 options.UseOpenIddict();

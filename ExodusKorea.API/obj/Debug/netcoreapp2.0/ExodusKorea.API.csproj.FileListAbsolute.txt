@@ -14,3 +14,19 @@ C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Debu
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.csproj.CopyComplete
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.dll
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.pdb
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.API.deps.json
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.API.runtimeconfig.json
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.API.runtimeconfig.dev.json
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.API.dll
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.API.pdb
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.Data.dll
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.Model.dll
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.Data.pdb
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\bin\Debug\netcoreapp2.0\ExodusKorea.Model.pdb
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.csprojAssemblyReference.cache
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.csproj.CoreCompileInputs.cache
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.AssemblyInfoInputs.cache
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.AssemblyInfo.cs
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.csproj.CopyComplete
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.dll
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.API\obj\Debug\netcoreapp2.0\ExodusKorea.API.pdb

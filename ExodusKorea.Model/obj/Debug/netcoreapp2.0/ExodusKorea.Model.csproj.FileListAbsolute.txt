@@ -7,3 +7,12 @@ C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\De
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.AssemblyInfo.cs
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.dll
 C:\Users\she jong shon\Desktop\etc\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.pdb
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\bin\Debug\netcoreapp2.0\ExodusKorea.Model.deps.json
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\bin\Debug\netcoreapp2.0\ExodusKorea.Model.dll
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\bin\Debug\netcoreapp2.0\ExodusKorea.Model.pdb
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.csprojAssemblyReference.cache
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.csproj.CoreCompileInputs.cache
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.AssemblyInfoInputs.cache
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.AssemblyInfo.cs
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.dll
+C:\Users\sejong\Downloads\projects\ExodusKorea\ExodusKorea.Model\obj\Debug\netcoreapp2.0\ExodusKorea.Model.pdb
